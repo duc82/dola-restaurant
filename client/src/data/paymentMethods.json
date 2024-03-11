@@ -1,0 +1,14 @@
+[
+  {
+    "name": "VnPay",
+    "image": "/vnpay.webp"
+  },
+  {
+    "name": "PayPal",
+    "image": "/paypal.png"
+  },
+  {
+    "name": "Thanh toán khi giao hàng (COD)",
+    "image": "/money_bill.svg"
+  }
+]

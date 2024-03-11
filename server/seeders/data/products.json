@@ -1,0 +1,49 @@
+[
+  {
+    "title": "Salad rau mùa sốt cam",
+    "parentCategory": "645cfb9ee8dc0504920c11f9",
+    "childCategory": "645cfb9ee8dc0504920c11fb",
+    "price": 70000,
+    "discountPercent": 3,
+    "stock": 100,
+    "taste": "chua",
+    "size": "nhỏ",
+    "description": "<div id='description'><p>Salad rau mùa sốt cam là sự lựa chọn tuyệt vời cho các tín đồ yêu eat clean. Món ăn có đến 5 loại xà lách (carol, frise, lô lô tím, xà lách mỡ và radicchio tím) kết hợp cùng các loại trái cây như táo, cà chua, ô liu... mang lại nguồn vitamin tổng hợp dồi dào, hỗ trợ tăng cường đề kháng cho cơ thể. Điểm nhấn tạo nên nét chấm phá cho món nằm ở nước sốt cam độc đáo với vị chua ngọt tự nhiên dịu dàng. Salad rau mùa sốt cam thực sự là một bữa tiệc về màu sắc, xua tan cơn nóng mùa hè, đánh thức tối đa vị giác.</p><h3>Thành phần :</h3><p>Xà lách carol, xà lách frise, xà lách lô lô tím, xà lách mỡ, xà lách radicchio tím, táo đỏ, táo xanh, cà chua bi, củ cải đường, rau mầm, cà rốt baby, trái olive đen, trái olive xanh.</p><h3>Khẩu phần:</h3><p>1 - 2 người</p><h3>Thời gian hoàn tất :</h3><p>6 - 8 phút</p></div>",
+    "images": [
+      {
+        "url": "https://res.cloudinary.com/dnyzscdim/image/upload/v1683398539/Dola%20Restaurant/salad-rau-mua-sot-cam.webp"
+      }
+    ]
+  },
+  {
+    "title": "Salad rau mùa sốt mác mác",
+    "parentCategory": "645cfb9ee8dc0504920c11f9",
+    "childCategory": "645cfb9ee8dc0504920c11fb",
+    "price": 68000,
+    "stock": 110,
+    "taste": "chua",
+    "size": "nhỏ",
+    "description": "<div id='description'><p>Salad rau mùa sốt mác mác được lựa chọn từ những loại rau củ ẩm thực phương Tây như xà lách lolo, xà lách carron, dầu oliu, kết hợp với hương đồng cỏ nội trong văn hoá ẩm thực Việt Nam là củ dền, táo đỏ, táo xanh, chanh dây và rau quế. Tất cả được hòa quyện dưới lớp sốt mác mác rau mùi được cấu thành bởi 3 thành phần chính là chanh dây, rau mùi và mayonaise, đem đến hương vị độc đáo, giàu vitamin C và chất xơ.</p><h3>Thành phần :</h3><p>Táo đỏ, táo xanh, củ dền, cà rốt, xà lách lolo, xà lách carron, chanh dây, dầu oliu, rau quế, mayonaise,...</p><h3>Khẩu phần:</h3><p>1 người</p><h3>Năng lượng :</h3><p>Protein: 2.2, Carbs: 14.4, Fat: 12.2, Total Kcal: 157.8</p></div>",
+    "images": [
+      {
+        "url": "https://res.cloudinary.com/dnyzscdim/image/upload/v1683884588/Dola%20Restaurant/salad-rau-mua-sot-mac-mac.webp"
+      }
+    ]
+  },
+  {
+    "title": "Phở cuốn",
+    "parentCategory": "645cfb9ee8dc0504920c11f9",
+    "childCategory": "645cfb9ee8dc0504920c11ff",
+    "price": 90000,
+    "discountPercent": 9,
+    "stock": 120,
+    "taste": "ngọt",
+    "size": "vừa",
+    "description": "<div id='description'><p>Phở cuốn là món ăn được các đầu bếp dành nhiều thời gian dày công chế biến. Với bánh phở tạo ra từ hạt gạo ngâm suốt 12 tiếng liền, sau đó xay và tráng cách thủy mang đến miếng bánh ướt mỏng, dai dai hoàn toàn tự nhiên. Thêm vào đó là sự kết hợp hài hòa cùng nguyên liệu bò Úc thượng hạng tẩm ướp đậm vị và các loại rau thơm nhiệt đới. Khi thưởng thức kèm nước sốt chấm được pha chế đặc biệt mang đến trải nghiệm ẩm thực tuyệt hảo, đầy thú vị.</p><h3>Thành phần :</h3><p>Nạc vai bò Úc, bánh ướt, húng lủi, húng quế, ngò gai, giá sống, cà chua, hành phi, đậu phộng, nước mắm, đường cát Biên Hòa, giấm nuôi, tỏi lột, mè trắng, bột thịt gà, tiêu đen</p><h3>Khẩu phần:</h3><p>1 người</p><h3>Năng lượng :</h3><p>Protein - 28.33, Carbs - 24.93, Fats - 8.97 (Total Kcal - 293.77)</p></div>",
+    "images": [
+      {
+        "url": "https://res.cloudinary.com/dnyzscdim/image/upload/v1683888002/Dola%20Restaurant/pho-cuon.webp"
+      }
+    ]
+  }
+]

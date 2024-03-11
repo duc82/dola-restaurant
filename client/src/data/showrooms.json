@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Dola Trần Phú",
+    "address": "95 Trần Phú, Phường Văn Quán, Quận Hà Đông, Hà Nội",
+    "hotline": "0123456789",
+    "email": "example@gmail.com",
+    "main": false,
+    "iframeSrc": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3725.223851188735!2d105.78757288043306!3d20.98366213077312!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135accf4ca461f1%3A0xbf3d6106644c93b!2zOTUgVHLhuqduIFBow7osIFAuIFbEg24gUXXDoW4sIEjDoCDEkMO0bmcsIEjDoCBO4buZaSwgVmnhu4d0IE5hbQ!5e0!3m2!1svi!2s!4v1702361860088!5m2!1svi!2s"
+  },
+  {
+    "name": "Dola Restaurant Hà Nội",
+    "address": "266 Đội Cấn, Phường Liễu Giai, Quận Ba Đình, Hà Nội",
+    "hotline": "0123456789",
+    "email": "example@gmail.com",
+    "main": true,
+    "iframeSrc": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d878.7244708224887!2d105.8163476275882!3d21.03651155742603!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab128d511a8d%3A0x3440d4c5d63f693!2zMjY2IFAuIMSQ4buZaSBD4bqlbiwgTGnhu4V1IEdpYWksIEJhIMSQw6xuaCwgSMOgIE7hu5lpLCBWaeG7h3QgTmFt!5e0!3m2!1svi!2s!4v1702362197158!5m2!1svi!2s"
+  },
+  {
+    "name": "Dola Hoàng Quốc Việt",
+    "address": "38 Hoàng Quốc Việt, Phường Nghĩa Tân, Quận Cầu Giấy, Hà Nội",
+    "hotline": "0123456789",
+    "email": "example@gmail.com",
+    "main": false,
+    "iframeSrc": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3723.6250324093016!2d105.7910873752117!3d21.047684280606415!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab2fffc8cf29%3A0x202d1bc863ab6845!2zTmcuIDEwNi9Ib8OgbmcgUXXhu5FjIFZp4buHdC8zOEEgMTUsIFThu5UgMzEsIEPhuqd1IEdp4bqleSwgSMOgIE7hu5lpLCBWaeG7h3QgTmFt!5e0!3m2!1svi!2s!4v1702362335085!5m2!1svi!2s"
+  }
+]

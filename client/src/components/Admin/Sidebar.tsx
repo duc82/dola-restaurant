@@ -1,0 +1,30 @@
+import admins from "@/data/admins";
+import cn from "@/utils/cn";
+import { Link, useLocation } from "react-router-dom";
+
+const Sidebar = () => {
+  const { pathname } = useLocation();
+
+  return (
+    <aside className="hidden lg:block h-full fixed top-0 left-0 bg-emerald-secondary border-r border-r-gray-600 pt-[66px] md:pt-20 lg:pt-[88px] flex-none group w-64 overflow-y-auto">
+      <ul className="px-3 pt-3">
+        {admins.map((admin, i) => (
+          <li key={i} className="mb-2 last:mb-0">
+            <Link
+              to={admin.link}
+              className={cn(
+                "flex items-center font-medium text-base hover:bg-emerald-primary transition rounded-md p-2",
+                pathname === admin.link ? "bg-emerald-primary" : "text-gray-400"
+              )}
+            >
+              <admin.icon className="w-6 h-6" />
+              <span className={"ml-3"}>{admin.label}</span>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </aside>
+  );
+};
+
+export default Sidebar;

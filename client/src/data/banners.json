@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "image": "/banner1.webp",
+    "alt": "Banner",
+    "title": "Món ăn đa dạng"
+  },
+  {
+    "id": 2,
+    "image": "/banner2.webp",
+    "alt": "Banner",
+    "title": "Hương vị đặc biệt"
+  },
+  {
+    "id": 3,
+    "image": "/banner3.webp",
+    "alt": "Banner",
+    "title": "Công thức độc quyền"
+  },
+  {
+    "id": 4,
+    "image": "/banner4.webp",
+    "alt": "Banner",
+    "title": "Đảm bảo chất lượng"
+  }
+]
