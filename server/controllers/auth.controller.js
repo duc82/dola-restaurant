@@ -41,9 +41,8 @@ class AuthController {
     const doc = {
       fullName: `${payload.given_name} ${payload.family_name}`,
       email: payload.email,
-      isVerified: payload.email_verified,
-      isHavePassword: false,
     };
+
     const user = await this.userService.findOneOrCreate(filter, doc, {
       exclude: "password",
     });
@@ -77,8 +76,6 @@ class AuthController {
       {
         fullName: payload.name,
         email: payload.email,
-        isVerified: true,
-        isHavePassword: false,
       },
       { exclude: "password" }
     );

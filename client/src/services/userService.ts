@@ -1,5 +1,6 @@
 import {
   FullUser,
+  User,
   UserResponse,
   UserUpdateCurrentDTO,
   UsersResponse,
@@ -37,6 +38,12 @@ const userService = {
 
   getCurrent: () => {
     return apiRequest<FullUser>("/users/current", "GET", null, {
+      refreshToken: true,
+    });
+  },
+
+  create: (user: User) => {
+    return apiRequest<UserResponse>("/users/create", "POST", user, {
       refreshToken: true,
     });
   },

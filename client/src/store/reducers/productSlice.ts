@@ -99,10 +99,8 @@ const productSlice = createSlice({
     });
 
     builder.addCase(createProduct.fulfilled, (state, { payload }) => {
-      state.total += 1;
-      if (state.total <= state.limit) {
-        state.products.push(payload.product);
-      }
+      state.total++;
+      state.products.push(payload.product);
     });
 
     builder.addCase(updateProduct.fulfilled, (state, { payload }) => {
@@ -117,7 +115,7 @@ const productSlice = createSlice({
     });
 
     builder.addCase(deleteProduct.fulfilled, (state, { payload }) => {
-      state.total -= 1;
+      state.total--;
       const indexProduct = state.products.findIndex(
         (product) => product._id === payload.id
       );

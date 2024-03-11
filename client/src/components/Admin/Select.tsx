@@ -3,6 +3,13 @@ interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   wrapperClassName?: string;
 }
 
+const Option = ({
+  children,
+  ...props
+}: React.OptionHTMLAttributes<HTMLOptionElement>) => (
+  <option {...props}>{children}</option>
+);
+
 const Select = ({ label, wrapperClassName, ...props }: SelectProps) => {
   return (
     <div className={wrapperClassName}>
@@ -18,5 +25,7 @@ const Select = ({ label, wrapperClassName, ...props }: SelectProps) => {
     </div>
   );
 };
+
+Select.Option = Option;
 
 export default Select;

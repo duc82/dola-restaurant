@@ -23,7 +23,9 @@ const userSchema = new Schema(
     },
     isHavePassword: {
       type: Boolean,
-      default: true,
+      default: function () {
+        return this.password ? true : false;
+      },
     },
     addresses: [{ type: Schema.Types.ObjectId, ref: "Address" }],
     token: {

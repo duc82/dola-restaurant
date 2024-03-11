@@ -3,8 +3,6 @@ import Container from "../components/Container";
 import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import InputGroup from "../components/Form/InputGroup";
-import { string } from "yup";
-import { loginSchema } from "./Login";
 import FacebookLogin from "../components/Login/FacebookLogin";
 import GoogleLogin from "../components/Login/GoogleLogin";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
@@ -16,21 +14,9 @@ import authService from "@/services/authService";
 import Button from "../components/Form/Button";
 import { Spinner } from "@/icons";
 import { SignUpDTO } from "@/types/auth";
+import { signUpSchema } from "@/schemas/authSchema";
 
 const title = "Đăng ký tài khoản";
-
-const signUpSchema = loginSchema.clone().shape({
-  fullName: string().required("Họ và tên là bắt buộc."),
-  phone: string()
-    .matches(/(03|05|07|08|09|01[2|6|8|9])+([0-9]{8})\b/, {
-      message: "Số điện thoại không hợp lệ.",
-    })
-    .required("Số điện thoại là bắt buộc."),
-  password: string()
-    .min(6, "Mật khẩu phải tối thiểu 6 kí tự.")
-    .max(50, "Mật khẩu tối đa 50 kí tự.")
-    .required("Mật khẩu là bắt buộc."),
-});
 
 const SignUp = () => {
   const dispatch = useAppDispatch();

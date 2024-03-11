@@ -65,20 +65,37 @@ class UserService {
     const filter = {};
 
     if (search) {
-      filter.fullName = {
-        $regex: search,
-        $options: "i",
-      };
+      filter.$or = [
+        {
+          email: {
+            $regex: search,
+            $options: "i",
+          },
+        },
+        {
+          phone: {
+            $regex: search,
+            $options: "i",
+          },
+        },
+        {
+          fullName: {
+            $regex: search,
+            $options: "i",
+          },
+        },
+      ];
     }
 
     const users = await User.find(filter)
       .skip(skip)
       .limit(limit)
       .select("-password")
+      .sort({ createdAt: -1 })
       .populate("addresses");
     const total = await User.countDocuments(filter);
 
-    return { users, limit, skip, total };
+    return { users, limit, total };
   }
 
   async create(body) {
@@ -182,7 +199,6 @@ class UserService {
   }
 
   async delete(id) {
-    // await User.deleteOne({ _id: id }) not trigger on delete cascade hook in model User
     const user = await User.findByIdAndDelete(id);
 
     if (!user) {

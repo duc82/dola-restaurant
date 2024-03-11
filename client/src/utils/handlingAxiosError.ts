@@ -7,6 +7,6 @@ export default function handlingAxiosError(error: unknown): {
     const data = error.response?.data;
     return data;
   } else {
-    return { message: "Đã xảy ra lỗi" };
+    return error as { message: string };
   }
 }

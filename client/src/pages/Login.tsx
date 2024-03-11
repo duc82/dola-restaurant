@@ -2,7 +2,6 @@ import Breadcrumb from "../components/Breadcrumb";
 import Container from "../components/Container";
 import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
-import { string, object } from "yup";
 import FacebookLogin from "../components/Login/FacebookLogin";
 import GoogleLogin from "../components/Login/GoogleLogin";
 import InputGroup from "../components/Form/InputGroup";
@@ -22,18 +21,9 @@ import authService from "@/services/authService";
 import { Spinner } from "@/icons";
 import { LoginDTO } from "@/types/auth";
 import { setUser } from "@/store/reducers/userSlice";
+import { loginSchema } from "@/schemas/authSchema";
 
 const title = "Đăng nhập tài khoản";
-
-export const loginSchema = object().shape({
-  email: string()
-    .email("Địa chỉ email không hợp lệ.")
-    .required("Địa chỉ email là bắt buộc."),
-  password: string()
-    .min(6, "Mật khẩu phải tối thiểu 6 kí tự.")
-    .max(50, "Mật khẩu tối đa 50 kí tự.")
-    .required("Mật khẩu là bắt buộc."),
-});
 
 const Login = () => {
   const [isActiveForgotPassword, setActiveForgotPassword] = useState(false);

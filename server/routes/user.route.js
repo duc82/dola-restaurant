@@ -2,7 +2,7 @@ const { Router } = require("express");
 const userController = require("../controllers/user.controller");
 const validation = require("../middlewares/validation.middleware");
 const UserDto = require("../dtos/user.dto");
-const authorizationMiddleware = require("../middlewares/authorization.middleware");
+const authorization = require("../middlewares/authorization.middleware");
 const authenticationMiddleware = require("../middlewares/authentication.middleware");
 
 const userDto = new UserDto();
@@ -14,7 +14,7 @@ router.get("/", userController.getAll);
 
 router.post(
   "/create",
-  authorizationMiddleware,
+  authorization,
   validation.validateDto(userDto.create),
   userController.create
 );
@@ -28,7 +28,7 @@ router.put(
 
 router.put(
   "/update/:id",
-  authorizationMiddleware,
+  authorization,
   validation.validateDto(userDto.update),
   userController.update
 );
@@ -42,14 +42,14 @@ router.post(
 
 router.delete(
   "/delete/:id",
-  authorizationMiddleware,
+  authorization,
   validation.validateParams(userDto.getById),
   userController.delete
 );
 
 router.post(
   "/delete-many",
-  authorizationMiddleware,
+  authorization,
   validation.validateDto(userDto.deleteMany),
   userController.deleteMany
 );

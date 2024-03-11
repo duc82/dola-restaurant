@@ -5,12 +5,12 @@ interface User {
   email: string;
   phone?: string;
   role: "user" | "admin";
-  addresses: string[];
-  isHavePassword: boolean;
-  ipAddress: string;
 }
 
-interface FullUser extends FullType, Omit<User, "addresses"> {}
+interface FullUser extends FullType, User {
+  ipAddress: string;
+  isHavePassword: boolean;
+}
 
 interface UserResponse {
   user: FullUser;
