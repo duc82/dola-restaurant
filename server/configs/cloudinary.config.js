@@ -1,5 +1,4 @@
 const cloudinary = require("cloudinary").v2;
-require("dotenv").config();
 
 const API_KEY_CLOUDINARY = process.env.API_KEY_CLOUDINARY;
 const API_SECRET_CLOUDINARY = process.env.API_SECRET_CLOUDINARY;

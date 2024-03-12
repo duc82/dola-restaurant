@@ -1,6 +1,5 @@
 const User = require("../models/user.model");
 const CustomError = require("../utils/error.util");
-const client = require("../configs/redis.config");
 const Address = require("../models/address.model");
 const Token = require("../models/token.model");
 
@@ -39,12 +38,6 @@ class UserService {
   }
 
   async getCurrent(userId) {
-    const cachedUser = await client.get(`user:${userId}`);
-
-    if (cachedUser) {
-      return JSON.parse(cachedUser);
-    }
-
     const user = await User.findById(userId).select("-password");
 
     if (!user) {
@@ -53,8 +46,6 @@ class UserService {
         status: 404,
       });
     }
-
-    await client.setEx(`user:${userId}`, 3600, JSON.stringify(user));
 
     return user;
   }

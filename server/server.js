@@ -1,11 +1,10 @@
 const express = require("express");
-require("dotenv");
+require("dotenv").config();
 const connectDB = require("./configs/db.config");
 const cookieParser = require("cookie-parser");
 const swaggerUi = require("swagger-ui-express");
 const swaggerSpec = require("./utils/swagger.util");
 const morgan = require("morgan");
-const client = require("./configs/redis.config");
 const logger = require("./utils/logger.util");
 
 const app = express();
@@ -83,19 +82,11 @@ app.use((req, _res, next) => {
 // Error Handler
 app.use(require("./middlewares/errorHandler.middleware"));
 
-const PORT = process.env.PORT || 5000;
-
 const startServer = async () => {
+  const PORT = process.env.PORT || 5000;
+
   // Connect to MongoDB
   await connectDB();
-
-  // Connect to Redis
-  client.on("error", (error) => {
-    throw error;
-  });
-  await client.connect().then(() => {
-    logger.info("Redis is connected");
-  });
 
   // Start server
   app.listen(PORT, () => logger.info(`Server is running on PORT: ${PORT}!`));

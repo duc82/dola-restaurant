@@ -1,5 +1,4 @@
 const nodemailer = require("nodemailer");
-require("dotenv").config();
 
 const EMAIL_GOOGLE = process.env.EMAIL_GOOGLE;
 const APP_PASSWORD_GOOGLE = process.env.APP_PASSWORD_GOOGLE;

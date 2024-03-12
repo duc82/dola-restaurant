@@ -1,6 +1,5 @@
 const { connect } = require("mongoose");
 const logger = require("../utils/logger.util");
-require("dotenv").config();
 
 const MONGODB_URI = process.env.MONGODB_URI;
 

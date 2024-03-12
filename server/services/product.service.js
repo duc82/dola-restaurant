@@ -1,4 +1,3 @@
-const client = require("../configs/redis.config");
 const Category = require("../models/category.model");
 const Image = require("../models/image.model");
 const Product = require("../models/product.model");
@@ -94,12 +93,6 @@ class ProductService {
   }
 
   async getBySlug(slug) {
-    const cachedProduct = await client.get(`product:${slug}`);
-
-    if (cachedProduct) {
-      return JSON.parse(cachedProduct);
-    }
-
     const product = await Product.findOne({
       slug,
     }).populate(["parentCategory", "childCategory", "images"]);
@@ -110,8 +103,6 @@ class ProductService {
         status: 404,
       });
     }
-
-    await client.setEx(slug, 3600, JSON.stringify(product));
 
     return product;
   }
