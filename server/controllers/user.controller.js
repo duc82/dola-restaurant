@@ -48,11 +48,11 @@ class UserController {
   }
 
   async delete(req, res) {
-    res.json(await this.userService.delete(req.params.id));
+    res.json(await this.userService.delete(req.params.id, req.user.userId));
   }
 
   async deleteMany(req, res) {
-    res.json(await this.userService.deleteMany(req.body.ids));
+    res.json(await this.userService.deleteMany(req.body.ids, req.user.userId));
   }
 }
 

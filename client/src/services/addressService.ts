@@ -34,7 +34,7 @@ const addressService = {
   },
 
   getCurrent: async () => {
-    return apiRequest<FullAddress[]>("addresses", "GET", null, {
+    return apiRequest<FullAddress[]>("addresses/current", "GET", null, {
       refreshToken: true,
     });
   },

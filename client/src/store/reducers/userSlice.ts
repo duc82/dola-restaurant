@@ -4,6 +4,18 @@ import type { Filter, RejectValue } from "@/types";
 import { FullUser, User, UserResponse, UsersResponse } from "@/types/user";
 import userService from "@/services/userService";
 
+export const getCurrentUser = createAsyncThunk<FullUser, void, RejectValue>(
+  "user/getCurrentUser",
+  async (_, thunkApi) => {
+    try {
+      const data = await userService.getCurrent();
+      return data;
+    } catch (error) {
+      return thunkApi.rejectWithValue(handlingAxiosError(error));
+    }
+  }
+);
+
 export const getAllUser = createAsyncThunk<UsersResponse, Filter, RejectValue>(
   "user/getAllUser",
   async (filter, thunkApi) => {
@@ -28,6 +40,32 @@ export const createUser = createAsyncThunk<UserResponse, User, RejectValue>(
   }
 );
 
+export const deleteUser = createAsyncThunk<
+  { message: string; id: string },
+  string,
+  RejectValue
+>("user/deleteUser", async (id, thunkApi) => {
+  try {
+    const data = await userService.delete(id);
+    return { message: data.message, id };
+  } catch (error) {
+    return thunkApi.rejectWithValue(handlingAxiosError(error));
+  }
+});
+
+export const deleteManyUser = createAsyncThunk<
+  { message: string; ids: string[] },
+  string[],
+  RejectValue
+>("user/deleteManyUser", async (ids, thunkApi) => {
+  try {
+    const data = await userService.deleteMany(ids);
+    return { message: data.message, ids };
+  } catch (error) {
+    return thunkApi.rejectWithValue(handlingAxiosError(error));
+  }
+});
+
 const initialState = {
   user: null as FullUser | null,
   users: [] as FullUser[],
@@ -40,12 +78,15 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     resetUser: () => initialState,
-
     setUser: (state, { payload }: PayloadAction<FullUser>) => {
       state.user = payload;
     },
   },
   extraReducers: (builder) => {
+    builder.addCase(getCurrentUser.fulfilled, (state, { payload }) => {
+      state.user = payload;
+    });
+
     builder.addCase(getAllUser.fulfilled, (state, { payload }) => {
       state.users = payload.users;
       state.limit = payload.limit;
@@ -59,6 +100,22 @@ const userSlice = createSlice({
       if (state.users.length > state.limit) {
         state.users.pop();
       }
+    });
+
+    builder.addCase(deleteUser.fulfilled, (state, { payload }) => {
+      const index = state.users.findIndex((user) => user._id === payload.id);
+
+      if (index !== -1) {
+        state.users.splice(index, 1);
+        state.total--;
+      }
+    });
+
+    builder.addCase(deleteManyUser.fulfilled, (state, { payload }) => {
+      state.users = state.users.filter(
+        (user) => !payload.ids.includes(user._id)
+      );
+      state.total -= payload.ids.length;
     });
   },
 });

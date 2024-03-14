@@ -3,8 +3,9 @@ import { Outlet, useNavigate } from "react-router-dom";
 import Header from "../components/Admin/Header";
 import Sidebar from "../components/Admin/Sidebar";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
-import userService from "@/services/userService";
-import { setUser } from "@/store/reducers/userSlice";
+import { getCurrentUser } from "@/store/reducers/userSlice";
+import authService from "@/services/authService";
+import { resetAuth } from "@/store/reducers/authSlice";
 
 const AdminLayout = () => {
   const dispatch = useAppDispatch();
@@ -13,17 +14,15 @@ const AdminLayout = () => {
   const [isActiveSidebar, setActiveSidebar] = useState(false);
 
   useEffect(() => {
-    const getCurrentUser = async () => {
-      try {
-        const user = await userService.getCurrent();
-        dispatch(setUser(user));
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
     if (!user) {
-      getCurrentUser();
+      dispatch(getCurrentUser())
+        .unwrap()
+        .catch(() => {
+          authService.logout().then(() => {
+            dispatch(resetAuth());
+            navigate("/dang-nhap");
+          });
+        });
     } else {
       if (user.role !== "admin") {
         navigate("/");

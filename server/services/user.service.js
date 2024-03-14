@@ -189,12 +189,19 @@ class UserService {
     return { message: "Đổi mật khẩu thành công" };
   }
 
-  async delete(id) {
+  async delete(id, userId) {
+    if (id === userId) {
+      throw new CustomError({
+        message: "Không thể xóa tài khoản của chính mình",
+        status: 400,
+      });
+    }
+
     const user = await User.findByIdAndDelete(id);
 
     if (!user) {
       throw new CustomError({
-        message: "Xóa người dùng thất bại!",
+        message: "Xóa người dùng thất bại",
         status: 400,
       });
     }
@@ -204,7 +211,7 @@ class UserService {
     };
   }
 
-  async deleteMany(ids) {
+  async deleteMany(ids, userId) {
     const users = await User.find({ _id: { $in: ids } }).select(
       "-password -passwordResetToken -passwordResetTokenExpirationAt"
     );
@@ -212,6 +219,13 @@ class UserService {
     if (!users.length) {
       throw new CustomError({
         message: "Xóa người dùng thất bại!",
+        status: 400,
+      });
+    }
+
+    if (users.some((user) => user._id === userId)) {
+      throw new CustomError({
+        message: "Không thể xóa tài khoản của chính mình",
         status: 400,
       });
     }

@@ -47,7 +47,7 @@ router.delete(
   userController.delete
 );
 
-router.post(
+router.delete(
   "/delete-many",
   authorization,
   validation.validateDto(userDto.deleteMany),

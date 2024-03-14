@@ -6,9 +6,15 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { useSearchParams } from "react-router-dom";
 import Pagination from "@/components/Pagination";
 import useAdminModal from "@/hooks/useAdminModal";
-import { getAllUser } from "@/store/reducers/userSlice";
+import {
+  deleteManyUser,
+  deleteUser,
+  getAllUser,
+} from "@/store/reducers/userSlice";
 import formatDate from "@/utils/formatDate";
 import CreateModal from "@/components/Admin/User/CreateModal";
+import toast from "react-hot-toast";
+import handlingAxiosError from "@/utils/handlingAxiosError";
 
 const title = "Quản lý người dùng";
 
@@ -20,10 +26,12 @@ const User = () => {
     openUpdateModal,
     openDeleteModal,
     closeModal,
+    id,
     ids,
     handleSelect,
     handleSelectAll,
     clearDeleteMany,
+    isDeleteMany,
     selectedAllRef,
   } = useAdminModal();
   const [urlSearchParams, setUrlSearchParams] = useSearchParams();
@@ -38,7 +46,20 @@ const User = () => {
     setUrlSearchParams(urlSearchParams);
   };
 
-  const handleDelete = () => {};
+  const handleDelete = async () => {
+    try {
+      if (isDeleteMany) {
+        await dispatch(deleteManyUser(ids)).unwrap();
+        clearDeleteMany();
+      } else {
+        await dispatch(deleteUser(id)).unwrap();
+      }
+      closeModal();
+      toast.success("Xóa người dùng thành công");
+    } catch (error) {
+      toast.error(handlingAxiosError(error).message);
+    }
+  };
 
   useEffect(() => {
     const limit = 12;

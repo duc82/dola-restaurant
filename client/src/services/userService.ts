@@ -59,6 +59,28 @@ const userService = {
       refreshToken: true,
     });
   },
+
+  delete: (id: string) => {
+    return apiRequest<{ message: string }>(
+      `/users/delete/${id}`,
+      "DELETE",
+      null,
+      {
+        refreshToken: true,
+      }
+    );
+  },
+
+  deleteMany: (ids: string[]) => {
+    return apiRequest<{ message: string }>(
+      "/users/delete-many",
+      "DELETE",
+      { ids },
+      {
+        refreshToken: true,
+      }
+    );
+  },
 };
 
 export default userService;
