@@ -1,9 +1,13 @@
-const { generateJwtToken } = require("../utils/jwt.util");
 require("dotenv").config();
 const transporter = require("../configs/nodemailer.config");
 const UserService = require("./user.service");
-const asyncHandler = require("../middlewares/asyncHandler.middleware");
+const jwt = require("jsonwebtoken");
+const util = require("util");
 const CustomError = require("../utils/error.util");
+const User = require("../models/user.model");
+
+const sign = util.promisify(jwt.sign);
+const verify = util.promisify(jwt.verify);
 
 class AuthService {
   constructor() {
@@ -22,21 +26,80 @@ class AuthService {
     return null;
   }
 
-  async attachCookieToResponse({ res, name, payload, tokenExpires }) {
-    const tokenExpiresSecond = tokenExpires / 1000;
+  async generateJwtToken(payload, options) {
+    return sign(payload, process.env.SECRET_KEY_JWT, options);
+  }
 
-    const token = await generateJwtToken(payload, {
-      expiresIn: tokenExpiresSecond,
+  async verifyJwtToken(token) {
+    const { iat, exp, ...payload } = await verify(
+      token,
+      process.env.SECRET_KEY_JWT
+    );
+    return payload;
+  }
+
+  async login(email, password, ipAddress, res) {
+    const user = await User.findOne({
+      email,
+    }).populate("addresses");
+
+    const isCorrectPassword = await user?.comparePassword(password);
+
+    if (!user || !isCorrectPassword) {
+      throw new CustomError({
+        message: "Email hoặc mật khẩu không hợp lệ",
+        status: 400,
+      });
+    }
+
+    user.ipAddress = ipAddress;
+    await user.save();
+
+    const userPayload = {
+      userId: user._id,
+      role: user.role,
+    };
+
+    const accessToken = await this.generateJwtToken(userPayload, {
+      expiresIn: this.accessTokenExpiresIn / 1000,
     });
 
-    res.cookie(name, token, {
+    const refreshToken = await this.generateJwtToken(userPayload, {
+      expiresIn: this.refreshTokenExpiresIn / 1000,
+    });
+
+    res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      maxAge: tokenExpires,
-      secure: true,
-      sameSite: "None",
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "none",
     });
 
-    return token;
+    delete user.password;
+
+    return { accessToken, user, message: "Đăng nhập thành công" };
+  }
+
+  async refreshToken(refreshToken) {
+    const userPayload = await this.verifyJwtToken(refreshToken);
+
+    const user = await User.findById(userPayload.userId);
+
+    if (!user) {
+      throw new CustomError({
+        message: "Tài khoản không tồn tại",
+        status: 400,
+      });
+    }
+
+    const newAccessToken = await this.generateJwtToken(userPayload, {
+      expiresIn: this.accessTokenExpiresIn / 1000,
+    });
+
+    return {
+      accessToken: newAccessToken,
+      user,
+      message: "Refresh token thành công",
+    };
   }
 
   async sendVerifyEmail({ to, token, fullName }) {

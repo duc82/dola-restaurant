@@ -1,14 +1,13 @@
-import cookies from "@/utils/cookies";
 import { createSlice } from "@reduxjs/toolkit";
 
-interface AuthState {
+export interface AuthState {
   isLoading: boolean;
-  isLoggedIn: boolean;
+  accessToken: string;
 }
 
 const initialState: AuthState = {
   isLoading: false,
-  isLoggedIn: Boolean(cookies.get("isLoggedIn")),
+  accessToken: "",
 };
 
 const authSlice = createSlice({
@@ -21,8 +20,9 @@ const authSlice = createSlice({
     authSuccess: (state) => {
       state.isLoading = false;
     },
-    loginSuccess: (state) => {
-      state.isLoggedIn = Boolean(cookies.get("isLoggedIn"));
+
+    loginSuccess: (state, { payload }) => {
+      state.accessToken = payload.accessToken;
     },
 
     resetAuth: () => initialState,

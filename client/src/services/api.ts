@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosHeaders } from "axios";
+import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import authService from "./authService";
 
 const API_BASE_URL: string | undefined = import.meta.env.VITE_API;
@@ -8,9 +8,9 @@ if (!API_BASE_URL) {
 }
 
 interface Option {
-  withCredentials?: boolean;
-  headers?: AxiosHeaders;
+  data?: any;
   refreshToken?: boolean;
+  headers?: AxiosRequestConfig["headers"];
 }
 
 const api = axios.create({
@@ -20,7 +20,6 @@ const api = axios.create({
 export default async function apiRequest<T>(
   endpoint: string,
   method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE",
-  data?: any,
   options?: Option
 ): Promise<T> {
   // Auto refresh token when token expired
@@ -42,15 +41,12 @@ export default async function apiRequest<T>(
         return Promise.reject(error);
       }
     );
-
-    options.withCredentials = true;
   }
 
   const res = await api<T>({
     method,
     url: endpoint,
-    data,
-    withCredentials: options?.withCredentials,
+    data: options?.data,
     headers: options?.headers,
   });
 

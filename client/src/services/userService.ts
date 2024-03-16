@@ -31,20 +31,27 @@ const userService = {
       endpoint += query;
     }
 
-    return apiRequest<UsersResponse>(endpoint, "GET", null, {
+    return apiRequest<UsersResponse>(endpoint, "GET", {
       refreshToken: true,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
     });
   },
 
   getCurrent: () => {
-    return apiRequest<FullUser>("/users/current", "GET", null, {
+    return apiRequest<FullUser>("/users/current", "GET", {
       refreshToken: true,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
     });
   },
 
   create: (user: User) => {
-    return apiRequest<UserResponse>("/users/create", "POST", user, {
+    return apiRequest<UserResponse>("/users/create", "POST", {
       refreshToken: true,
+      data: user,
     });
   },
 

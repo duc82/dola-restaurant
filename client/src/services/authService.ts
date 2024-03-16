@@ -4,36 +4,28 @@ import { LoginDTO, SignUpDTO } from "@/types/auth";
 
 const authService = {
   loginGoogle: (code: string) => {
-    return apiRequest<UserResponse>(
-      "/auth/login/google",
-      "POST",
-      { code },
-      { withCredentials: true }
-    );
-  },
-
-  loginFacebook: (accessToken: string) => {
-    return apiRequest<UserResponse>(
-      "/auth/login/facebook",
-      "POST",
-      { accessToken },
-      { withCredentials: true }
-    );
-  },
-
-  login: (data: LoginDTO) => {
-    return apiRequest<UserResponse>("/auth/login", "POST", data, {
-      withCredentials: true,
+    return apiRequest<UserResponse>("/auth/login/google", "POST", {
+      data: { code },
     });
   },
 
+  loginFacebook: (accessToken: string) => {
+    return apiRequest<UserResponse>("/auth/login/facebook", "POST", {
+      data: { accessToken },
+    });
+  },
+
+  login: (data: LoginDTO) => {
+    return apiRequest<UserResponse>("/auth/login", "POST", { data });
+  },
+
   signUp: (data: SignUpDTO) => {
-    return apiRequest<UserResponse>("/auth/signup", "POST", data);
+    return apiRequest<UserResponse>("/auth/signup", "POST", { data });
   },
 
   forgotPassword: (email: string) => {
     return apiRequest<{ message: string }>("/auth/forgotPassword", "POST", {
-      email,
+      data: { email },
     });
   },
 
@@ -41,7 +33,7 @@ const authService = {
     return apiRequest<{ verified: boolean }>(
       "/auth/forgotPassword/verify",
       "POST",
-      data
+      { data }
     );
   },
 
@@ -49,28 +41,20 @@ const authService = {
     return apiRequest<{ message: string }>(
       "/auth/forgotPassword/reset",
       "POST",
-      data
+      { data }
     );
   },
 
   refreshToken: () => {
-    return apiRequest<void>(
-      "/auth/refreshToken",
-      "POST",
-      {
-        id: "refreshToken",
-      },
-      { withCredentials: true }
-    );
+    return apiRequest<{ message: string }>("/auth/refreshToken", "POST", {
+      data: { refreshToken: true },
+    });
   },
 
   logout: () => {
-    return apiRequest<void>(
-      "/auth/logout",
-      "POST",
-      { logout: true },
-      { refreshToken: true }
-    );
+    return apiRequest<{ message: string }>("/auth/logout", "POST", {
+      data: { logout: true },
+    });
   },
 };
 

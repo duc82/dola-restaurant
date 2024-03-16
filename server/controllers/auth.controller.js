@@ -3,9 +3,8 @@ const crypto = require("crypto");
 const User = require("../models/user.model");
 const CustomError = require("../utils/error.util");
 const verifyGoogleToken = require("../utils/verifyGoogleToken.util");
-const { verifyJwtToken } = require("../utils/jwt.util");
 const Token = require("../models/token.model");
-const { default: mongoose } = require("mongoose");
+const mongoose = require("mongoose");
 const AuthService = require("../services/auth.service");
 const UserService = require("../services/user.service");
 require("dotenv").config();
@@ -102,53 +101,18 @@ class AuthController {
   }
 
   async login(req, res) {
-    const user = await User.findOne({
-      email: req.body.email,
-    }).populate("addresses");
-
-    const isCorrectPassword = await user?.comparePassword(req.body.password);
-
-    if (!user || !isCorrectPassword) {
-      throw new CustomError({
-        message: "Email hoặc mật khẩu không hợp lệ",
-        status: 400,
-      });
-    }
-
     const ipAddress =
       req.headers["x-forwarded-for"] || req.connection.remoteAddress;
-
-    user.ipAddress = ipAddress;
-
-    await user.save();
-
-    const userPayload = {
-      userId: user._id,
-      role: user.role,
-    };
-
-    const accessToken = await this.authService.attachCookieToResponse({
-      res,
-      name: "accessToken",
-      payload: userPayload,
-      tokenExpires: this.accessTokenExpiresIn,
-    });
-    const refreshToken = await this.authService.attachCookieToResponse({
-      res,
-      name: "refreshToken",
-      payload: userPayload,
-      tokenExpires: this.refreshTokenExpiresIn,
-    });
-
-    res.cookie("isLoggedIn", true, {
-      secure: true,
-      sameSite: "None",
-      maxAge: this.refreshTokenExpiresIn,
-    });
-
-    const { password, ...data } = user.toObject();
-
-    res.status(200).json({ message: "Đăng nhập thành công", user: data });
+    res
+      .status(200)
+      .json(
+        await this.authService.login(
+          req.body.email,
+          req.body.password,
+          ipAddress,
+          res
+        )
+      );
   }
 
   async signUp(req, res) {
@@ -178,24 +142,14 @@ class AuthController {
   }
 
   async logout(_req, res) {
-    res.clearCookie("accessToken");
-    res.clearCookie("refreshToken");
-    res.clearCookie("isLoggedIn");
     res.status(200).json({ message: "Đăng xuất thành công!" });
   }
 
   async refreshToken(req, res) {
     try {
-      const userPayload = await verifyJwtToken(req.cookies.refreshToken);
-
-      await this.authService.attachCookieToResponse({
-        res,
-        name: "accessToken",
-        payload: userPayload,
-        tokenExpires: this.accessTokenExpiresIn,
-      });
-
-      res.status(200).json({ message: "Refresh token thành công" });
+      res
+        .status(200)
+        .json(await this.authService.refreshToken(req.body.refreshToken));
     } catch (error) {
       res.status(400).json({ message: error.message });
     }
