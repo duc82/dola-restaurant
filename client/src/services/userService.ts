@@ -54,6 +54,12 @@ const userService = {
     });
   },
 
+  update: (id: string, data: Partial<User>) => {
+    return apiRequest<UserResponse>(`/users/update/${id}`, "PUT", data, {
+      refreshToken: true,
+    });
+  },
+
   changePassword: (data: { oldPassword: string; newPassword: string }) => {
     return apiRequest<UserResponse>("/users/changePassword", "POST", data, {
       refreshToken: true,

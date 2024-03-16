@@ -40,6 +40,19 @@ export const createUser = createAsyncThunk<UserResponse, User, RejectValue>(
   }
 );
 
+export const updateUser = createAsyncThunk<
+  UserResponse,
+  { id: string; data: Partial<User> },
+  RejectValue
+>("user/updateUser", async ({ id, data }, thunkApi) => {
+  try {
+    const response = await userService.update(id, data);
+    return response;
+  } catch (error) {
+    return thunkApi.rejectWithValue(handlingAxiosError(error));
+  }
+});
+
 export const deleteUser = createAsyncThunk<
   { message: string; id: string },
   string,
@@ -99,6 +112,16 @@ const userSlice = createSlice({
 
       if (state.users.length > state.limit) {
         state.users.pop();
+      }
+    });
+
+    builder.addCase(updateUser.fulfilled, (state, { payload }) => {
+      const index = state.users.findIndex(
+        (user) => user._id === payload.user._id
+      );
+
+      if (index !== -1) {
+        state.users[index] = payload.user;
       }
     });
 

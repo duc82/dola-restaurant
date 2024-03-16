@@ -15,6 +15,7 @@ import formatDate from "@/utils/formatDate";
 import CreateModal from "@/components/Admin/User/CreateModal";
 import toast from "react-hot-toast";
 import handlingAxiosError from "@/utils/handlingAxiosError";
+import UpdateModal from "@/components/Admin/User/UpdateModal";
 
 const title = "Quản lý người dùng";
 
@@ -62,7 +63,7 @@ const User = () => {
   };
 
   useEffect(() => {
-    const limit = 12;
+    const limit = 3;
     const query = urlSearchParams.toString();
     dispatch(getAllUser({ query, limit }));
   }, [dispatch, urlSearchParams]);
@@ -148,7 +149,9 @@ const User = () => {
               <th scope="col" className="px-2 py-4">
                 Vai trò
               </th>
-
+              <th scope="col" className="px-2 py-4">
+                Địa chỉ IP
+              </th>
               <th scope="col" className="px-2 py-4">
                 Ngày tạo
               </th>
@@ -183,6 +186,7 @@ const User = () => {
                 <td className="px-2 py-4 capitalize">
                   {user.role === "user" ? "Người dùng" : user.role}
                 </td>
+                <td className="px-2 py-4">{user.ipAddress}</td>
                 <td className="px-2 py-4">{formatDate(user.createdAt)}</td>
                 <td className="px-2 py-4 whitespace-nowrap space-x-2.5">
                   <button
@@ -223,6 +227,7 @@ const User = () => {
       )}
 
       <CreateModal onClose={closeModal} show={activeModal.create} />
+      <UpdateModal onClose={closeModal} show={activeModal.update} id={id} />
 
       <DeleteModal
         show={activeModal.delete}

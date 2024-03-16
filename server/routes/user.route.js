@@ -3,13 +3,13 @@ const userController = require("../controllers/user.controller");
 const validation = require("../middlewares/validation.middleware");
 const UserDto = require("../dtos/user.dto");
 const authorization = require("../middlewares/authorization.middleware");
-const authenticationMiddleware = require("../middlewares/authentication.middleware");
+const authentication = require("../middlewares/authentication.middleware");
 
 const userDto = new UserDto();
 
 const router = Router();
 
-router.get("/current", authenticationMiddleware, userController.getCurrent);
+router.get("/current", authentication, userController.getCurrent);
 router.get("/", userController.getAll);
 
 router.post(
@@ -21,7 +21,7 @@ router.post(
 
 router.put(
   "/update/current",
-  authenticationMiddleware,
+  authentication,
   validation.validateDto(userDto.updateCurrent),
   userController.updateCurrent
 );
@@ -29,13 +29,13 @@ router.put(
 router.put(
   "/update/:id",
   authorization,
-  validation.validateDto(userDto.update),
+  validation.validateParams(userDto.getById),
   userController.update
 );
 
 router.post(
   "/changePassword",
-  authenticationMiddleware,
+  authentication,
   validation.validateDto(userDto.changePassword),
   userController.changePassword
 );

@@ -47,7 +47,7 @@ const CreateModal = ({ show, onClose }: CreateModalProps) => {
             type="text"
             label="Họ và tên"
             name="fullName"
-            id="fullName"
+            id="createFullName"
             autoComplete="off"
             placeholder="Dola"
             value={formik.values.fullName}
@@ -58,7 +58,7 @@ const CreateModal = ({ show, onClose }: CreateModalProps) => {
             type="text"
             label="Email"
             name="email"
-            id="email"
+            id="createEmail"
             autoComplete="off"
             placeholder="example@gmail.com"
             value={formik.values.email}
@@ -69,7 +69,7 @@ const CreateModal = ({ show, onClose }: CreateModalProps) => {
             type="text"
             label="Số điện thoại"
             name="phone"
-            id="phone"
+            id="createPhone"
             autoComplete="off"
             placeholder="0123456789"
             value={formik.values.phone}
@@ -80,7 +80,7 @@ const CreateModal = ({ show, onClose }: CreateModalProps) => {
             type="password"
             label="Mật khẩu"
             name="password"
-            id="password"
+            id="createPassword"
             autoComplete="off"
             placeholder="********"
             value={formik.values.password}
@@ -89,13 +89,13 @@ const CreateModal = ({ show, onClose }: CreateModalProps) => {
           />
           <Select
             label="Vai trò"
-            id="role"
+            id="createRole"
             name="role"
             value={formik.values.role}
             onChange={formik.handleChange}
             wrapperClassName="col-span-2"
           >
-            <Select.Option value="user">User</Select.Option>
+            <Select.Option value="user">Người dùng</Select.Option>
             <Select.Option value="admin">Admin</Select.Option>
           </Select>
         </Modal.Body>

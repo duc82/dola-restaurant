@@ -32,7 +32,7 @@ class UserService {
 
   async updateUser(id, update) {
     const user = await User.findByIdAndUpdate(id, update, { new: true }).select(
-      "-password -passwordResetToken -passwordResetTokenExpirationAt"
+      "-password"
     );
     return user;
   }
@@ -212,9 +212,7 @@ class UserService {
   }
 
   async deleteMany(ids, userId) {
-    const users = await User.find({ _id: { $in: ids } }).select(
-      "-password -passwordResetToken -passwordResetTokenExpirationAt"
-    );
+    const users = await User.find({ _id: { $in: ids } }).select("-password");
 
     if (!users.length) {
       throw new CustomError({

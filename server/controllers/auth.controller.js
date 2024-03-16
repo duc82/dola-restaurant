@@ -115,6 +115,13 @@ class AuthController {
       });
     }
 
+    const ipAddress =
+      req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+
+    user.ipAddress = ipAddress;
+
+    await user.save();
+
     const userPayload = {
       userId: user._id,
       role: user.role,
@@ -157,7 +164,10 @@ class AuthController {
       });
     }
 
-    const user = await User.create(req.body);
+    const ipAddress =
+      req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+
+    const user = await User.create({ ...req.body, ipAddress });
 
     const { password, ...data } = user.toObject();
 
@@ -167,7 +177,7 @@ class AuthController {
     });
   }
 
-  async logout(req, res) {
+  async logout(_req, res) {
     res.clearCookie("accessToken");
     res.clearCookie("refreshToken");
     res.clearCookie("isLoggedIn");
