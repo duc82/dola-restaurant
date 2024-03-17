@@ -1,11 +1,7 @@
 import { useAppSelector } from "@/store/hooks";
 import NavbarMobileItem from "../Navbar/Mobile/NavbarMobileItem";
 
-interface CategoryProps {
-  title: string;
-}
-
-const Category = ({ title }: CategoryProps) => {
+const Category = ({ title }: { title: string }) => {
   const { categories } = useAppSelector((state) => state.category);
 
   return (
@@ -14,7 +10,7 @@ const Category = ({ title }: CategoryProps) => {
         {title}
       </h1>
       <nav className="border border-yellow-primary py-2.5 px-4 rounded-b-lg w-full">
-        <ul>
+        {/* <ul>
           {categories.map((category) => (
             <NavbarMobileItem
               category={category}
@@ -23,7 +19,9 @@ const Category = ({ title }: CategoryProps) => {
               linkClassName="text-base py-2"
             />
           ))}
-        </ul>
+        </ul> */}
+
+        <ul></ul>
       </nav>
     </div>
   );

@@ -38,7 +38,12 @@ class UserService {
   }
 
   async getCurrent(userId) {
-    const user = await User.findById(userId).select("-password");
+    const user = await User.findById(userId)
+      .populate({
+        path: "addresses",
+        options: { sort: { isDefault: -1 } },
+      })
+      .select("-password");
 
     if (!user) {
       throw new CustomError({

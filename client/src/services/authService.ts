@@ -50,14 +50,20 @@ const authService = {
   },
 
   refreshToken: () => {
-    return apiRequest<{ message: string }>("/auth/refreshToken", "POST", {
-      data: { refreshToken: true },
-    });
+    return apiRequest<{ message: string; accessToken: string }>(
+      "/auth/refreshToken",
+      "POST",
+      {
+        data: { refreshToken: true },
+        withCredentials: true,
+      }
+    );
   },
 
   logout: () => {
     return apiRequest<{ message: string }>("/auth/logout", "POST", {
       data: { logout: true },
+      withCredentials: true,
     });
   },
 };

@@ -1,11 +1,10 @@
 import { useEffect } from "react";
-import { Navigate, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { getCurrentUser } from "@/store/reducers/userSlice";
 import { resetAuth } from "@/store/reducers/authSlice";
 
 const PrivateLayout = ({ redirect }: { redirect: string }) => {
-  const { accessToken } = useAppSelector((state) => state.auth);
   const { user } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
 
@@ -20,7 +19,7 @@ const PrivateLayout = ({ redirect }: { redirect: string }) => {
     }
   }, [user, dispatch, redirect]);
 
-  return accessToken ? <Outlet /> : <Navigate to={redirect} />;
+  return <Outlet />;
 };
 
 export default PrivateLayout;

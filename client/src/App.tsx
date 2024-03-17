@@ -51,7 +51,7 @@ const App = () => {
     <Routes>
       <Route path="/" element={<RootLayout />}>
         <Route index element={<Home />} />
-        <Route path="/" element={<AuthLayout />}>
+        <Route element={<AuthLayout />}>
           <Route path="dang-nhap" element={<Login />} />
           <Route path="dang-ky" element={<SignUp />} />
           <Route
@@ -60,7 +60,7 @@ const App = () => {
           />
         </Route>
 
-        <Route path="/" element={<PrivateLayout redirect="/dang-nhap" />}>
+        <Route element={<PrivateLayout redirect="/dang-nhap" />}>
           <Route path="tai-khoan" element={<AccountLayout />}>
             <Route index element={<AccountInfo />} />
             <Route path="don-hang" element={<Orders />} />
@@ -68,7 +68,6 @@ const App = () => {
             <Route path="doi-mat-khau" element={<ChangePassword />} />
             <Route path="dia-chi" element={<Address />} />
           </Route>
-
           <Route path="dang-xuat" element={<Logout />} />
         </Route>
 

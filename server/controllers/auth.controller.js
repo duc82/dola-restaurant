@@ -142,17 +142,14 @@ class AuthController {
   }
 
   async logout(_req, res) {
+    res.clearCookie("refreshToken");
     res.status(200).json({ message: "Đăng xuất thành công!" });
   }
 
   async refreshToken(req, res) {
-    try {
-      res
-        .status(200)
-        .json(await this.authService.refreshToken(req.body.refreshToken));
-    } catch (error) {
-      res.status(400).json({ message: error.message });
-    }
+    res
+      .status(200)
+      .json(await this.authService.refreshToken(req.cookies.refreshToken));
   }
 
   async forgotPassword(req, res) {

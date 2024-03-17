@@ -1,5 +1,3 @@
-import { memo } from "react";
-
 interface Checkbox {
   name: string;
   value: string;
@@ -52,4 +50,4 @@ const FilterGroup = ({
   );
 };
 
-export default memo(FilterGroup);
+export default FilterGroup;

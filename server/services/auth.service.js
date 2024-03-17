@@ -73,8 +73,9 @@ class AuthService {
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: true,
       sameSite: "none",
+      maxAge: this.refreshTokenExpiresIn,
     });
 
     delete user.password;
@@ -100,7 +101,6 @@ class AuthService {
 
     return {
       accessToken: newAccessToken,
-      user,
       message: "Refresh token thành công",
     };
   }

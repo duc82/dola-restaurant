@@ -42,7 +42,6 @@ const Login = () => {
         const data = await authService.login(values);
         dispatch(loginSuccess(data.accessToken));
         dispatch(setUser(data.user));
-        window.location.replace("/tai-khoan");
       } catch (error) {
         toast.error(handlingAxiosError(error).message);
       } finally {

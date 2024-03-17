@@ -1,0 +1,27 @@
+[
+  {
+    "id": 1,
+    "name": "Trang chủ",
+    "slug": "trang-chu"
+  },
+  {
+    "id": 2,
+    "name": "Giới thiệu",
+    "slug": "gioi-thieu"
+  },
+  {
+    "id": 3,
+    "name": "Menu",
+    "slug": "san-pham"
+  },
+  {
+    "id": 4,
+    "name": "Tin tức",
+    "slug": "tin-tuc"
+  },
+  {
+    "id": 5,
+    "name": "Liên hệ",
+    "slug": "lien-he"
+  }
+]

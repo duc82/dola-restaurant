@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import Container from "../components/Container";
-import Breadcrumb from "../components/Breadcrumb";
+import Breadcrumb from "../components/Breadcrumb/index";
 import Sort from "../components/ProductCategory/Sort";
 import FilterGroup from "../components/ProductCategory/FilterGroup";
 import Pagination from "../components/Pagination";
@@ -13,9 +13,10 @@ import { getAllProduct } from "@/store/reducers/productSlice";
 import { Helmet } from "react-helmet-async";
 import SelectedFilter from "../components/ProductCategory/SelectedFilter";
 import cn from "../utils/cn";
-import Products from "../components/Product/ProductList";
 import classNames from "classnames";
+import Products from "../components/Product/ProductList";
 
+// ???
 const queryArray = (
   urlSearchParams: URLSearchParams,
   name: string
@@ -27,14 +28,11 @@ const queryArray = (
   return [];
 };
 
-export const productListLimit = 8;
-
 const ProductList = () => {
+  const dispatch = useAppDispatch();
   const topProductsRef = useRef<HTMLDivElement>(null);
   const { category } = useParams();
-
   const [urlSearchParams, setUrlSearchParams] = useSearchParams();
-
   const [selectedFilter, setSelectedFilter] = useState<
     Record<string, string[]>
   >({
@@ -43,6 +41,8 @@ const ProductList = () => {
     size: queryArray(urlSearchParams, "size"),
   });
   const [isActiveFilterMobile, setIsActiveFilterMobile] = useState(false);
+  const { products, total, limit } = useAppSelector((state) => state.product);
+  const page = parseInt(urlSearchParams.get("page") ?? "1");
 
   const updateSelectedFilter = useCallback(
     (value: string, name: string) => {
@@ -78,14 +78,8 @@ const ProductList = () => {
     setUrlSearchParams();
   };
 
-  const dispatch = useAppDispatch();
-
-  const { products, total, limit } = useAppSelector((state) => state.product);
-
   const toggelFilterMobile = () =>
     setIsActiveFilterMobile(!isActiveFilterMobile);
-
-  const page = parseInt(urlSearchParams.get("page") ?? "1");
 
   const handlePageChange = (page: number) => {
     urlSearchParams.set("page", page.toString());
@@ -101,27 +95,29 @@ const ProductList = () => {
       getAllProduct({
         category: category === "tat-ca-san-pham" ? undefined : category,
         query,
-        limit: productListLimit,
+        limit: 12,
       })
     );
   }, [urlSearchParams, category, dispatch]);
 
   const pageCount = limit > 0 ? Math.ceil(total / limit) : 0;
 
-  const title = products[0]?.childCategory.name;
-
   const isCategoryAllProduct = category === "tat-ca-san-pham";
+
+  const title = isCategoryAllProduct
+    ? "Tất cả sản phẩm"
+    : products[0]?.childCategory.name;
 
   return (
     <>
       <Helmet>
-        <title>{isCategoryAllProduct ? "Tất cả sản phẩm" : title}</title>
+        <title>{title}</title>
       </Helmet>
-      <Breadcrumb
-        breadcrumbs={[
-          { name: isCategoryAllProduct ? "Tất cả sản phẩm" : title },
-        ]}
-      />
+
+      <Breadcrumb>
+        <Breadcrumb.Item href="/">Trang chủ</Breadcrumb.Item>
+        <Breadcrumb.Item active>{title}</Breadcrumb.Item>
+      </Breadcrumb>
 
       <Container className="block lg:flex relative" ref={topProductsRef}>
         <aside

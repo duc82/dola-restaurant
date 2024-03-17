@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import sorts from "../../data/sorts.json";
-import cn from "../../utils/cn";
+import sorts from "@/data/sorts.json";
+import cn from "@/utils/cn";
 
 interface ISort {
   value: string;
@@ -52,7 +52,7 @@ const Sort = () => {
   return (
     <div className="flex items-center justify-between bg-yellow-primary text-white mb-5 pl-2.5 rounded-md lg:float-right lg:w-1/4">
       <label htmlFor="sortBy" className="font-bold leading-[30px] w-1/2">
-        Sắp xếp theo:{" "}
+        Sắp xếp theo:
       </label>
       <div
         ref={ref}

@@ -1,6 +1,7 @@
-import axios, { AxiosError, AxiosRequestConfig } from "axios";
+import axios, { AxiosError } from "axios";
 import authService from "./authService";
 import { ToolkitStore } from "@reduxjs/toolkit/dist/configureStore";
+import { loginSuccess } from "@/store/reducers/authSlice";
 
 const API_BASE_URL: string | undefined = import.meta.env.VITE_API;
 
@@ -11,7 +12,6 @@ if (!API_BASE_URL) {
 interface Option {
   data?: any;
   refreshToken?: boolean;
-  headers?: AxiosRequestConfig["headers"];
   withCredentials?: boolean;
 }
 
@@ -32,18 +32,16 @@ export default async function apiRequest<T>(
 ): Promise<T> {
   // Auto refresh token when token expired
   if (options?.refreshToken) {
-    options.withCredentials = true;
-
     api.interceptors.response.use(
       (res) => res,
       async (error: AxiosError) => {
         if (error.response?.status === 401) {
           try {
-            await authService.refreshToken();
-            return api(error.config!);
+            const { accessToken } = await authService.refreshToken();
+            store.dispatch(loginSuccess(accessToken));
+            return api<T>(error.config!);
           } catch (error) {
             await authService.logout();
-            window.location.href = "/dang-nhap";
             return Promise.reject(error);
           }
         }
@@ -65,7 +63,6 @@ export default async function apiRequest<T>(
     method,
     url: endpoint,
     data: options?.data,
-    headers: options?.headers,
     withCredentials: options?.withCredentials,
   });
 

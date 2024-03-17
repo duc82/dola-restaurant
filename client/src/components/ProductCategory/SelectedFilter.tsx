@@ -1,6 +1,5 @@
 import { Close } from "../../icons";
 import filter from "../../data/filter.json";
-import { memo } from "react";
 
 const SelectedFilter = ({
   selected,
@@ -76,4 +75,4 @@ const SelectedFilter = ({
   );
 };
 
-export default memo(SelectedFilter);
+export default SelectedFilter;
