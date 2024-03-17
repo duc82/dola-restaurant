@@ -34,32 +34,29 @@ const addressService = {
   },
 
   getCurrent: async () => {
-    return apiRequest<FullAddress[]>("addresses/current", "GET", null, {
+    return apiRequest<FullAddress[]>("addresses/current", "GET", {
       refreshToken: true,
     });
   },
 
   create: (data: Address) => {
-    return apiRequest<AddressResponse>("addresses/create", "POST", data, {
+    return apiRequest<AddressResponse>("addresses/create", "POST", {
       refreshToken: true,
+      data,
     });
   },
 
   update: (id: string, data: Address) => {
-    return apiRequest<AddressResponse>(`addresses/update/${id}`, "PUT", data, {
+    return apiRequest<AddressResponse>(`addresses/update/${id}`, "PUT", {
       refreshToken: true,
+      data,
     });
   },
 
   deleteOne: (id: string) => {
-    return apiRequest<{ message: string }>(
-      `addresses/delete/${id}`,
-      "DELETE",
-      null,
-      {
-        refreshToken: true,
-      }
-    );
+    return apiRequest<{ message: string }>(`addresses/delete/${id}`, "DELETE", {
+      refreshToken: true,
+    });
   },
 };
 

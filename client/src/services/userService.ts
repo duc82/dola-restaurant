@@ -33,18 +33,12 @@ const userService = {
 
     return apiRequest<UsersResponse>(endpoint, "GET", {
       refreshToken: true,
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
     });
   },
 
   getCurrent: () => {
     return apiRequest<FullUser>("/users/current", "GET", {
       refreshToken: true,
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
     });
   },
 
@@ -56,43 +50,37 @@ const userService = {
   },
 
   updateCurrent: (data: UserUpdateCurrentDTO) => {
-    return apiRequest<UserResponse>("/users/update/current", "PUT", data, {
+    return apiRequest<UserResponse>("/users/update/current", "PUT", {
       refreshToken: true,
+      data,
     });
   },
 
   update: (id: string, data: Partial<User>) => {
-    return apiRequest<UserResponse>(`/users/update/${id}`, "PUT", data, {
+    return apiRequest<UserResponse>(`/users/update/${id}`, "PUT", {
       refreshToken: true,
+      data,
     });
   },
 
   changePassword: (data: { oldPassword: string; newPassword: string }) => {
-    return apiRequest<UserResponse>("/users/changePassword", "POST", data, {
+    return apiRequest<UserResponse>("/users/changePassword", "POST", {
       refreshToken: true,
+      data,
     });
   },
 
   delete: (id: string) => {
-    return apiRequest<{ message: string }>(
-      `/users/delete/${id}`,
-      "DELETE",
-      null,
-      {
-        refreshToken: true,
-      }
-    );
+    return apiRequest<{ message: string }>(`/users/delete/${id}`, "DELETE", {
+      refreshToken: true,
+    });
   },
 
   deleteMany: (ids: string[]) => {
-    return apiRequest<{ message: string }>(
-      "/users/delete-many",
-      "DELETE",
-      { ids },
-      {
-        refreshToken: true,
-      }
-    );
+    return apiRequest<{ message: string }>("/users/delete-many", "DELETE", {
+      refreshToken: true,
+      data: { ids },
+    });
   },
 };
 

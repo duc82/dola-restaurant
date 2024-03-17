@@ -16,7 +16,11 @@ const authService = {
   },
 
   login: (data: LoginDTO) => {
-    return apiRequest<UserResponse>("/auth/login", "POST", { data });
+    return apiRequest<UserResponse & { accessToken: string }>(
+      "/auth/login",
+      "POST",
+      { data, withCredentials: true }
+    );
   },
 
   signUp: (data: SignUpDTO) => {

@@ -4,19 +4,19 @@ import { resetAuth } from "../../store/reducers/authSlice";
 import authService from "@/services/authService";
 
 const AccountDropdown = () => {
-  const { isLoggedIn } = useAppSelector((state) => state.auth);
+  const { accessToken } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
 
   const handleLogout = () => {
     authService.logout().then(() => {
       dispatch(resetAuth());
-      window.location.href = "/dang-nhap";
+      window.location.replace("/dang-nhap");
     });
   };
 
   return (
     <ul className="transition-[visibility,opacity,transform] bg-white duration-300 rounded-lg p-2.5 absolute top-full right-0 min-w-[196px] z-10 opacity-0 invisible scale-95 group-hover:opacity-100 group-hover:visible group-hover:scale-100 text-white will-change-transform shadow-dropdown">
-      {!isLoggedIn && (
+      {!accessToken && (
         <>
           <li className="mb-2.5">
             <Link
@@ -39,7 +39,7 @@ const AccountDropdown = () => {
         </>
       )}
 
-      {isLoggedIn && (
+      {accessToken && (
         <>
           <li className="mb-2.5">
             <Link

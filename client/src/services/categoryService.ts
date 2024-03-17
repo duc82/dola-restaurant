@@ -7,30 +7,23 @@ const categoryService = {
   },
 
   create: (formData: FormData) => {
-    return apiRequest<CategoryResponse>(
-      "/categories/create",
-      "POST",
-      formData,
-      { refreshToken: true }
-    );
+    return apiRequest<CategoryResponse>("/categories/create", "POST", {
+      refreshToken: true,
+      data: formData,
+    });
   },
 
   update: (id: string, formData: FormData) => {
-    return apiRequest<CategoryResponse>(
-      `/categories/update/${id}`,
-      "PUT",
-      formData,
-      {
-        refreshToken: true,
-      }
-    );
+    return apiRequest<CategoryResponse>(`/categories/update/${id}`, "PUT", {
+      refreshToken: true,
+      data: formData,
+    });
   },
 
   delete: (id: string) => {
     return apiRequest<{ message: string }>(
       `/categories/delete/${id}`,
       "DELETE",
-      null,
       {
         refreshToken: true,
       }
@@ -41,9 +34,9 @@ const categoryService = {
     return apiRequest<{ message: string }>(
       "/categories/delete-many",
       "DELETE",
-      { ids },
       {
         refreshToken: true,
+        data: { ids },
       }
     );
   },

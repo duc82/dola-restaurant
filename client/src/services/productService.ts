@@ -35,31 +35,23 @@ const productService = {
   },
 
   create: (formData: FormData) => {
-    return apiRequest<ProductResponse>("/products/create", "POST", formData, {
+    return apiRequest<ProductResponse>("/products/create", "POST", {
       refreshToken: true,
+      data: formData,
     });
   },
 
   update: (id: string, formData: FormData) => {
-    return apiRequest<ProductResponse>(
-      `/products/update/${id}`,
-      "PUT",
-      formData,
-      {
-        refreshToken: true,
-      }
-    );
+    return apiRequest<ProductResponse>(`/products/update/${id}`, "PUT", {
+      refreshToken: true,
+      data: formData,
+    });
   },
 
   delete: (id: string) => {
-    return apiRequest<{ message: string }>(
-      `/products/delete/${id}`,
-      "DELETE",
-      null,
-      {
-        refreshToken: true,
-      }
-    );
+    return apiRequest<{ message: string }>(`/products/delete/${id}`, "DELETE", {
+      refreshToken: true,
+    });
   },
 };
 

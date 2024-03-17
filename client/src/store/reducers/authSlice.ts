@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 export interface AuthState {
   isLoading: boolean;
@@ -21,8 +21,8 @@ const authSlice = createSlice({
       state.isLoading = false;
     },
 
-    loginSuccess: (state, { payload }) => {
-      state.accessToken = payload.accessToken;
+    loginSuccess: (state, { payload }: PayloadAction<string>) => {
+      state.accessToken = payload;
     },
 
     resetAuth: () => initialState,

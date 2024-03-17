@@ -35,7 +35,8 @@ app.use((req, res, next) => {
 
   res.header({
     "Access-Control-Allow-Credentials": true,
-    "Access-Control-Allow-Headers": "origin, content-type, accept",
+    "Access-Control-Allow-Headers":
+      "authorization, origin, content-type, accept",
     "Access-Control-Allow-Methods":
       "GET, PUT, PATCH, POST, DELETE, HEAD, OPTIONS",
   });
@@ -46,13 +47,7 @@ app.use((req, res, next) => {
 app.use(cookieParser());
 
 // Static files
-app.use(
-  "/",
-  express.static("public", {
-    cacheControl: true,
-    maxAge: 3600000,
-  })
-);
+app.use("/", express.static("public"));
 
 app.get("/", (req, res) => {
   res.send("Dola Restaurant API");

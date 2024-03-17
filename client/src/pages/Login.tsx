@@ -1,6 +1,6 @@
-import Breadcrumb from "../components/Breadcrumb";
+import Breadcrumb from "../components/Breadcrumb/index";
 import Container from "../components/Container";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useFormik } from "formik";
 import FacebookLogin from "../components/Login/FacebookLogin";
 import GoogleLogin from "../components/Login/GoogleLogin";
@@ -28,7 +28,6 @@ const title = "Đăng nhập tài khoản";
 const Login = () => {
   const [isActiveForgotPassword, setActiveForgotPassword] = useState(false);
   const { isLoading } = useAppSelector((state) => state.auth);
-  const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
   const formik = useFormik<LoginDTO>({
@@ -41,9 +40,9 @@ const Login = () => {
       dispatch(authStart());
       try {
         const data = await authService.login(values);
-        dispatch(loginSuccess());
+        dispatch(loginSuccess(data.accessToken));
         dispatch(setUser(data.user));
-        navigate("/tai-khoan");
+        window.location.replace("/tai-khoan");
       } catch (error) {
         toast.error(handlingAxiosError(error).message);
       } finally {
@@ -58,13 +57,10 @@ const Login = () => {
       <Helmet>
         <title>{title}</title>
       </Helmet>
-      <Breadcrumb
-        breadcrumbs={[
-          {
-            name: title,
-          },
-        ]}
-      />
+      <Breadcrumb>
+        <Breadcrumb.Item href="/">Trang chủ</Breadcrumb.Item>
+        <Breadcrumb.Item active>{title}</Breadcrumb.Item>
+      </Breadcrumb>
       <Container className="px-0">
         <div className="p-6 bg-white/[0.06] rounded-lg md:max-w-[50%] xl:max-w-[35%] mx-auto mb-10">
           <ul className="flex w-full h-[50px] mb-[30px]">

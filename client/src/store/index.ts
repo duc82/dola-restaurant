@@ -11,6 +11,7 @@ import {
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import rootReducer from "./reducers";
+import { injectStore } from "@/services/api";
 
 const persistConfig = {
   key: "root",
@@ -31,6 +32,8 @@ export const store = configureStore({
       },
     }),
 });
+
+injectStore(store);
 
 export const persistor = persistStore(store);
 

@@ -12,6 +12,9 @@ const verify = util.promisify(jwt.verify);
 class AuthService {
   constructor() {
     this.userService = new UserService();
+    this.origin = process.env.ORIGIN_CLIENT;
+    this.accessTokenExpiresIn = process.env.ACCESS_TOKEN_EXPIRES_IN;
+    this.refreshTokenExpiresIn = process.env.REFRESH_TOKEN_EXPIRES_IN;
   }
 
   async verifyFacebookToken(accessToken) {

@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import authService from "./authService";
+import { ToolkitStore } from "@reduxjs/toolkit/dist/configureStore";
 
 const API_BASE_URL: string | undefined = import.meta.env.VITE_API;
 
@@ -11,7 +12,14 @@ interface Option {
   data?: any;
   refreshToken?: boolean;
   headers?: AxiosRequestConfig["headers"];
+  withCredentials?: boolean;
 }
+
+let store: ToolkitStore;
+
+export const injectStore = (s: ToolkitStore) => {
+  store = s;
+};
 
 const api = axios.create({
   baseURL: API_BASE_URL + "/api/v1",
@@ -24,6 +32,8 @@ export default async function apiRequest<T>(
 ): Promise<T> {
   // Auto refresh token when token expired
   if (options?.refreshToken) {
+    options.withCredentials = true;
+
     api.interceptors.response.use(
       (res) => res,
       async (error: AxiosError) => {
@@ -43,11 +53,20 @@ export default async function apiRequest<T>(
     );
   }
 
+  api.interceptors.request.use((config) => {
+    const accessToken = store.getState().auth.accessToken;
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
+    }
+    return config;
+  });
+
   const res = await api<T>({
     method,
     url: endpoint,
     data: options?.data,
     headers: options?.headers,
+    withCredentials: options?.withCredentials,
   });
 
   return res.data;

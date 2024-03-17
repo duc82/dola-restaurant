@@ -12,8 +12,9 @@ const voucherService = {
   },
 
   create: (data: Voucher) => {
-    return apiRequest<VoucherResponse>("/vouchers/create", "POST", data, {
+    return apiRequest<VoucherResponse>("/vouchers/create", "POST", {
       refreshToken: true,
+      data,
     });
   },
 
@@ -22,31 +23,23 @@ const voucherService = {
   },
 
   update: (id: string, data: Voucher) => {
-    return apiRequest<VoucherResponse>(`/vouchers/update/${id}`, "PUT", data, {
+    return apiRequest<VoucherResponse>(`/vouchers/update/${id}`, "PUT", {
       refreshToken: true,
+      data,
     });
   },
 
   delete: (id: string) => {
-    return apiRequest<{ message: string }>(
-      `/vouchers/delete/${id}`,
-      "DELETE",
-      null,
-      {
-        refreshToken: true,
-      }
-    );
+    return apiRequest<{ message: string }>(`/vouchers/delete/${id}`, "DELETE", {
+      refreshToken: true,
+    });
   },
 
   deleteMany: (ids: string[]) => {
-    return apiRequest<{ message: string }>(
-      "/vouchers/delete-many",
-      "DELETE",
-      { ids },
-      {
-        refreshToken: true,
-      }
-    );
+    return apiRequest<{ message: string }>("/vouchers/delete-many", "DELETE", {
+      refreshToken: true,
+      data: { ids },
+    });
   },
 };
 

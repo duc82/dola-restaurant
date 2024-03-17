@@ -4,7 +4,6 @@ import Header from "../components/Admin/Header";
 import Sidebar from "../components/Admin/Sidebar";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { getCurrentUser } from "@/store/reducers/userSlice";
-import authService from "@/services/authService";
 import { resetAuth } from "@/store/reducers/authSlice";
 
 const AdminLayout = () => {
@@ -18,10 +17,8 @@ const AdminLayout = () => {
       dispatch(getCurrentUser())
         .unwrap()
         .catch(() => {
-          authService.logout().then(() => {
-            dispatch(resetAuth());
-            navigate("/dang-nhap");
-          });
+          dispatch(resetAuth());
+          navigate("/dang-nhap");
         });
     } else {
       if (user.role !== "admin") {
