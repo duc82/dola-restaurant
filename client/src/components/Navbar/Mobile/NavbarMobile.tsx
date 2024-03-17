@@ -15,7 +15,7 @@ interface NavbarProps {
 }
 
 const Navbar = ({ active, onClose }: NavbarProps) => {
-  const { isLoggedIn } = useAppSelector((state) => state.auth);
+  const { accessToken } = useAppSelector((state) => state.auth);
   const { categories } = useAppSelector((state) => state.category);
   const dispatch = useAppDispatch();
   const [isOpenDropdown, setIsOpenDropdown] = useState(false);
@@ -136,7 +136,7 @@ const Navbar = ({ active, onClose }: NavbarProps) => {
             />
           ))} */}
 
-          {!isLoggedIn && (
+          {!accessToken && (
             <>
               <li>
                 <Link
@@ -161,7 +161,7 @@ const Navbar = ({ active, onClose }: NavbarProps) => {
             </>
           )}
 
-          {isLoggedIn && (
+          {accessToken && (
             <>
               <li>
                 <Link
