@@ -7,7 +7,7 @@ import userService from "@/services/userService";
 import { setUser } from "@/store/reducers/userSlice";
 
 const CheckoutLayout = () => {
-  const { isLoggedIn } = useAppSelector((state) => state.auth);
+  const { accessToken } = useAppSelector((state) => state.auth);
   const { user } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
 
@@ -24,7 +24,7 @@ const CheckoutLayout = () => {
     }
   }, [user, dispatch]);
 
-  if (!isLoggedIn) return <Navigate to="/dang-nhap" />;
+  if (!accessToken) return <Navigate to="/dang-nhap" />;
 
   return (
     <div className="bg-white text-[rgb(51,51,51)]">
