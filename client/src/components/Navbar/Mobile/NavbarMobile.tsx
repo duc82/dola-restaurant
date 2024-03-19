@@ -5,9 +5,8 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import authService from "@/services/authService";
 import { resetAuth } from "@/store/reducers/authSlice";
 import Overlay from "@/components/Overlay";
-import { useState } from "react";
-import { Minus, Plus } from "@/icons";
-import NavbarDropdown from "./NavbarDropdown";
+import menus from "@/data/menus.json";
+import NavbarMobileItem from "./NavbarMobileItem";
 
 interface NavbarProps {
   active: boolean;
@@ -16,22 +15,14 @@ interface NavbarProps {
 
 const Navbar = ({ active, onClose }: NavbarProps) => {
   const { accessToken } = useAppSelector((state) => state.auth);
-  const { categories } = useAppSelector((state) => state.category);
   const dispatch = useAppDispatch();
-  const [isOpenDropdown, setIsOpenDropdown] = useState(false);
-
-  const toggleDropdown = () => setIsOpenDropdown(!isOpenDropdown);
 
   const handleLogout = () => {
     authService.logout().then(() => {
       dispatch(resetAuth());
-      window.location.href = "/dang-nhap";
+      window.location.replace("/dang-nhap");
     });
   };
-
-  const parentCategories = categories.filter(
-    (category) => !category.parentCategory
-  );
 
   const activeClasses = active
     ? "translate-x-0 visible"
@@ -61,80 +52,17 @@ const Navbar = ({ active, onClose }: NavbarProps) => {
               />
             </Link>
           </li>
-          <li className="flex items-center justify-between w-full hover:text-yellow-primary">
-            <Link
-              to="/"
-              className="flex items-center w-full leading-9 pl-2.5"
-              title="Trang chủ"
-            >
-              Trang chủ
-            </Link>
-          </li>
-          <li className="flex items-center justify-between w-full hover:text-yellow-primary">
-            <Link
-              to="/gioi-thieu"
-              className="flex items-center w-full leading-9 pl-2.5"
-              title="Giới thiệu"
-            >
-              Giới thiệu
-            </Link>
-          </li>
 
-          <li>
-            <div className="flex items-center justify-between w-full hover:text-yellow-primary">
-              <Link
-                to="/danh-muc-san-pham/tat-ca-san-pham"
-                className="flex items-center w-full leading-9 pl-2.5"
-                title="Menu"
-              >
-                Menu
-              </Link>
-              <button
-                type="button"
-                title={isOpenDropdown ? "Đóng" : "Mở"}
-                onClick={toggleDropdown}
-                className="p-2.5"
-              >
-                {isOpenDropdown ? (
-                  <Minus className="w-4 h-4" />
-                ) : (
-                  <Plus className="w-4 h-4" />
-                )}
-              </button>
-            </div>
-            <NavbarDropdown
-              dropdowns={parentCategories}
-              active={isOpenDropdown}
-              depthLevel={1}
-            />
-          </li>
-
-          <li className="flex items-center justify-between w-full hover:text-yellow-primary">
-            <Link
-              to="/tin-tuc"
-              className="flex items-center w-full leading-9 pl-2.5"
-              title="Tin tức"
-            >
-              Tin tức
-            </Link>
-          </li>
-          <li className="flex items-center justify-between w-full hover:text-yellow-primary">
-            <Link
-              to="/lien-he"
-              className="flex items-center w-full leading-9 pl-2.5"
-              title="Liên hệ"
-            >
-              Liên hệ
-            </Link>
-          </li>
-          {/* {parentCategories.map((category) => (
+          {menus.map((menu) => (
             <NavbarMobileItem
-              key={category._id}
-              category={category}
-              depthLevel={1}
-              onClose={onClose}
-            />
-          ))} */}
+              key={menu.url}
+              url={menu.url}
+              hasChild={menu.hasChild}
+              title={menu.name}
+            >
+              {menu.name}
+            </NavbarMobileItem>
+          ))}
 
           {!accessToken && (
             <>

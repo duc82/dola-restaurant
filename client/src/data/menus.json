@@ -2,26 +2,27 @@
   {
     "id": 1,
     "name": "Trang chủ",
-    "slug": "trang-chu"
+    "url": "/"
   },
   {
     "id": 2,
     "name": "Giới thiệu",
-    "slug": "gioi-thieu"
+    "url": "/gioi-thieu"
   },
   {
     "id": 3,
     "name": "Menu",
-    "slug": "san-pham"
+    "url": "/danh-muc-san-pham/tat-ca-san-pham",
+    "hasChild": true
   },
   {
     "id": 4,
     "name": "Tin tức",
-    "slug": "tin-tuc"
+    "url": "/tin-tuc"
   },
   {
     "id": 5,
     "name": "Liên hệ",
-    "slug": "lien-he"
+    "url": "/lien-he"
   }
 ]

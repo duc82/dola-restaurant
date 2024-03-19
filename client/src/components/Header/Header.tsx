@@ -3,16 +3,16 @@ import Container from "../Container";
 import { Link, useLocation } from "react-router-dom";
 import { Account, Cart, Geo, MenuBar, Search } from "@/icons";
 import useWindowResize from "@/hooks/useWindowResize";
-import NavbarMobile from "../Navbar/Mobile/NavbarMobile";
 import HeaderSearchMobile from "./HeaderSearchMobile";
 import HeaderSearchDesktop from "./HeaderSearchDesktop";
 import AccountDropdown from "./AccountDropdown";
 import HeaderCart from "./HeaderCart";
-import Menu from "../Navbar/Desktop/Menu";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import cn from "@/utils/cn";
 import categoryService from "@/services/categoryService";
 import { setCategories } from "@/store/reducers/categorySlice";
+import Menu from "../Navbar/Desktop/Menu";
+import NavbarMobile from "../Navbar/Mobile/NavbarMobile";
 
 const Header = () => {
   const [isActiveNavbar, setIsActiveNavbar] = useState(false);
@@ -70,6 +70,7 @@ const Header = () => {
           </div>
           {/* Menu */}
           {isDesktop && <Menu />}
+
           {/* Navbar Mobile */}
           {!isDesktop && (
             <NavbarMobile active={isActiveNavbar} onClose={closeNavbar} />

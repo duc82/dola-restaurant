@@ -1,70 +1,70 @@
-import { useState } from "react";
+import { Minus, Plus } from "@/icons";
 import { Link } from "react-router-dom";
 import NavbarDropdown from "./NavbarDropdown";
-import { Minus, Plus } from "@/icons";
-import cn from "@/utils/cn";
-import { FullCategory } from "@/types/category";
+import { useState } from "react";
 import { useAppSelector } from "@/store/hooks";
 
 interface NavbarItemsProps {
-  category: FullCategory;
-  depthLevel: number;
-  linkClassName?: string;
-  onClose?: () => void;
+  children: React.ReactNode;
+  url: string;
+  title?: string;
+  hasChild?: boolean;
 }
 
 const NavbarMobileItem = ({
-  category,
-  depthLevel,
-  linkClassName,
-  onClose,
+  children,
+  url,
+  title,
+  hasChild,
 }: NavbarItemsProps) => {
+  const [isOpenDropdown, setIsOpenDropdown] = useState(false);
   const { categories } = useAppSelector((state) => state.category);
-  const [isOpen, setIsOpen] = useState(false);
+  const parentCategories = categories.filter((cate) => !cate.parentCategory);
 
-  const levelPadding = depthLevel > 0 ? "pl-2.5" : "";
+  const toggleDropdown = () => setIsOpenDropdown(!isOpenDropdown);
 
-  const toggleOpen = () => setIsOpen(!isOpen);
-
-  const childCategories = categories.filter(
-    (cate) => cate.parentCategory?._id === category._id
-  );
-
-  return (
-    <li>
-      <div className="flex items-center justify-between w-full hover:text-yellow-primary">
-        <Link
-          to={`/danh-muc-san-pham/${category.slug}`}
-          onClick={onClose}
-          className={cn(
-            "flex items-center w-full leading-9",
-            linkClassName,
-            levelPadding
-          )}
-        >
-          {category.name}
-        </Link>
-        {childCategories.length > 0 && (
+  if (hasChild) {
+    return (
+      <li>
+        <div className="flex items-center justify-between w-full hover:text-yellow-primary">
+          <Link
+            to={url}
+            className="flex items-center w-full leading-9 pl-2.5"
+            title={title}
+          >
+            {children}
+          </Link>
           <button
-            title={isOpen ? "Đóng" : "Mở"}
-            onClick={toggleOpen}
+            type="button"
+            title={isOpenDropdown ? "Đóng" : "Mở"}
+            onClick={toggleDropdown}
             className="p-2.5"
           >
-            {isOpen ? (
+            {isOpenDropdown ? (
               <Minus className="w-4 h-4" />
             ) : (
               <Plus className="w-4 h-4" />
             )}
           </button>
-        )}
-      </div>
-      {childCategories.length > 0 && (
+        </div>
         <NavbarDropdown
-          active={isOpen}
-          dropdowns={childCategories}
-          depthLevel={depthLevel}
+          dropdowns={parentCategories}
+          active={isOpenDropdown}
+          depthLevel={1}
         />
-      )}
+      </li>
+    );
+  }
+
+  return (
+    <li className="flex items-center justify-between w-full hover:text-yellow-primary">
+      <Link
+        to={url}
+        className="flex items-center w-full leading-9 pl-2.5"
+        title={title}
+      >
+        {children}
+      </Link>
     </li>
   );
 };

@@ -1,9 +1,9 @@
 import { FullCategory } from "@/types/category";
 import { motion } from "framer-motion";
-import NavbarMobileItem from "./NavbarMobileItem";
+import NavbarDropdownItem from "./NavbarDropdownItem";
 
 interface NavbarDropdownProps {
-  active: boolean;
+  active?: boolean;
   dropdowns: FullCategory[];
   depthLevel: number;
 }
@@ -44,7 +44,7 @@ const NavbarDropdown = ({
       className="pl-2.5"
     >
       {dropdowns.map((dropdown) => (
-        <NavbarMobileItem
+        <NavbarDropdownItem
           key={dropdown._id}
           category={dropdown}
           depthLevel={depthLevel}

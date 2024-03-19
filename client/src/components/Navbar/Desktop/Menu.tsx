@@ -14,9 +14,9 @@ const Menu = () => {
     setIsActiveHoverMenu(true);
   };
 
-  const closeMenuDropdown = useCallback(() => {
+  const closeMenuDropdown = () => {
     setIsActiveHoverMenu(false);
-  }, []);
+  };
 
   const mouseEvents = {
     onMouseEnter: activeHoverMenu,

@@ -1,13 +1,14 @@
 import productService from "@/services/productService";
 import { FullProduct } from "@/types/product";
-import { ChangeEvent, useEffect, useState } from "react";
+import debounce from "@/utils/debounce";
+import { ChangeEvent, useCallback, useState } from "react";
 
 interface Options {
   debounceDelay: number;
 }
 
 const useSearchProduct = (options?: Options) => {
-  const debounceDelay = options?.debounceDelay ?? 300;
+  const debounceDelay = options?.debounceDelay ?? 500;
   const [search, setSearch] = useState("");
   const [products, setProducts] = useState<FullProduct[]>([]);
 
@@ -16,27 +17,27 @@ const useSearchProduct = (options?: Options) => {
     setProducts([]);
   };
 
-  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setSearch(e.target.value);
-  };
-
-  useEffect(() => {
-    const debounceTimeOut = setTimeout(async () => {
-      if (!search) {
-        setProducts([]);
-        return;
-      }
+  const debounceSearch = debounce(async (value: string) => {
+    if (!value) return setProducts([]);
+    try {
       const data = await productService.getAll({
         query: `search=${search}`,
         limit: 4,
       });
       setProducts(data.products);
-    }, debounceDelay);
+    } catch (error) {
+      console.error(error);
+    }
+  }, debounceDelay);
 
-    return () => {
-      clearTimeout(debounceTimeOut);
-    };
-  }, [search, debounceDelay]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const getResults = useCallback((value: string) => debounceSearch(value), []);
+
+  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearch(value);
+    getResults(value);
+  };
 
   return { search, products, resetSearch, handleSearchChange };
 };

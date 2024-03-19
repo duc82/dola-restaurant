@@ -34,10 +34,6 @@ const ProductQuickview = () => {
     updateAddedCart(newCart);
   };
 
-  const discountedPrice = product
-    ? product.price - (product.price * product.discountPercent) / 100
-    : 0;
-
   return (
     <>
       <Overlay active={isActive} onClick={onCloseClick} />
@@ -63,7 +59,7 @@ const ProductQuickview = () => {
             </h1>
             <div className="mb-2.5">
               <span className="text-red-500 text-[28px] font-bold">
-                {formatVnd(discountedPrice)}
+                {formatVnd(product?.discountedPrice)}
               </span>
               {product && product.discountPercent > 0 && (
                 <del className="text-base text-white ml-2">
