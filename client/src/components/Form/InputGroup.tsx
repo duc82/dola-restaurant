@@ -1,15 +1,21 @@
-import { twMerge } from "tailwind-merge";
+import cn from "@/utils/cn";
 
 interface InputGroupProps extends React.InputHTMLAttributes<HTMLInputElement> {
   error?: string | boolean;
+  wrapperClassName?: string;
 }
 
-const InputGroup = ({ error, className, ...attributes }: InputGroupProps) => {
+const InputGroup = ({
+  error,
+  className,
+  wrapperClassName,
+  ...props
+}: InputGroupProps) => {
   return (
-    <div className="mb-4">
+    <div className={cn("mb-4", wrapperClassName)}>
       <input
-        {...attributes}
-        className={twMerge(
+        {...props}
+        className={cn(
           "w-full rounded-md p-2.5 outline-none text-black border-b-2 border-b-yellow-primary focus:ring-yellow-primary focus:border-yellow-secondary",
           className
         )}

@@ -18,8 +18,13 @@ class OrderService {
   async getAll(userId) {
     const orders = await Order.find({
       user: userId,
-    })
-      .populate({
+    }).populate([
+      "shippingAddress",
+      {
+        path: "user",
+        select: "-password",
+      },
+      {
         path: "products.product",
         model: "Product",
         populate: [
@@ -37,8 +42,8 @@ class OrderService {
             model: "Category",
           },
         ],
-      })
-      .populate(["user", "shippingAddress"]);
+      },
+    ]);
 
     return {
       orders,
@@ -47,8 +52,13 @@ class OrderService {
   }
 
   async getById(id) {
-    const order = await Order.findById(id)
-      .populate({
+    const order = await Order.findById(id).populate([
+      "shippingAddress",
+      {
+        path: "user",
+        select: "-password",
+      },
+      {
         path: "products.product",
         model: "Product",
         populate: [
@@ -56,7 +66,6 @@ class OrderService {
             path: "images",
             model: "Image",
           },
-
           {
             path: "parentCategory",
             model: "Category",
@@ -66,8 +75,8 @@ class OrderService {
             model: "Category",
           },
         ],
-      })
-      .populate(["user", "shippingAddress"]);
+      },
+    ]);
 
     return {
       message: "Đơn hàng đã được tải thành công!",

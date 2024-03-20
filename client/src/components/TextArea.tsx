@@ -3,13 +3,19 @@ import cn from "../utils/cn";
 
 interface TextAreaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   error?: string | boolean;
+  wrapperClassName?: string;
 }
 
-const TextArea = ({ error, className, ...attributes }: TextAreaProps) => {
+const TextArea = ({
+  error,
+  className,
+  wrapperClassName,
+  ...props
+}: TextAreaProps) => {
   return (
-    <div className="mb-2.5">
+    <div className={cn("mb-2.5", wrapperClassName)}>
       <textarea
-        {...attributes}
+        {...props}
         className={cn(
           "w-full h-full rounded-md p-2.5 outline-none text-black border-b-2 border-b-yellow-primary",
           className

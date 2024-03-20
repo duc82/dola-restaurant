@@ -4,10 +4,6 @@ import { Outlet, useLocation } from "react-router-dom";
 import Breadcrumb from "../components/Breadcrumb/index";
 import { Helmet } from "react-helmet-async";
 import { BreadcrumbItem } from "../types";
-import { useEffect } from "react";
-import addressService from "@/services/addressService";
-import { useAppDispatch } from "@/store/hooks";
-import { setAddress } from "@/store/reducers/addressSlice";
 
 const data: Record<string, { title: string; breadcrumbs: BreadcrumbItem[] }> = {
   "/tai-khoan": {
@@ -54,13 +50,6 @@ const data: Record<string, { title: string; breadcrumbs: BreadcrumbItem[] }> = {
 
 const AccountLayout = () => {
   const { pathname } = useLocation();
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    addressService.getCurrent().then((addresses) => {
-      dispatch(setAddress(addresses));
-    });
-  }, [dispatch]);
 
   if (!data[pathname]) return <Outlet />;
 

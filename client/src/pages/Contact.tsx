@@ -1,4 +1,4 @@
-import Breadcrumb from "../components/Breadcrumb";
+import Breadcrumb from "../components/Breadcrumb/index";
 import Container from "../components/Container";
 import ContactAddress from "../components/Contact/ContactAddress";
 import ContactForm from "../components/Contact/ContactForm";
@@ -13,13 +13,10 @@ const Contact = () => {
       <Helmet>
         <title>{title}</title>
       </Helmet>
-      <Breadcrumb
-        breadcrumbs={[
-          {
-            name: title,
-          },
-        ]}
-      />
+      <Breadcrumb>
+        <Breadcrumb.Item href="/">Trang chủ</Breadcrumb.Item>
+        <Breadcrumb.Item active>{title}</Breadcrumb.Item>
+      </Breadcrumb>
       <Container className="mb-[30px]">
         <div className="flex flex-col lg:flex-row space-y-5 lg:space-y-0 lg:space-x-8 mb-10">
           <ContactAddress />

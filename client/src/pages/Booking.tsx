@@ -23,13 +23,10 @@ const Booking = () => {
       <Helmet>
         <title>{title}</title>
       </Helmet>
-      <Breadcrumb
-        breadcrumbs={[
-          {
-            name: title,
-          },
-        ]}
-      />
+      <Breadcrumb>
+        <Breadcrumb.Item href="/">Trang chủ</Breadcrumb.Item>
+        <Breadcrumb.Item active>{title}</Breadcrumb.Item>
+      </Breadcrumb>
       <Container>
         <section className="bg-booking bg-center bg-no-repeat bg-cover rounded-2xl p-2.5 lg:p-[50px]">
           <div className="rounded-2xl bg-emerald-primary p-5 w-full xl:max-w-[50%] mx-auto">

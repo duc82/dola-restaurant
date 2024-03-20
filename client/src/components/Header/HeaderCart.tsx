@@ -10,7 +10,7 @@ import { Cart } from "@/types/cart";
 export const HeaderCartItem = (cart: Cart) => {
   const dispatch = useAppDispatch();
 
-  const { _id, images, title, slug, price } = cart;
+  const { _id, images, title, slug, discountedPrice } = cart;
 
   return (
     <li className="flex items-center space-x-4 border-b border-b-gray-300 mb-4 pb-4">
@@ -35,7 +35,7 @@ export const HeaderCartItem = (cart: Cart) => {
           </div>
           <div className="flex-1 text-right">
             <span className="text-yellow-primary font-semibold block">
-              {formatVnd(price)}
+              {formatVnd(discountedPrice)}
             </span>
             <button
               type="button"

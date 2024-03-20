@@ -14,20 +14,13 @@ import AccountInfo from "./pages/Account/AccountInfo";
 import AuthLayout from "./layouts/AuthLayout";
 import ProductDetail from "./pages/ProductDetail";
 import Cart from "./pages/Cart";
-import CartLayout from "./layouts/CartLayout";
-import BuyingGuideLayout from "./layouts/BuyingGuideLayout";
 import BuyingGuide from "./pages/BuyingGuide";
-import PaymentInstructionLayout from "./layouts/PaymentInstructionLayout";
 import PaymentInstruction from "./pages/PaymentInstruction";
 import MembershipPolicy from "./pages/MembershipPolicy";
-import MembershipPolicyLayout from "./layouts/MembershipPolicyLayout";
 import PaymentPolicy from "./pages/PaymentPolicy";
-import PaymentPolicyLayout from "./layouts/PaymentPolicyLayout";
-import GratitudeGiftsLayout from "./layouts/GratitudeGiftsLayout";
 import GratitudeGifts from "./pages/GratitudeGifts";
 import RootLayout from "./layouts/RootLayout";
 import PrivateLayout from "./layouts/PrivateLayout";
-import CheckoutLayout from "./layouts/CheckoutLayout";
 import Checkout from "./pages/Checkout/Checkout";
 import AdminLayout from "./layouts/AdminLayout";
 import ResetPassword from "./pages/ResetPassword";
@@ -36,7 +29,6 @@ import Product from "./pages/Admin/Product";
 import Dashboard from "./pages/Admin/Dashboard";
 import Logout from "./pages/Logout";
 import Security from "./pages/Security";
-import SecurityLayout from "./layouts/SecurityLayout";
 import ChangePassword from "./pages/Account/ChangePassword";
 import NotFound from "./pages/NotFound";
 import BlogDetail from "./pages/Blog/BlogDetail";
@@ -45,6 +37,7 @@ import CheckoutSuccess from "./pages/Checkout/CheckoutSuccess";
 import Order from "./pages/Account/Order";
 import Voucher from "./pages/Admin/Voucher";
 import Category from "./pages/Admin/Category";
+import CheckoutLayout from "./layouts/CheckoutLayout";
 
 const App = () => {
   return (
@@ -68,6 +61,7 @@ const App = () => {
             <Route path="doi-mat-khau" element={<ChangePassword />} />
             <Route path="dia-chi" element={<Address />} />
           </Route>
+
           <Route path="dang-xuat" element={<Logout />} />
         </Route>
 
@@ -76,37 +70,17 @@ const App = () => {
         <Route path="tin-tuc/:title" element={<BlogDetail />} />
         <Route path="he-thong-nha-hang" element={<Showroom />} />
         <Route path="lien-he" element={<Contact />} />
-        <Route path="dat-ban" element={<Booking />} />
+        {/* <Route path="dat-ban" element={<Booking />} /> */}
         <Route path="danh-muc-san-pham/:category" element={<ProductList />} />
         <Route path="san-pham/:slug" element={<ProductDetail />} />
-        <Route path="gio-hang" element={<CartLayout />}>
-          <Route index element={<Cart />} />
-        </Route>
-        <Route path="huong-dan-mua-hang" element={<BuyingGuideLayout />}>
-          <Route index element={<BuyingGuide />} />
-        </Route>
-        <Route
-          path="huong-dan-thanh-toan"
-          element={<PaymentInstructionLayout />}
-        >
-          <Route index element={<PaymentInstruction />} />
-        </Route>
-        <Route
-          path="chinh-sach-thanh-vien"
-          element={<MembershipPolicyLayout />}
-        >
-          <Route index element={<MembershipPolicy />} />
-        </Route>
-        <Route path="chinh-sach-thanh-toan" element={<PaymentPolicyLayout />}>
-          <Route index element={<PaymentPolicy />} />
-        </Route>
-        <Route path="bao-mat-thong-tin-ca-nhan" element={<SecurityLayout />}>
-          <Route index element={<Security />} />
-        </Route>
+        <Route path="gio-hang" element={<Cart />} />
 
-        <Route path="qua-tang-tri-an" element={<GratitudeGiftsLayout />}>
-          <Route index element={<GratitudeGifts />} />
-        </Route>
+        <Route path="huong-dan-mua-hang" element={<BuyingGuide />} />
+        <Route path="huong-dan-thanh-toan" element={<PaymentInstruction />} />
+        <Route path="chinh-sach-thanh-vien" element={<MembershipPolicy />} />
+        <Route path="chinh-sach-thanh-toan" element={<PaymentPolicy />} />
+        <Route path="bao-mat-thong-tin-ca-nhan" element={<Security />} />
+        <Route path="qua-tang-tri-an" element={<GratitudeGifts />} />
 
         <Route path="*" element={<NotFound />} />
       </Route>

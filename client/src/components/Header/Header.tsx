@@ -117,13 +117,13 @@ const Header = () => {
                 <Geo className="w-5 h-5" />
               </Link>
 
-              <Link
+              {/* <Link
                 to="/dat-ban"
                 title="Đặt bàn"
                 className="py-2 px-5 text-lg lg:text-sm leading-relaxed lg:leading-relaxed rounded-lg bg-yellow-primary hover:bg-yellow-secondary flex justify-center items-center lg:py-1 lg:px-2.5 2xl:px-5 2xl:text-lg"
               >
                 Đặt bàn
-              </Link>
+              </Link> */}
             </div>
           </div>
           {/* Search Mobile */}

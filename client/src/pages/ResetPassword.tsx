@@ -76,7 +76,10 @@ const ResetPassword = () => {
       <Helmet>
         <title>{title}</title>
       </Helmet>
-      <Breadcrumb breadcrumbs={[{ name: title }]} />
+      <Breadcrumb>
+        <Breadcrumb.Item href="/">Trang chủ</Breadcrumb.Item>
+        <Breadcrumb.Item active>{title}</Breadcrumb.Item>
+      </Breadcrumb>
       <Container className="px-0">
         <div className="p-6 bg-white/[0.06] rounded-lg md:max-w-[50%] xl:max-w-[35%] mx-auto mb-10">
           <h1 className="text-2xl text-center mb-6">Đổi mật khẩu</h1>

@@ -15,6 +15,7 @@ import { useEffect, useState } from "react";
 import orderService from "@/services/orderService";
 import toast from "react-hot-toast";
 import handlingAxiosError from "@/utils/handlingAxiosError";
+import { resetCart } from "@/store/reducers/cartSlice";
 
 const shippingFee = 40000;
 
@@ -27,11 +28,14 @@ const Checkout = () => {
   const dispatch = useAppDispatch();
   const [urlSearchParams] = useSearchParams();
 
+  const initialAddress = addresses.find((address) => address.isDefault);
+
   const formik = useFormik({
     initialValues: {
+      fullName: initialAddress?.fullName,
+      phone: initialAddress?.phone,
+      shippingAddress: initialAddress?._id ?? "",
       user: user?._id ?? "",
-      shippingAddress:
-        addresses.find((address) => address.isDefault)?._id ?? "",
       total: subTotal + shippingFee,
       shippingFee,
       products: carts.map((cart) => ({
@@ -48,11 +52,15 @@ const Checkout = () => {
         const url = await VnPay.createPaymentUrl(values);
         window.location.href = url;
       } else if (values.paymentMethod === "Thanh toán khi giao hàng (COD)") {
+        delete values.fullName;
+        delete values.phone;
+
         orderService
           .create(values)
           .then((data) => {
             navigate(`/thanh-toan/cam-on/${data.order._id}`);
             setSuccess(true);
+            dispatch(resetCart());
           })
           .catch((error) => {
             toast.error(handlingAxiosError(error).message);
@@ -94,7 +102,7 @@ const Checkout = () => {
       <main className="lg:p-6 lg:w-2/3 px-4">
         <header className="hidden lg:block">
           <h1 className="text-[28px] leading-none text-blue-500 font-normal">
-            <Link to="/">Dola Restaurant</Link>
+            <Link to="/thanh-toan">Dola Restaurant</Link>
           </h1>
         </header>
         <div className="pt-6 lg:flex lg:space-x-8">
@@ -126,7 +134,7 @@ const Checkout = () => {
                 label="Họ và tên"
                 disabled
                 wrapperClassName="mb-3"
-                value={user?.fullName ?? ""}
+                value={formik.values?.fullName ?? ""}
               />
 
               <FloatingLabel
@@ -136,7 +144,7 @@ const Checkout = () => {
                 label="Số điện thoại"
                 disabled
                 wrapperClassName="mb-3"
-                value={user?.phone ?? ""}
+                value={formik.values?.phone ?? ""}
               />
               <Select
                 label="Địa chỉ"
@@ -230,10 +238,7 @@ const Checkout = () => {
               >
                 ĐẶT HÀNG
               </Button>
-              <Link
-                to={"/gio-hang"}
-                className="text-center text-blue-500 block"
-              >
+              <Link to="/gio-hang" className="text-center text-blue-500 block">
                 <span> Quay lại giỏ hàng</span>
               </Link>
             </div>

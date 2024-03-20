@@ -7,14 +7,15 @@ const ContactForm = () => {
       <h1 className="text-base text-white py-2.5 px-4 rounded-t-lg uppercase font-bold bg-yellow-primary">
         Liên hệ với chúng tôi
       </h1>
-      <form className="border border-yellow-primary py-2.5 px-4 rounded-b-lg w-full">
+      <form className="border border-yellow-primary py-2.5 px-4 rounded-b-lg w-full lg:h-[306px]">
         <InputGroup
           type="text"
           name="name"
           id="name"
           placeholder="Họ và tên"
           autoComplete="off"
-          className="py-1.5"
+          className="py-1.5 px-5"
+          wrapperClassName="mb-2.5"
         />
         <InputGroup
           type="text"
@@ -22,7 +23,8 @@ const ContactForm = () => {
           id="email"
           placeholder="Email"
           autoComplete="off"
-          className="py-1.5"
+          className="py-1.5 px-5"
+          wrapperClassName="mb-2.5"
         />
         <InputGroup
           type="text"
@@ -30,7 +32,8 @@ const ContactForm = () => {
           id="phone"
           placeholder="Điện thoại"
           autoComplete="off"
-          className="py-1.5"
+          className="py-1.5 px-5"
+          wrapperClassName="mb-2.5"
         />
         <TextArea
           placeholder="Nội dung"
@@ -39,7 +42,7 @@ const ContactForm = () => {
           autoComplete="off"
           rows={3}
           required
-          className="py-1.5"
+          className="py-1.5 px-5"
         ></TextArea>
         <button
           type="submit"

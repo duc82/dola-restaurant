@@ -23,13 +23,10 @@ const Blog = () => {
       <Helmet>
         <title>{title}</title>
       </Helmet>
-      <Breadcrumb
-        breadcrumbs={[
-          {
-            name: title,
-          },
-        ]}
-      />
+      <Breadcrumb>
+        <Breadcrumb.Item href="/">Trang chủ</Breadcrumb.Item>
+        <Breadcrumb.Item active>{title}</Breadcrumb.Item>
+      </Breadcrumb>
       <Container className="block lg:flex space-y-12 lg:space-y-0 mb-8">
         <div className="flex-[75%] order-2 lg:pl-4">
           <h1 className="uppercase text-yellow-primary font-bold text-base py-2.5 mb-4 border-b border-b-yellow-primary">

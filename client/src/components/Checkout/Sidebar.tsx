@@ -77,7 +77,7 @@ const Sidebar = () => {
                 <p className="text-[rgb(51,51,51)] font-medium">{cart.title}</p>
               </div>
               <span className="pl-4">
-                {formatVnd(cart.price * cart.quantity)}
+                {formatVnd(cart.discountedPrice * cart.quantity)}
               </span>
             </li>
           ))}

@@ -26,10 +26,10 @@ const Hero = () => {
               Món ăn đa dạng
             </p>
             <Link
-              to="/dat-ban"
+              to="/danh-muc-san-pham/tat-ca-san-pham"
               className="bg-yellow-primary text-center text-xs md:text-[15px] min-w-[120px] h-[30px] leading-[30px] uppercase hover:bg-yellow-secondary rounded-lg md:h-[45px] md:leading-[45px] md:min-w-[180px] transition-colors ease-ease duration-[400ms] animate__animated animate__backInUp animate__custom"
             >
-              Đặt bàn ngay
+              Xem thực đơn
             </Link>
           </div>
         </SwiperSlide>

@@ -1,30 +1,29 @@
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { setAddress } from "@/store/reducers/addressSlice";
+import { resetAuth } from "@/store/reducers/authSlice";
+import { getCurrentUser } from "@/store/reducers/userSlice";
 import { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
-import { Link, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Outlet } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../store/hooks";
-import userService from "@/services/userService";
-import { setUser } from "@/store/reducers/userSlice";
 
 const CheckoutLayout = () => {
-  const { accessToken } = useAppSelector((state) => state.auth);
-  const { user } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
+  const { user } = useAppSelector((state) => state.user);
 
   useEffect(() => {
     if (!user) {
-      userService
-        .getCurrent()
+      dispatch(getCurrentUser())
+        .unwrap()
         .then((data) => {
-          dispatch(setUser(data));
+          dispatch(setAddress(data.addresses));
         })
-        .catch((err) => {
-          console.log(err);
+        .catch(() => {
+          dispatch(resetAuth());
+          window.location.replace("/dang-nhap");
         });
     }
-  }, [user, dispatch]);
-
-  if (!accessToken) return <Navigate to="/dang-nhap" />;
+  }, [dispatch, user]);
 
   return (
     <div className="bg-white text-[rgb(51,51,51)]">

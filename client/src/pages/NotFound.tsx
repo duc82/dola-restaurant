@@ -1,16 +1,15 @@
 import Breadcrumb from "@/components/Breadcrumb";
 import { Link } from "react-router-dom";
 
+const title = "404 Không tìm thấy trang";
+
 const NotFound = () => {
   return (
     <>
-      <Breadcrumb
-        breadcrumbs={[
-          {
-            name: "404 Không tìm thấy trang",
-          },
-        ]}
-      />
+      <Breadcrumb>
+        <Breadcrumb.Item href="/">Trang chủ</Breadcrumb.Item>
+        <Breadcrumb.Item active>{title}</Breadcrumb.Item>
+      </Breadcrumb>
       <section className="mb-[30px] lg:mb-10 text-center">
         <h1 className="text-5xl mb-2">404</h1>
         <p className="mb-4">

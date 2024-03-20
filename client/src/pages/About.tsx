@@ -1,5 +1,5 @@
 import Container from "../components/Container";
-import Breadcrumb from "../components/Breadcrumb";
+import Breadcrumb from "../components/Breadcrumb/index";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Helmet } from "react-helmet-async";
 
@@ -11,13 +11,11 @@ const About = () => {
       <Helmet>
         <title>{title}</title>
       </Helmet>
-      <Breadcrumb
-        breadcrumbs={[
-          {
-            name: title,
-          },
-        ]}
-      />
+      <Breadcrumb>
+        <Breadcrumb.Item href="/">Trang chủ</Breadcrumb.Item>
+        <Breadcrumb.Item active>{title}</Breadcrumb.Item>
+      </Breadcrumb>
+
       <section className="mb-10">
         <Container>
           <h1 className="mb-2 text-[2.5rem] leading-snug font-medium">

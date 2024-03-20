@@ -1,6 +1,19 @@
-import { Link } from "react-router-dom";
+import orderService from "@/services/orderService";
+import { FullOrder } from "@/types/order";
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 
 const CheckoutSuccess = () => {
+  const { id } = useParams();
+  const [order, setOrder] = useState<FullOrder | null>(null);
+
+  useEffect(() => {
+    if (!id) return;
+    orderService.getById(id).then((data) => {
+      setOrder(data.order);
+    });
+  }, [id]);
+
   return (
     <div className="bg-[rgb(230,232,234)] text-[rgb(70,72,74)]">
       <div className="md:max-w-3xl lg:max-w-7xl lg:px-8 mx-auto">
@@ -29,7 +42,7 @@ const CheckoutSuccess = () => {
                     Cảm ơn bạn đã đặt hàng
                   </h2>
                   <p>
-                    Một email xác nhận đã được gửi tới bidv840242@gmail.com.
+                    Một email xác nhận đã được gửi tới {order?.user.email}.
                     <br></br> Xin vui lòng kiểm tra email của bạn
                   </p>
                 </div>

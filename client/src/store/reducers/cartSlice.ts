@@ -36,7 +36,7 @@ const cartSlice = createSlice({
         state.carts.push(payload);
       }
 
-      state.subTotal += payload.price;
+      state.subTotal += payload.discountedPrice * payload.quantity;
       state.count += payload.quantity;
     },
     decreaseQuantity: (state, { payload }: PayloadAction<Cart>) => {
@@ -47,7 +47,7 @@ const cartSlice = createSlice({
       if (indexCart !== -1) {
         const cart = state.carts[indexCart];
 
-        state.subTotal -= payload.price * payload.quantity;
+        state.subTotal -= payload.discountedPrice * payload.quantity;
         state.count -= payload.quantity;
 
         cart.quantity -= payload.quantity;
@@ -75,7 +75,7 @@ const cartSlice = createSlice({
         state.carts.push(payload);
       }
 
-      state.subTotal += payload.price * payload.quantity;
+      state.subTotal += payload.discountedPrice * payload.quantity;
       state.count += payload.quantity;
     },
 
@@ -84,7 +84,7 @@ const cartSlice = createSlice({
       if (indexCart !== -1) {
         const cart = state.carts[indexCart];
 
-        state.subTotal -= cart.price * cart.quantity;
+        state.subTotal -= cart.discountedPrice * cart.quantity;
         state.count -= cart.quantity;
         state.carts.splice(indexCart, 1);
       }

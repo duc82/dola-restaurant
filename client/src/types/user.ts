@@ -1,4 +1,5 @@
 import { FullType } from ".";
+import { FullAddress } from "./address";
 
 interface User {
   fullName: string;
@@ -10,6 +11,7 @@ interface User {
 interface FullUser extends FullType, User {
   ipAddress: string;
   isHavePassword: boolean;
+  addresses: FullAddress[];
 }
 
 interface UserResponse {

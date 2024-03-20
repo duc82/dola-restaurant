@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import showrooms from "../../data/showrooms.json";
+import showrooms from "@/data/showrooms.json";
 
 const showroom = showrooms.find((showroom) => showroom.main);
 
@@ -9,8 +9,8 @@ const Address = () => {
       <h1 className="text-base text-white py-2.5 px-4 rounded-t-lg uppercase font-bold bg-yellow-primary">
         Nhà hàng Dola Restaurant
       </h1>
-      <div className="border border-yellow-primary py-2.5 px-4 rounded-b-lg w-full overflow-y-auto">
-        <p>
+      <div className="border border-yellow-primary py-2.5 px-4 rounded-b-lg w-full lg:h-[306px]">
+        <p className="mt-2.5">
           Nhà hàng chúng tôi luôn luôn đặt khách hàng lên hàng đầu, tận tâm phục
           vụ, mang lại cho khách hàng những trãi nghiệm tuyệt với nhất. Các món
           ăn với công thức độc quyền sẽ mang lại hương vị mới mẻ cho thực khách.
@@ -18,10 +18,10 @@ const Address = () => {
         </p>
         <h2 className="text-[17px] font-bold mt-2.5">Cửa hàng chính</h2>
         <ul className="mt-2.5 mb-4">
-          <li className="mb-1">
+          <li className="mb-1.5">
             <b>Địa chỉ:</b> {showroom?.address}
           </li>
-          <li className="text-yellow-primary mb-1">
+          <li className="text-yellow-primary mb-1.5">
             <b className="text-white">Điện thoại:</b>{" "}
             <a
               title={showroom?.hotline}
@@ -31,7 +31,7 @@ const Address = () => {
               {showroom?.hotline}
             </a>
           </li>
-          <li className="text-yellow-primary mb-1">
+          <li className="text-yellow-primary mb-1.5">
             <b className="text-white">Email:</b>{" "}
             <a
               title={showroom?.email}
