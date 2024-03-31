@@ -5,6 +5,10 @@ const jwt = require("jsonwebtoken");
 const util = require("util");
 const CustomError = require("../utils/error.util");
 const User = require("../models/user.model");
+const verifyGoogleToken = require("../utils/verifyGoogleToken.util");
+const crypto = require("crypto");
+const Token = require("../models/token.model");
+const mongoose = require("mongoose");
 
 const sign = util.promisify(jwt.sign);
 const verify = util.promisify(jwt.verify);
@@ -15,6 +19,7 @@ class AuthService {
     this.origin = process.env.ORIGIN_CLIENT;
     this.accessTokenExpiresIn = process.env.ACCESS_TOKEN_EXPIRES_IN;
     this.refreshTokenExpiresIn = process.env.REFRESH_TOKEN_EXPIRES_IN;
+    this.emailGoogle = process.env.EMAIL_GOOGLE;
   }
 
   async verifyFacebookToken(accessToken) {
@@ -39,6 +44,99 @@ class AuthService {
       process.env.SECRET_KEY_JWT
     );
     return payload;
+  }
+
+  async loginGoogle(code) {
+    const payload = await verifyGoogleToken(code);
+
+    const filter = {
+      email: payload.email,
+    };
+
+    const doc = {
+      fullName: `${payload.given_name} ${payload.family_name}`,
+      email: payload.email,
+    };
+
+    const user = await this.userService.findOneOrCreate(filter, doc, {
+      exclude: "password",
+    });
+
+    const userPayload = {
+      userId: user._id,
+      role: user.role,
+    };
+
+    await attachCookieToResponse({
+      res,
+      name: "accessToken",
+      payload: userPayload,
+      tokenExpires: this.accessTokenExpiresIn,
+    });
+    await attachCookieToResponse({
+      res,
+      name: "refreshToken",
+      payload: userPayload,
+      tokenExpires: this.refreshTokenExpiresIn,
+    });
+
+    return { message: "Đăng nhập thành công", user };
+  }
+
+  async loginFacebook(accessToken) {
+    const payload = await this.verifyFacebookToken(accessToken);
+
+    const user = await this.findOneOrCreate(
+      { email: payload.email },
+      {
+        fullName: payload.name,
+        email: payload.email,
+      },
+      { exclude: "password" }
+    );
+
+    const userPayload = {
+      userId: user._id,
+      role: user.role,
+    };
+
+    await attachCookieToResponse({
+      res,
+      name: "accessToken",
+      payload: userPayload,
+      tokenExpires: this.accessTokenExpiresIn,
+    });
+    await attachCookieToResponse({
+      res,
+      name: "refreshToken",
+      payload: userPayload,
+      tokenExpires: this.refreshTokenExpiresIn,
+    });
+
+    return { message: "Đăng nhập thành công", user };
+  }
+
+  async signUp(body, ipAddress) {
+    const isUserExists = await this.userService.checkUserExists(
+      body.email,
+      body.phone
+    );
+
+    if (isUserExists) {
+      throw new CustomError({
+        message: "Email hoặc số điện thoại đã tồn tại.",
+        status: 400,
+      });
+    }
+
+    const user = await User.create({ ...body, ipAddress });
+
+    const { password, ...data } = user.toObject();
+
+    return {
+      user: data,
+      message: "Đăng ký tài khoản thành công",
+    };
   }
 
   async login(email, password, ipAddress, res) {
@@ -105,15 +203,104 @@ class AuthService {
     };
   }
 
+  async forgotPassword(email) {
+    const user = await User.findOne({
+      email,
+    })
+      .populate("token")
+      .select("_id email fullName token");
+
+    if (!user) {
+      throw new CustomError({ message: "Không tìm thấy email", status: 404 });
+    }
+
+    const newToken = crypto.randomBytes(32).toString("hex");
+    const oneHour = 1000 * 60 * 60;
+
+    const token = await Token.findByIdAndUpdate(
+      user.token?._id ?? new mongoose.Types.ObjectId(),
+      {
+        passwordResetToken: newToken,
+        passwordResetTokenExpirationAt: new Date(Date.now() + oneHour),
+      },
+      {
+        new: true,
+        upsert: true,
+      }
+    );
+
+    user.token = token._id;
+    await user.save();
+
+    await this.sendResetPasswordEmail({
+      to: user.email,
+      token: newToken,
+      fullName: user.fullName,
+    });
+
+    return { message: "Gửi email thành công" };
+  }
+
+  async verifyPasswordResetToken(email, token) {
+    if (!email || !token) {
+      throw new CustomError({
+        message: "Token không hợp lệ hoặc đã hết hạn",
+        status: 401,
+      });
+    }
+
+    const user = await User.findOne({
+      email,
+    })
+      .populate("token")
+      .select("token");
+
+    if (
+      !user ||
+      user.token?.passwordResetToken !== token ||
+      new Date() > user.token?.passwordResetTokenExpirationAt
+    ) {
+      throw new CustomError({
+        message: "Token không hợp lệ hoặc đã hết hạn",
+        status: 401,
+        verified: false,
+      });
+    }
+
+    return { verified: true };
+  }
+
+  async resetPassword(email, password) {
+    const user = await User.findOne({
+      email,
+    }).select("token");
+
+    if (!user) {
+      throw new CustomError({
+        message: "Người dùng không tồn tại!",
+        status: 404,
+      });
+    }
+
+    await Token.deleteOne({ _id: user.token });
+    user.password = password;
+    user.token = null;
+    await user.save();
+
+    return {
+      message: "Đổi mật khẩu thành công",
+    };
+  }
+
   async sendVerifyEmail({ to, token, fullName }) {
     const mailOptions = {
-      from: `"Dola Restaurant" <${process.env.EMAIL_GOOGLE}>`,
+      from: `"Dola Restaurant" <${this.emailGoogle}>`,
       to,
       subject: `Xác minh tài khoản Dola Restaurant`,
       html: `
     <p>Chào ${fullName},</p>
     <p>Vui lòng nhấn vào nút dưới đây để xác thực địa chỉ email:</p>
-    <a href='${process.env.ORIGIN_CLIENT}/xac-minh-email/${token}'>Xác thực email</a>
+    <a href='${this.orgin}/xac-minh-email/${token}'>Xác thực email</a>
     <p>
     Email xác nhận này chỉ có hiệu lực trong <b>1h.</b></p>
     <p>
@@ -129,14 +316,14 @@ class AuthService {
 
   async sendResetPasswordEmail({ to, token, fullName }) {
     const mailOptions = {
-      from: `"Dola Restaurant" <${process.env.EMAIL_GOOGLE}>`,
+      from: `"Dola Restaurant" <${this.emailGoogle}>`,
       to,
       subject: `Thiết lập lại mật khẩu của tài khoản khách hàng`,
       html: `
       <p>Xin chào ${fullName},</p>
       <p>Anh/chị đã yêu cầu đổi mật khẩu tại <b>Dola Restaurant.<b></p>
       <p>Anh/chị vui lòng truy cập vào liên kết dưới đây để thay đổi mật khẩu của Anh/chị nhé.</p>
-      <a href='${process.env.ORIGIN_CLIENT}/doi-mat-khau/${to}/${token}'>Đặt lại mật khẩu</a>
+      <a href='${this.origin}/doi-mat-khau/${to}/${token}'>Đặt lại mật khẩu</a>
       `,
     };
     const info = await transporter.sendMail(mailOptions);
