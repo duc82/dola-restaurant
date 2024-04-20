@@ -1,12 +1,14 @@
 import { useLogin } from "react-facebook";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { toast } from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
 import authService from "@/services/authService";
+import { useAppDispatch } from "@/store/hooks";
+import { loginSuccess } from "@/store/reducers/authSlice";
+import { setUser } from "@/store/reducers/userSlice";
 
 const FacebookLogin = () => {
+  const dispatch = useAppDispatch();
   const { login, isLoading } = useLogin();
-  const navigate = useNavigate();
 
   const handleLoginFacebook = async () => {
     try {
@@ -14,8 +16,9 @@ const FacebookLogin = () => {
         scope: "email",
       });
       const authResponse = authRes.authResponse;
-      await authService.loginFacebook(authResponse.accessToken);
-      navigate("/tai-khoan");
+      const data = await authService.loginFacebook(authResponse.accessToken);
+      dispatch(loginSuccess(data.accessToken));
+      dispatch(setUser(data.user));
     } catch (error) {
       toast.error("Đăng nhập thất bại");
     }

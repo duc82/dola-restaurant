@@ -1,14 +1,14 @@
-import { memo } from "react";
 import cn from "../utils/cn";
 
 interface OverlayProps {
   active: boolean;
-  onClick?: () => void;
   className?: string;
+  onClick?: () => void;
 }
 
-const Overlay = ({ active, onClick, className }: OverlayProps) => {
+const Overlay = ({ className, active, onClick }: OverlayProps) => {
   const activeClasses = active ? "visible opacity-100" : "invisible opacity-0";
+
   return (
     <div
       onClick={onClick}
@@ -21,4 +21,4 @@ const Overlay = ({ active, onClick, className }: OverlayProps) => {
   );
 };
 
-export default memo(Overlay);
+export default Overlay;

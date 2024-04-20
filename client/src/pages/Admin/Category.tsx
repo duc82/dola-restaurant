@@ -1,21 +1,33 @@
 import CreateModal from "@/components/Admin/Category/CreateModal";
 import UpdateModal from "@/components/Admin/Category/UpdateModal";
 import DeleteModal from "@/components/Admin/DeleteModal";
+import Pagination from "@/components/Pagination";
 import useAdminModal from "@/hooks/useAdminModal";
-import useSearch from "@/hooks/useSearch";
-import { Dustbin, Edit } from "@/icons";
+import { ArrowUp, Dustbin, Edit, Plus2 } from "@/icons";
 import categoryService from "@/services/categoryService";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { setCategories } from "@/store/reducers/categorySlice";
+import {
+  deleteCategory,
+  setCategories,
+  sortCategories,
+} from "@/store/reducers/categorySlice";
 import formatDate from "@/utils/formatDate";
 import handlingAxiosError from "@/utils/handlingAxiosError";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import { useSearchParams } from "react-router-dom";
+import limits from "@/data/limits.json";
+import Limit from "@/components/Limit";
+import cn from "@/utils/cn";
+
+interface Sort {
+  key: "name" | "createdAt";
+  order: "asc" | "desc";
+}
 
 const Category = () => {
-  const { search, handleSearch } = useSearch();
   const {
     activeModal,
     openCreateModal,
@@ -31,25 +43,29 @@ const Category = () => {
     clearDeleteMany,
   } = useAdminModal();
   const dispatch = useAppDispatch();
+  const [urlSearchParams, setUrlSearchParams] = useSearchParams();
+  const [activeLimit, setActiveLimit] = useState(limits[0]);
+  const [sort, setSort] = useState<Sort>({
+    key: "createdAt",
+    order: "asc",
+  });
+  const search = urlSearchParams.get("search") ?? "";
+  const page = parseInt(urlSearchParams.get("page") ?? "1");
 
-  const { categories } = useAppSelector((state) => state.category);
+  const { categories, total, skip } = useAppSelector((state) => state.category);
 
   const handleDelete = async () => {
     try {
       if (isDeleteMany) {
         const data = await categoryService.deleteMany(ids);
-        dispatch(
-          setCategories(
-            categories.filter((category) => !ids.includes(category._id))
-          )
-        );
+        for (const id of ids) {
+          dispatch(deleteCategory(id));
+        }
         toast.success(data.message);
         clearDeleteMany();
       } else {
         const data = await categoryService.delete(id);
-        dispatch(
-          setCategories(categories.filter((category) => category._id !== id))
-        );
+        dispatch(deleteCategory(id));
         toast.success(data.message);
       }
       closeModal();
@@ -58,15 +74,37 @@ const Category = () => {
     }
   };
 
-  useEffect(() => {
-    if (categories.length > 0) return;
+  const onPageChange = (page: number) => {
+    urlSearchParams.set("page", page.toString());
+    setUrlSearchParams(urlSearchParams);
+  };
 
-    categoryService.getAll().then((data) => {
-      if (data.length) {
+  const handleActiveLimit = (limit: number) => {
+    setActiveLimit(limit);
+    const pageCount = Math.ceil(total / limit);
+    if (page > pageCount) {
+      urlSearchParams.set("page", pageCount.toString());
+      setUrlSearchParams(urlSearchParams);
+    }
+  };
+
+  useEffect(() => {
+    categoryService
+      .getAll({
+        search,
+        page,
+        limit: activeLimit,
+      })
+      .then((data) => {
         dispatch(setCategories(data));
-      }
-    });
-  }, [dispatch, categories]);
+      });
+  }, [dispatch, search, page, activeLimit]);
+
+  useEffect(() => {
+    dispatch(sortCategories(sort));
+  }, [sort, dispatch]);
+
+  const pageCount = Math.ceil(total / activeLimit);
 
   return (
     <div className="overflow-y-auto w-full">
@@ -87,11 +125,10 @@ const Category = () => {
               <input
                 type="text"
                 id="search"
-                name="email"
+                name="search"
                 autoComplete="off"
                 placeholder="Tìm kiếm danh mục sản phẩm"
-                value={search}
-                onChange={handleSearch}
+                defaultValue={search}
                 className="w-full bg-emerald-secondary p-2.5 border border-gray-600 rounded-lg text-sm placeholder:text-gray-400 transition"
               />
             </form>
@@ -109,17 +146,18 @@ const Category = () => {
               onClick={openCreateModal}
               className="px-3 py-2 bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-900 rounded-lg inline-flex items-center font-medium justify-center text-sm transition"
             >
-              Thêm danh mục sản phẩm
+              <Plus2 className="w-6 h-6 mr-2" />
+              <span>Thêm danh mục</span>
             </button>
           </div>
         </div>
       </div>
 
-      <div className="mb-[30px]">
+      <div>
         <table className="w-full text-left divide-y divide-gray-600">
           <thead className="bg-emerald-secondary">
             <tr className="text-base">
-              <th scope="col" className="px-2 py-4">
+              <th className="p-4">
                 <div className="flex items-center">
                   <input
                     type="checkbox"
@@ -139,31 +177,63 @@ const Category = () => {
                   </label>
                 </div>
               </th>
-              <th scope="col" className="px-2 py-4">
-                Tên danh mục
+
+              <th className="px-2 py-4">Id</th>
+              <th className="px-2 py-4">
+                <button
+                  type="button"
+                  className="flex items-center space-x-1"
+                  onClick={() => {
+                    setSort((prev) => ({
+                      key: "name",
+                      order: prev.order === "asc" ? "desc" : "asc",
+                    }));
+                  }}
+                >
+                  <span>Tên danh mục</span>
+                  <ArrowUp
+                    className={cn(
+                      "w-5 h-5 transition-transform",
+                      sort.key === "name" &&
+                        sort.order === "desc" &&
+                        "rotate-180"
+                    )}
+                  />
+                </button>
               </th>
-              <th scope="col" className="px-2 py-4">
-                Danh mục cha
+              <th className="px-2 py-4">Danh mục cha</th>
+              <th className="px-2 py-4">Hình ảnh</th>
+              <th className="px-2 py-4">Mô tả</th>
+              <th className="px-2 py-4">
+                <button
+                  type="button"
+                  className="flex items-center space-x-1"
+                  onClick={() => {
+                    setSort((prev) => ({
+                      key: "createdAt",
+                      order: prev.order === "asc" ? "desc" : "asc",
+                    }));
+                  }}
+                >
+                  <span>Thời gian tạo</span>
+                  <ArrowUp
+                    className={cn(
+                      "w-5 h-5 transition-transform",
+                      sort.key === "createdAt" &&
+                        sort.order === "desc" &&
+                        "rotate-180"
+                    )}
+                  />
+                </button>
               </th>
-              <th scope="col" className="px-2 py-4">
-                Hình ảnh
-              </th>
-              <th scope="col" className="px-2 py-4">
-                Mô tả
-              </th>
-              <th scope="col" className="px-2 py-4">
-                Ngày tạo
-              </th>
-              <th scope="col" className="px-2 py-4">
-                Chức năng
-              </th>
+              <th className="px-2 py-4">Chức năng</th>
             </tr>
           </thead>
 
           <tbody className="divide-y divide-gray-600">
             {categories.map((category) => (
               <tr key={category._id} className="hover:bg-emerald-secondary">
-                <td className="px-2 py-4">
+                <td className="p-4">
                   <div className="flex items-center">
                     <input
                       type="checkbox"
@@ -180,6 +250,9 @@ const Category = () => {
                     </label>
                   </div>
                 </td>
+                <td className="px-2 py-4">
+                  <p className="truncate w-48">{category._id}</p>
+                </td>
                 <td className="px-2 py-4">{category.name}</td>
                 <td className="px-2 py-4">
                   {category.parentCategory?.name || "Không có"}
@@ -190,8 +263,8 @@ const Category = () => {
                       src={category.image}
                       alt={category.slug}
                       effect="opacity"
-                      width={50}
-                      height={50}
+                      width={60}
+                      height={60}
                       className="rounded-md"
                     />
                   ) : (
@@ -199,7 +272,9 @@ const Category = () => {
                   )}
                 </td>
                 <td className="px-2 py-4">
-                  {category.description || "Không có"}
+                  <p className="truncate w-64" title={category.description}>
+                    {category.description || "Không có"}
+                  </p>
                 </td>
 
                 <td className="px-2 py-4">{formatDate(category.createdAt)}</td>
@@ -227,13 +302,28 @@ const Category = () => {
         </table>
       </div>
 
+      <div className="p-4 flex items-center justify-between border-t border-t-gray-600">
+        <div>
+          <span className="text-sm text-gray-400">
+            Hiển thị {skip + 1} - {skip + categories.length} trên tổng số{" "}
+            {total}
+          </span>
+        </div>
+        <Pagination
+          pageCount={pageCount}
+          currentPage={page}
+          onPageChange={onPageChange}
+        />
+        <Limit activeLimit={activeLimit} handleClick={handleActiveLimit} />
+      </div>
+
       <CreateModal show={activeModal.create} onClose={closeModal} />
       <UpdateModal show={activeModal.update} onClose={closeModal} id={id} />
       <DeleteModal
         show={activeModal.delete}
         onClose={closeModal}
         handleDelete={handleDelete}
-        alert="Bạn có muốn xóa mã giảm giá này không?"
+        alert="Bạn có muốn xóa danh mục sản phẩm này không?"
       />
     </div>
   );

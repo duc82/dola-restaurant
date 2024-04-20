@@ -6,6 +6,7 @@ import { createPortal } from "react-dom";
 import ProductQuickview from "../components/Product/ProductQuickview";
 import ModalCart from "../components/Cart/ModalCart";
 import { Helmet } from "react-helmet-async";
+import Overlay from "@/components/Overlay";
 
 const RootLayout = () => {
   return (
@@ -23,6 +24,7 @@ const RootLayout = () => {
         <>
           <ProductQuickview />
           <ModalCart />
+          <Overlay />
         </>,
         document.body
       )}

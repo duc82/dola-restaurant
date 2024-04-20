@@ -67,12 +67,7 @@ const router = Router();
 
 router.get("/", categoryController.getAll);
 
-router.post(
-  "/create",
-  authorizationMiddleware,
-  upload.single("image"),
-  categoryController.create
-);
+router.post("/create", authorizationMiddleware, categoryController.create);
 
 router.put(
   "/update/:id",

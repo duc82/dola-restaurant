@@ -4,9 +4,9 @@ import cn from "@/utils/cn";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import authService from "@/services/authService";
 import { resetAuth } from "@/store/reducers/authSlice";
-import Overlay from "@/components/Overlay";
 import menus from "@/data/menus.json";
 import NavbarMobileItem from "./NavbarMobileItem";
+import Overlay from "@/components/Overlay";
 
 interface NavbarProps {
   active: boolean;

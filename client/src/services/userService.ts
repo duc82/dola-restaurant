@@ -10,28 +10,21 @@ import { Filter } from "@/types";
 
 const userService = {
   getAll: (filter?: Filter) => {
-    let endpoint = "/users";
-    if (filter) {
-      let query = "";
+    let query = "";
 
-      if (filter.query) {
-        query += `?${filter.query}`;
-      }
-
-      if (filter.search) {
-        query += query
-          ? `&search=${filter.search}`
-          : `?search=${filter.search}`;
-      }
-
-      if (filter.limit) {
-        query += query ? `&limit=${filter.limit}` : `?limit=${filter.limit}`;
-      }
-
-      endpoint += query;
+    if (filter?.query) {
+      query += `?${filter.query}`;
     }
 
-    return apiRequest<UsersResponse>(endpoint, "GET", {
+    if (filter?.search) {
+      query += query ? `&search=${filter.search}` : `?search=${filter.search}`;
+    }
+
+    if (filter?.limit) {
+      query += query ? `&limit=${filter.limit}` : `?limit=${filter.limit}`;
+    }
+
+    return apiRequest<UsersResponse>("/users" + query, "GET", {
       refreshToken: true,
     });
   },

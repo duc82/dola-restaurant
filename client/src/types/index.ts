@@ -34,8 +34,14 @@ interface RejectValue {
 
 interface Filter {
   search?: string;
-  query?: string;
+  page?: number;
   limit?: number;
+}
+
+interface Pagination {
+  page: number;
+  limit: number;
+  total: number;
 }
 
 export type {
@@ -47,4 +53,5 @@ export type {
   FullType,
   FilePreview,
   Filter,
+  Pagination,
 };

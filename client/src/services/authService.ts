@@ -1,26 +1,27 @@
 import { UserResponse } from "@/types/user";
 import apiRequest from "./api";
-import { LoginDTO, SignUpDTO } from "@/types/auth";
+import { LoginDTO, LoginResponse, SignUpDTO } from "@/types/auth";
 
 const authService = {
   loginGoogle: (code: string) => {
-    return apiRequest<UserResponse>("/auth/login/google", "POST", {
+    return apiRequest<LoginResponse>("/auth/login/google", "POST", {
       data: { code },
+      withCredentials: true,
     });
   },
 
   loginFacebook: (accessToken: string) => {
-    return apiRequest<UserResponse>("/auth/login/facebook", "POST", {
+    return apiRequest<LoginResponse>("/auth/login/facebook", "POST", {
       data: { accessToken },
+      withCredentials: true,
     });
   },
 
   login: (data: LoginDTO) => {
-    return apiRequest<UserResponse & { accessToken: string }>(
-      "/auth/login",
-      "POST",
-      { data, withCredentials: true }
-    );
+    return apiRequest<LoginResponse>("/auth/login", "POST", {
+      data,
+      withCredentials: true,
+    });
   },
 
   signUp: (data: SignUpDTO) => {

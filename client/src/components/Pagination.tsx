@@ -65,7 +65,7 @@ const Pagination = ({
   }
 
   return (
-    <nav className="mb-[30px] w-full flex justify-center">
+    <div>
       <ul className="flex items-center space-x-1.5">
         {currentPage > 1 && (
           <li
@@ -112,7 +112,7 @@ const Pagination = ({
           </li>
         )}
       </ul>
-    </nav>
+    </div>
   );
 };
 

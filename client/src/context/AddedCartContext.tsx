@@ -17,21 +17,21 @@ const AddedCartContext = createContext<AddedCartContextType>({
 });
 
 export const AddedCartProvider = ({ children }: ChildrenProps) => {
-  const [active, setActive] = useState(false);
+  const [isActive, setIsActive] = useState(false);
   const [addedCart, setAddedCart] = useState<Cart | null>(null);
 
   const closeModalCart = () => {
-    setActive(false);
+    setIsActive(false);
   };
 
   const updateAddedCart = (cart: Cart) => {
-    setActive(true);
+    setIsActive(true);
     setAddedCart(cart);
   };
 
   return (
     <AddedCartContext.Provider
-      value={{ active, closeModalCart, addedCart, updateAddedCart }}
+      value={{ active: isActive, closeModalCart, addedCart, updateAddedCart }}
     >
       {children}
     </AddedCartContext.Provider>

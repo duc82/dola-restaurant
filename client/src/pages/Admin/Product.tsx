@@ -195,10 +195,7 @@ const Product = () => {
                     : "Không"}
                 </td>
                 <td className="px-2 py-4">
-                  {formatVnd(
-                    product.price -
-                      (product.price * product.discountPercent) / 100
-                  )}
+                  {formatVnd(product.discountedPrice)}
                 </td>
                 <td className="px-2 py-4">{product.stock}</td>
                 <td className="px-2 py-4">{formatDate(product.createdAt)}</td>

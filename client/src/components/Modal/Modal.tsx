@@ -36,7 +36,7 @@ const ModalHeader = ({
   <div className="flex items-center justify-between p-4 rounded-tl-lg rounded-tr-lg border-b border-b-gray-600">
     {children}
     {closeButton && (
-      <button className="close-button" onClick={onHide}>
+      <button type="button" className="close-button" onClick={onHide}>
         <Close className="w-5 h-5" />
       </button>
     )}

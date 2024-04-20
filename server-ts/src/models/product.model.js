@@ -1,0 +1,93 @@
+const { Schema, model } = require("mongoose");
+const toLowerCaseNonAccentVietnamese = require("../utils/toLowerCaseNonAccentVietnamese.util");
+
+const productSchema = new Schema(
+  {
+    title: {
+      type: String,
+      index: true,
+    },
+    slug: {
+      type: String,
+      index: true,
+    },
+    parentCategory: {
+      type: Schema.Types.ObjectId,
+      ref: "Category",
+    },
+    childCategory: {
+      type: Schema.Types.ObjectId,
+      ref: "Category",
+    },
+    images: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Image",
+      },
+    ],
+    price: Number,
+    discountPercent: {
+      type: Number,
+      default: 0,
+    },
+
+    discountedPrice: {
+      type: Number,
+      default: function () {
+        return this.price - (this.price * this.discountPercent) / 100;
+      },
+    },
+
+    stock: Number,
+    taste: {
+      type: String,
+      enum: ["mặn", "ngọt", "chua", "cay"],
+    },
+    size: {
+      type: String,
+      enum: ["nhỏ", "vừa", "lớn"],
+    },
+    description: String,
+    reviews: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Review",
+      },
+    ],
+    avgRating: {
+      type: Number,
+      default: 0,
+    },
+  },
+  {
+    timestamps: true,
+    versionKey: false,
+  }
+);
+
+productSchema.index({ slug: 1 });
+
+// before save
+productSchema.pre("save", function (next) {
+  if (this.title && !this.slug) {
+    this.slug = toLowerCaseNonAccentVietnamese(this.title.replace(/\s+/g, "-"));
+  }
+
+  next();
+});
+
+// before update
+productSchema.pre("findOneAndUpdate", function (next) {
+  const update = this.getUpdate();
+  if (update.$set.title && !update.$set.slug) {
+    update.$set.slug = toLowerCaseNonAccentVietnamese(
+      update.$set.title.replace(/\s+/g, "-")
+    );
+  }
+
+  next();
+});
+
+const Product = model("Product", productSchema);
+
+module.exports = Product;

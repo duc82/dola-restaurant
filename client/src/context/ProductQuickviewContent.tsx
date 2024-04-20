@@ -25,7 +25,9 @@ export const ProductQuickviewProvider = ({ children }: ChildrenProps) => {
     setIsActive(true);
   };
 
-  const onCloseClick = () => setIsActive(false);
+  const onCloseClick = () => {
+    setIsActive(false);
+  };
 
   return (
     <ProductQuickviewContext.Provider

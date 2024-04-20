@@ -12,6 +12,8 @@ import Input from "../Input";
 import Select from "../Select";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Upload } from "@/icons";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { storage } from "@/configs/firebase";
 
 const CreateModal = ({ show, onClose }: CreateModalProps) => {
   const { categories } = useAppSelector((state) => state.category);
@@ -37,24 +39,27 @@ const CreateModal = ({ show, onClose }: CreateModalProps) => {
       }
     },
   });
+  const storageRef = ref(storage, `categories/${file?.name}`);
 
   const formik = useFormik({
     initialValues: {
       name: "",
       description: "",
-      parentCategory: "",
+      parentCategory: "" as string | undefined,
+      image: "",
     },
     onSubmit: async (values, { resetForm }) => {
       try {
-        const formData = new FormData();
-        formData.append("name", values.name);
-        formData.append("image", file ? file : "");
-        formData.append("description", values.description);
-        if (values.parentCategory) {
-          formData.append("parentCategory", values.parentCategory);
+        console.time("Upload file");
+        if (!values.parentCategory) {
+          delete values.parentCategory;
         }
-
-        const data = await dispatch(createCategory(formData)).unwrap();
+        await uploadBytes(storageRef, file as File)
+          .then((snapshot) => getDownloadURL(snapshot.ref))
+          .then((url) => {
+            values.image = url;
+          });
+        const data = await dispatch(createCategory(values)).unwrap();
         onClose();
         toast.success(data.message);
         resetForm();
@@ -76,9 +81,7 @@ const CreateModal = ({ show, onClose }: CreateModalProps) => {
       contentClassName="bg-emerald-secondary text-white"
     >
       <Modal.Header>
-        <Modal.Title className="text-xl">
-          Thêm mới danh mục sản phẩm
-        </Modal.Title>
+        <Modal.Title className="text-xl">Thêm danh mục sản phẩm</Modal.Title>
       </Modal.Header>
       <form onSubmit={formik.handleSubmit}>
         <Modal.Body>

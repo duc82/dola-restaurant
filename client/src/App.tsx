@@ -70,7 +70,7 @@ const App = () => {
         <Route path="tin-tuc/:title" element={<BlogDetail />} />
         <Route path="he-thong-nha-hang" element={<Showroom />} />
         <Route path="lien-he" element={<Contact />} />
-        {/* <Route path="dat-ban" element={<Booking />} /> */}
+        <Route path="dat-ban" element={<Booking />} />
         <Route path="danh-muc-san-pham/:category" element={<ProductList />} />
         <Route path="san-pham/:slug" element={<ProductDetail />} />
         <Route path="gio-hang" element={<Cart />} />

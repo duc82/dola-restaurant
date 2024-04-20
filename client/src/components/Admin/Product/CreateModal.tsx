@@ -52,7 +52,7 @@ const CreateModal = ({ show, onClose }: CreateModalProps) => {
   const formik = useFormik({
     initialValues: {
       title: "",
-      category: childCategories[0]._id,
+      category: childCategories[0]?._id ?? "",
       description: "",
       taste: tastes[0],
       size: sizes[0],

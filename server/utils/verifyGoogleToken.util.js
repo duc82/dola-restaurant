@@ -11,7 +11,7 @@ const googleClient = new OAuth2Client(
 );
 
 const verifyGoogleToken = async (code) => {
-  const { tokens } = await googleClient.getToken(code);
+  const { tokens } = await googleClient.getToken(code); // exchange code for tokens
   const ticket = await googleClient.verifyIdToken({
     idToken: tokens.id_token,
     audience: clientIdGoogle,

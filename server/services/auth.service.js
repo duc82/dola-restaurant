@@ -1,5 +1,4 @@
 require("dotenv").config();
-const transporter = require("../configs/nodemailer.config");
 const UserService = require("./user.service");
 const jwt = require("jsonwebtoken");
 const util = require("util");
@@ -9,6 +8,7 @@ const verifyGoogleToken = require("../utils/verifyGoogleToken.util");
 const crypto = require("crypto");
 const Token = require("../models/token.model");
 const mongoose = require("mongoose");
+const logger = require("../utils/logger.util");
 
 const sign = util.promisify(jwt.sign);
 const verify = util.promisify(jwt.verify);
@@ -24,14 +24,17 @@ class AuthService {
 
   async verifyFacebookToken(accessToken) {
     const res = await fetch(
-      `https://graph.facebook.com/v16.0/me?fields=name,email&access_token=${accessToken}`
+      `https://graph.facebook.com/v19.0/me?fields=name,email&access_token=${accessToken}`
     );
 
     if (res.ok) {
       return res.json();
     }
 
-    return null;
+    throw new CustomError({
+      message: "Lỗi xác thực tài khoản Facebook",
+      status: 400,
+    });
   }
 
   async generateJwtToken(payload, options) {
@@ -46,12 +49,14 @@ class AuthService {
     return payload;
   }
 
-  async loginGoogle(code) {
+  async loginGoogle(code, res) {
     const payload = await verifyGoogleToken(code);
 
     const filter = {
       email: payload.email,
     };
+
+    logger.info(payload);
 
     const doc = {
       fullName: `${payload.given_name} ${payload.family_name}`,
@@ -67,26 +72,29 @@ class AuthService {
       role: user.role,
     };
 
-    await attachCookieToResponse({
-      res,
-      name: "accessToken",
-      payload: userPayload,
-      tokenExpires: this.accessTokenExpiresIn,
-    });
-    await attachCookieToResponse({
-      res,
-      name: "refreshToken",
-      payload: userPayload,
-      tokenExpires: this.refreshTokenExpiresIn,
+    const accessToken = await this.generateJwtToken(userPayload, {
+      expiresIn: this.accessTokenExpiresIn / 1000,
     });
 
-    return { message: "Đăng nhập thành công", user };
+    const refreshToken = await this.generateJwtToken(userPayload, {
+      expiresIn: this.refreshTokenExpiresIn / 1000,
+    });
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      maxAge: this.refreshTokenExpiresIn,
+    });
+
+    return { message: "Đăng nhập thành công", user, accessToken };
   }
 
-  async loginFacebook(accessToken) {
+  async loginFacebook(accessToken, res) {
     const payload = await this.verifyFacebookToken(accessToken);
+    console.log(accessToken);
 
-    const user = await this.findOneOrCreate(
+    const user = await this.userService.findOneOrCreate(
       { email: payload.email },
       {
         fullName: payload.name,
@@ -100,20 +108,26 @@ class AuthService {
       role: user.role,
     };
 
-    await attachCookieToResponse({
-      res,
-      name: "accessToken",
-      payload: userPayload,
-      tokenExpires: this.accessTokenExpiresIn,
-    });
-    await attachCookieToResponse({
-      res,
-      name: "refreshToken",
-      payload: userPayload,
-      tokenExpires: this.refreshTokenExpiresIn,
+    const accessTokenJwt = await this.generateJwtToken(userPayload, {
+      expiresIn: this.accessTokenExpiresIn / 1000,
     });
 
-    return { message: "Đăng nhập thành công", user };
+    const refreshToken = await this.generateJwtToken(userPayload, {
+      expiresIn: this.refreshTokenExpiresIn / 1000,
+    });
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      maxAge: this.refreshTokenExpiresIn,
+    });
+
+    return {
+      message: "Đăng nhập thành công",
+      user,
+      accessToken: accessTokenJwt,
+    };
   }
 
   async signUp(body, ipAddress) {

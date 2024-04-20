@@ -22,7 +22,6 @@ const Header = () => {
   const { pathname } = useLocation();
   const isHomePage = pathname === "/";
   const { count } = useAppSelector((state) => state.cart);
-  const { categories } = useAppSelector((state) => state.category);
   const dispatch = useAppDispatch();
 
   const openNavbar = () => {
@@ -36,21 +35,18 @@ const Header = () => {
   };
 
   useEffect(() => {
-    if (categories.length > 0) return;
     categoryService
       .getAll()
       .then((data) => {
-        if (data.length) {
-          dispatch(setCategories(data));
-        }
+        dispatch(setCategories(data));
       })
       .catch((error) => console.log(error));
-  }, [dispatch, categories]);
+  }, [dispatch]);
 
   return (
     <header
       className={cn(
-        " w-full z-[999] bg-emerald-primary lg:bg-emerald-blur",
+        "bg-emerald-primary lg:bg-emerald-blur",
         "lg:absolute lg:top-0" && isHomePage
       )}
     >
@@ -86,7 +82,7 @@ const Header = () => {
             >
               <MenuBar className="w-6 h-6 text-white" />
             </button>
-            <div className="inline-flex items-center space-x-4">
+            <div className="inline-flex items-center space-x-4 h-11 lg:h-auto">
               <div
                 onClick={() => setIsOpenSearchMobile(!isOpenSearchMobile)}
                 className="relative hover:text-yellow-primary lg:py-6 group"
@@ -112,7 +108,7 @@ const Header = () => {
               <Link
                 to="/he-thong-nha-hang"
                 title="Hệ thống nhà hàng"
-                className="hover:text-yellow-primary hidden lg:block lg:py-6"
+                className="hover:text-yellow-primary lg:py-6"
               >
                 <Geo className="w-5 h-5" />
               </Link>

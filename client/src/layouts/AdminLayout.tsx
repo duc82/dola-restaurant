@@ -22,7 +22,7 @@ const AdminLayout = () => {
         });
     } else {
       if (user.role !== "admin") {
-        navigate("/");
+        navigate(-1);
       }
     }
   }, [user, dispatch, navigate]);
@@ -30,7 +30,7 @@ const AdminLayout = () => {
   return (
     <>
       <Header toggleSidebar={() => setActiveSidebar(!isActiveSidebar)} />
-      <Sidebar />
+      <Sidebar active={isActiveSidebar} />
       <div className="pt-[66px] md:pt-20 lg:pt-[88px] flex h-full overflow-y-auto lg:ml-64">
         <Outlet />
       </div>

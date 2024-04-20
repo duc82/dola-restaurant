@@ -31,7 +31,7 @@ router.post(
 
 router.post(
   "/login/facebook",
-  validation.validateDto(authDto.loginGoogle),
+  validation.validateDto(authDto.loginFacebook),
   authController.loginFacebook
 );
 

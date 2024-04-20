@@ -1,3 +1,5 @@
+import { UserResponse } from "./user";
+
 interface LoginDTO {
   email: string;
   password: string;
@@ -8,4 +10,8 @@ interface SignUpDTO extends LoginDTO {
   phone: string;
 }
 
-export type { LoginDTO, SignUpDTO };
+interface LoginResponse extends UserResponse {
+  accessToken: string;
+}
+
+export type { LoginDTO, SignUpDTO, LoginResponse };

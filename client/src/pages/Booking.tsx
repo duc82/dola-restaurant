@@ -27,7 +27,7 @@ const Booking = () => {
         <Breadcrumb.Item href="/">Trang chủ</Breadcrumb.Item>
         <Breadcrumb.Item active>{title}</Breadcrumb.Item>
       </Breadcrumb>
-      <Container>
+      <Container className="mb-5">
         <section className="bg-booking bg-center bg-no-repeat bg-cover rounded-2xl p-2.5 lg:p-[50px]">
           <div className="rounded-2xl bg-emerald-primary p-5 w-full xl:max-w-[50%] mx-auto">
             <Title className="mb-[30px]">Liên hệ đặt bàn</Title>
