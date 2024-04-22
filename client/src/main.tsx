@@ -11,7 +11,7 @@ import { HelmetProvider } from "react-helmet-async";
 import { AddedCartProvider } from "./context/AddedCartContext";
 import { PersistGate } from "redux-persist/integration/react";
 
-ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
+ReactDOM.createRoot(document.getElementById("root")!).render(
   <Router>
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>

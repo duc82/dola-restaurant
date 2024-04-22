@@ -23,12 +23,12 @@ const Voucher = () => {
     openDeleteModal,
     closeModal,
     id,
-    ids,
+    selectedRows,
     isDeleteMany,
-    selectedAllRef,
+    selectedRowsRef,
     handleSelect,
     handleSelectAll,
-    clearDeleteMany,
+    clearDeleteMany
   } = useAdminModal();
   const dispatch = useAppDispatch();
   const { vouchers } = useAppSelector((state) => state.voucher);
@@ -36,9 +36,11 @@ const Voucher = () => {
   const handleDelete = async () => {
     try {
       if (isDeleteMany) {
-        const data = await voucherService.deleteMany(ids);
+        const data = await voucherService.deleteMany(selectedRows);
         dispatch(
-          setVouchers(vouchers.filter((voucher) => !ids.includes(voucher._id)))
+          setVouchers(
+            vouchers.filter((voucher) => !selectedRows.includes(voucher._id))
+          )
         );
         toast.success(data.message);
         clearDeleteMany();
@@ -91,7 +93,7 @@ const Voucher = () => {
             </form>
             <button
               type="button"
-              onClick={() => openDeleteModal(ids)}
+              onClick={() => openDeleteModal(selectedRows)}
               className="p-1 group hover:bg-emerald-secondary rounded cursor-pointer transition"
             >
               <Dustbin className="w-6 h-6 text-gray-400 group-hover:text-white transition" />
@@ -119,7 +121,7 @@ const Voucher = () => {
                     type="checkbox"
                     name="all"
                     id="all"
-                    ref={selectedAllRef}
+                    ref={selectedRowsRef}
                     onChange={(e) =>
                       handleSelectAll(
                         e,
@@ -162,7 +164,7 @@ const Voucher = () => {
                       type="checkbox"
                       name="userId"
                       id={voucher._id}
-                      checked={ids.includes(voucher._id)}
+                      checked={selectedRows.includes(voucher._id)}
                       onChange={(e) =>
                         handleSelect(e, voucher._id, vouchers.length)
                       }

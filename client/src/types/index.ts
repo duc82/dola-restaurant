@@ -42,6 +42,7 @@ interface Pagination {
   page: number;
   limit: number;
   total: number;
+  skip: number;
 }
 
 export type {
@@ -53,5 +54,5 @@ export type {
   FullType,
   FilePreview,
   Filter,
-  Pagination,
+  Pagination
 };

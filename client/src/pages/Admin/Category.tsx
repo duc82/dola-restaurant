@@ -9,7 +9,8 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
   deleteCategory,
   setCategories,
-  sortCategories,
+  setCategoriesPagination,
+  sortCategories
 } from "@/store/reducers/categorySlice";
 import formatDate from "@/utils/formatDate";
 import handlingAxiosError from "@/utils/handlingAxiosError";
@@ -35,19 +36,19 @@ const Category = () => {
     openDeleteModal,
     closeModal,
     id,
-    ids,
+    selectedRows,
     isDeleteMany,
-    selectedAllRef,
+    selectedRowsRef,
     handleSelect,
     handleSelectAll,
-    clearDeleteMany,
+    clearDeleteMany
   } = useAdminModal();
   const dispatch = useAppDispatch();
   const [urlSearchParams, setUrlSearchParams] = useSearchParams();
   const [activeLimit, setActiveLimit] = useState(limits[0]);
   const [sort, setSort] = useState<Sort>({
     key: "createdAt",
-    order: "asc",
+    order: "asc"
   });
   const search = urlSearchParams.get("search") ?? "";
   const page = parseInt(urlSearchParams.get("page") ?? "1");
@@ -57,8 +58,8 @@ const Category = () => {
   const handleDelete = async () => {
     try {
       if (isDeleteMany) {
-        const data = await categoryService.deleteMany(ids);
-        for (const id of ids) {
+        const data = await categoryService.deleteMany(selectedRows);
+        for (const id of selectedRows) {
           dispatch(deleteCategory(id));
         }
         toast.success(data.message);
@@ -90,13 +91,21 @@ const Category = () => {
 
   useEffect(() => {
     categoryService
-      .getAll({
+      .getAllPaginate({
         search,
         page,
-        limit: activeLimit,
+        limit: activeLimit
       })
       .then((data) => {
-        dispatch(setCategories(data));
+        dispatch(setCategories(data.categories));
+        dispatch(
+          setCategoriesPagination({
+            total: data.total,
+            skip: data.skip,
+            limit: data.limit,
+            page: data.page
+          })
+        );
       });
   }, [dispatch, search, page, activeLimit]);
 
@@ -134,7 +143,7 @@ const Category = () => {
             </form>
             <button
               type="button"
-              onClick={() => openDeleteModal(ids)}
+              onClick={() => openDeleteModal(selectedRows)}
               className="p-1 group hover:bg-emerald-secondary rounded cursor-pointer transition"
             >
               <Dustbin className="w-6 h-6 text-gray-400 group-hover:text-white transition" />
@@ -163,7 +172,7 @@ const Category = () => {
                     type="checkbox"
                     name="all"
                     id="all"
-                    ref={selectedAllRef}
+                    ref={selectedRowsRef}
                     onChange={(e) =>
                       handleSelectAll(
                         e,
@@ -186,7 +195,7 @@ const Category = () => {
                   onClick={() => {
                     setSort((prev) => ({
                       key: "name",
-                      order: prev.order === "asc" ? "desc" : "asc",
+                      order: prev.order === "asc" ? "desc" : "asc"
                     }));
                   }}
                 >
@@ -211,7 +220,7 @@ const Category = () => {
                   onClick={() => {
                     setSort((prev) => ({
                       key: "createdAt",
-                      order: prev.order === "asc" ? "desc" : "asc",
+                      order: prev.order === "asc" ? "desc" : "asc"
                     }));
                   }}
                 >
@@ -239,7 +248,7 @@ const Category = () => {
                       type="checkbox"
                       name="categoryId"
                       id={category._id}
-                      checked={ids.includes(category._id)}
+                      checked={selectedRows.includes(category._id)}
                       onChange={(e) =>
                         handleSelect(e, category._id, categories.length)
                       }

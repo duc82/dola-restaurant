@@ -43,6 +43,18 @@ const categorySlice = createSlice({
       state.categories = payload;
     },
 
+    setCategoriesPagination(
+      state,
+      {
+        payload
+      }: PayloadAction<Pick<CategoryState, "total" | "page" | "limit" | "skip">>
+    ) {
+      state.total = payload.total;
+      state.page = payload.page;
+      state.limit = payload.limit;
+      state.skip = payload.skip;
+    },
+
     sortCategories(
       state,
       {
@@ -91,7 +103,8 @@ export const {
   setCategories,
   updateCategories,
   deleteCategory,
-  sortCategories
+  sortCategories,
+  setCategoriesPagination
 } = categorySlice.actions;
 
 export default categorySlice.reducer;

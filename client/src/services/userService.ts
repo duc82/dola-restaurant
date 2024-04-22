@@ -25,12 +25,14 @@ const userService = {
     }
 
     return apiRequest<UsersResponse>("/users" + query, {
+      accessToken: true,
       refreshToken: true
     });
   },
 
   getCurrent: () => {
     return apiRequest<FullUser>("/users/current", {
+      accessToken: true,
       refreshToken: true
     });
   },
@@ -38,6 +40,7 @@ const userService = {
   create: (user: User) => {
     return apiRequest<UserResponse>("/users/create", {
       method: "POST",
+      accessToken: true,
       refreshToken: true,
       data: user
     });
@@ -46,6 +49,7 @@ const userService = {
   updateCurrent: (data: UserUpdateCurrentDTO) => {
     return apiRequest<UserResponse>("/users/update/current", {
       method: "PUT",
+      accessToken: true,
       refreshToken: true,
       data
     });
@@ -62,6 +66,7 @@ const userService = {
   changePassword: (data: { oldPassword: string; newPassword: string }) => {
     return apiRequest<UserResponse>("/users/changePassword", {
       method: "POST",
+      accessToken: true,
       refreshToken: true,
       data
     });
@@ -70,6 +75,7 @@ const userService = {
   delete: (id: string) => {
     return apiRequest<{ message: string }>(`/users/delete/${id}`, {
       method: "DELETE",
+      accessToken: true,
       refreshToken: true
     });
   },
@@ -77,6 +83,7 @@ const userService = {
   deleteMany: (ids: string[]) => {
     return apiRequest<{ message: string }>("/users/delete-many", {
       method: "DELETE",
+      accessToken: true,
       refreshToken: true,
       data: { ids }
     });

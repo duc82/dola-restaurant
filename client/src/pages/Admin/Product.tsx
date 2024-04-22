@@ -25,10 +25,10 @@ const Product = () => {
     openUpdateModal,
     openDeleteModal,
     id,
-    ids,
-    selectedAllRef,
+    selectedRows,
+    selectedRowsRef,
     handleSelect,
-    handleSelectAll,
+    handleSelectAll
   } = useAdminModal();
   const [urlSearchParams, setUrlSearchParams] = useSearchParams();
   const { products, total, limit } = useAppSelector((state) => state.product);
@@ -114,7 +114,7 @@ const Product = () => {
                     type="checkbox"
                     name="all"
                     id="all"
-                    ref={selectedAllRef}
+                    ref={selectedRowsRef}
                     onChange={(e) =>
                       handleSelectAll(
                         e,
@@ -164,7 +164,7 @@ const Product = () => {
                       type="checkbox"
                       name="productId"
                       id={product._id}
-                      checked={ids.includes(product._id)}
+                      checked={selectedRows.includes(product._id)}
                       onChange={(e) =>
                         handleSelect(e, product._id, products.length)
                       }

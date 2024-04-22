@@ -10,7 +10,7 @@ const AdminLayout = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { user } = useAppSelector((state) => state.user);
-  const [isActiveSidebar, setActiveSidebar] = useState(false);
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     if (!user) {
@@ -29,8 +29,8 @@ const AdminLayout = () => {
 
   return (
     <>
-      <Header toggleSidebar={() => setActiveSidebar(!isActiveSidebar)} />
-      <Sidebar active={isActiveSidebar} />
+      <Header toggleSidebar={() => setSidebarOpen(!isSidebarOpen)} />
+      <Sidebar isOpen={isSidebarOpen} />
       <div className="pt-[66px] md:pt-20 lg:pt-[88px] flex h-full overflow-y-auto lg:ml-64">
         <Outlet />
       </div>

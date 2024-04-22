@@ -2,14 +2,14 @@ import admins from "@/data/admins";
 import cn from "@/utils/cn";
 import { Link, useLocation } from "react-router-dom";
 
-const Sidebar = ({ active }: { active: boolean }) => {
+const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
   const { pathname } = useLocation();
 
   return (
     <aside
       className={cn(
         "block h-full fixed top-0 left-0 bg-emerald-secondary border-r border-r-gray-600 pt-[66px] md:pt-20 lg:pt-[88px] flex-none group w-72 lg:w-64 overflow-y-auto transition duration-500 -translate-x-full lg:translate-x-0 z-40",
-        active && "translate-x-0"
+        isOpen && "translate-x-0"
       )}
     >
       <ul className="px-3 pt-3">

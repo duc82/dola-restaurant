@@ -9,7 +9,7 @@ import useAdminModal from "@/hooks/useAdminModal";
 import {
   deleteManyUser,
   deleteUser,
-  getAllUser,
+  getAllUser
 } from "@/store/reducers/userSlice";
 import formatDate from "@/utils/formatDate";
 import CreateModal from "@/components/Admin/User/CreateModal";
@@ -28,12 +28,12 @@ const User = () => {
     openDeleteModal,
     closeModal,
     id,
-    ids,
+    selectedRows,
     handleSelect,
     handleSelectAll,
     clearDeleteMany,
     isDeleteMany,
-    selectedAllRef,
+    selectedRowsRef
   } = useAdminModal();
   const [urlSearchParams, setUrlSearchParams] = useSearchParams();
 
@@ -49,12 +49,7 @@ const User = () => {
 
   const handleDelete = async () => {
     try {
-      if (isDeleteMany) {
-        await dispatch(deleteManyUser(ids)).unwrap();
-        clearDeleteMany();
-      } else {
-        await dispatch(deleteUser(id)).unwrap();
-      }
+      await dispatch(deleteUser(id));
       closeModal();
       toast.success("Xóa người dùng thành công");
     } catch (error) {
@@ -64,11 +59,10 @@ const User = () => {
 
   useEffect(() => {
     const limit = 3;
-    const query = urlSearchParams.toString();
-    dispatch(getAllUser({ query, limit }));
-  }, [dispatch, urlSearchParams]);
+    dispatch(getAllUser({ limit, page, search }));
+  }, [dispatch, page, search]);
 
-  const pageCount = limit > 0 ? Math.ceil(total / limit) : 0;
+  const pageCount = Math.ceil(total / limit);
 
   return (
     <div className="overflow-y-auto w-full">
@@ -96,7 +90,7 @@ const User = () => {
             </form>
             <button
               type="button"
-              onClick={() => openDeleteModal(ids)}
+              onClick={() => openDeleteModal(selectedRows)}
               className="p-1 group hover:bg-emerald-secondary rounded cursor-pointer transition"
             >
               <Dustbin className="w-6 h-6 text-gray-400 group-hover:text-white transition" />
@@ -123,7 +117,7 @@ const User = () => {
                     type="checkbox"
                     name="all"
                     id="all"
-                    ref={selectedAllRef}
+                    ref={selectedRowsRef}
                     onChange={(e) =>
                       handleSelectAll(
                         e,
@@ -169,7 +163,7 @@ const User = () => {
                       type="checkbox"
                       name="userId"
                       id={user._id}
-                      checked={ids.includes(user._id)}
+                      checked={selectedRows.includes(user._id)}
                       onChange={(e) => handleSelect(e, user._id, users.length)}
                       className="w-3.5 h-3.5 bg-emerald-primary rounded focus:ring-offset-emerald-primary"
                     />

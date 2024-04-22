@@ -26,7 +26,7 @@ class CategoryService {
 
       const total = await Category.countDocuments(filter);
 
-      return { categories, total, page, limit };
+      return { categories, total, page, limit, skip };
     }
 
     return await Category.find(filter).populate("parentCategory");

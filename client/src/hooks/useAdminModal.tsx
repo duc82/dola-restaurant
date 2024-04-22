@@ -3,20 +3,20 @@ import { ChangeEvent, useCallback, useRef, useState } from "react";
 const initialActiveModal = {
   create: false,
   update: false,
-  delete: false,
+  delete: false
 };
 
 const useAdminModal = () => {
   const [activeModal, setActiveModal] = useState(initialActiveModal);
+  const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [id, setId] = useState("");
-  const [ids, setIds] = useState<string[]>([]);
   const [isDeleteMany, setIsDeleteMany] = useState(false);
-  const selectedAllRef = useRef<HTMLInputElement | null>(null);
+  const selectedRowsRef = useRef<HTMLInputElement | null>(null);
 
   const openCreateModal = () => {
     setActiveModal((prev) => ({
       ...prev,
-      create: true,
+      create: true
     }));
   };
 
@@ -24,7 +24,7 @@ const useAdminModal = () => {
     setId(id);
     setActiveModal((prev) => ({
       ...prev,
-      update: true,
+      update: true
     }));
   };
 
@@ -33,13 +33,13 @@ const useAdminModal = () => {
       setId(data);
       setIsDeleteMany(false);
     } else {
-      setIds(data);
+      setSelectedRows(data);
       setIsDeleteMany(true);
     }
 
     setActiveModal((prev) => ({
       ...prev,
-      delete: true,
+      delete: true
     }));
   };
 
@@ -47,12 +47,15 @@ const useAdminModal = () => {
     setActiveModal(initialActiveModal);
   };
 
-  const handleSelectAll = (e: ChangeEvent<HTMLInputElement>, ids: string[]) => {
+  const handleSelectAll = (
+    e: ChangeEvent<HTMLInputElement>,
+    selectedRows: string[]
+  ) => {
     const isSelectAll = e.target.checked;
     if (isSelectAll) {
-      setIds(ids);
+      setSelectedRows(selectedRows);
     } else {
-      setIds([]);
+      setSelectedRows([]);
     }
   };
 
@@ -60,13 +63,13 @@ const useAdminModal = () => {
     (e: ChangeEvent<HTMLInputElement>, id: string, maxLength: number) => {
       const isSelect = e.target.checked;
 
-      const selectedAll = selectedAllRef.current;
+      const selectedAll = selectedRowsRef.current;
       if (!selectedAll) return;
 
-      const newSelected = [...ids];
+      const newSelected = [...selectedRows];
       if (isSelect) {
         newSelected.push(id);
-        setIds(newSelected);
+        setSelectedRows(newSelected);
         if (newSelected.length === maxLength) {
           selectedAll.checked = true;
         }
@@ -74,33 +77,33 @@ const useAdminModal = () => {
         const index = newSelected.indexOf(id);
         if (index !== -1) {
           newSelected.splice(index, 1);
-          setIds(newSelected);
+          setSelectedRows(newSelected);
         }
         selectedAll.checked = false;
       }
     },
-    [ids]
+    [selectedRows]
   );
 
   const clearDeleteMany = () => {
-    setIds([]);
-    selectedAllRef.current!.checked = false;
+    setSelectedRows([]);
+    selectedRowsRef.current!.checked = false;
     setIsDeleteMany(false);
   };
 
   return {
     activeModal,
     id,
-    ids,
+    selectedRows,
     isDeleteMany,
     openCreateModal,
     openUpdateModal,
     openDeleteModal,
     closeModal,
-    selectedAllRef,
+    selectedRowsRef,
     handleSelectAll,
     handleSelect,
-    clearDeleteMany,
+    clearDeleteMany
   };
 };
 
