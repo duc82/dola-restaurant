@@ -3,7 +3,7 @@ import {
   User,
   UserResponse,
   UserUpdateCurrentDTO,
-  UsersResponse,
+  UsersResponse
 } from "@/types/user";
 import apiRequest from "./api";
 import { Filter } from "@/types";
@@ -12,69 +12,75 @@ const userService = {
   getAll: (filter?: Filter) => {
     let query = "";
 
-    if (filter?.query) {
-      query += `?${filter.query}`;
-    }
-
-    if (filter?.search) {
-      query += query ? `&search=${filter.search}` : `?search=${filter.search}`;
+    if (filter?.page) {
+      query += query ? `&page=${filter.page}` : `?page=${filter.page}`;
     }
 
     if (filter?.limit) {
       query += query ? `&limit=${filter.limit}` : `?limit=${filter.limit}`;
     }
 
-    return apiRequest<UsersResponse>("/users" + query, "GET", {
-      refreshToken: true,
+    if (filter?.search) {
+      query += query ? `&search=${filter.search}` : `?search=${filter.search}`;
+    }
+
+    return apiRequest<UsersResponse>("/users" + query, {
+      refreshToken: true
     });
   },
 
   getCurrent: () => {
-    return apiRequest<FullUser>("/users/current", "GET", {
-      refreshToken: true,
+    return apiRequest<FullUser>("/users/current", {
+      refreshToken: true
     });
   },
 
   create: (user: User) => {
-    return apiRequest<UserResponse>("/users/create", "POST", {
+    return apiRequest<UserResponse>("/users/create", {
+      method: "POST",
       refreshToken: true,
-      data: user,
+      data: user
     });
   },
 
   updateCurrent: (data: UserUpdateCurrentDTO) => {
-    return apiRequest<UserResponse>("/users/update/current", "PUT", {
+    return apiRequest<UserResponse>("/users/update/current", {
+      method: "PUT",
       refreshToken: true,
-      data,
+      data
     });
   },
 
   update: (id: string, data: Partial<User>) => {
-    return apiRequest<UserResponse>(`/users/update/${id}`, "PUT", {
+    return apiRequest<UserResponse>(`/users/update/${id}`, {
+      method: "PUT",
       refreshToken: true,
-      data,
+      data
     });
   },
 
   changePassword: (data: { oldPassword: string; newPassword: string }) => {
-    return apiRequest<UserResponse>("/users/changePassword", "POST", {
+    return apiRequest<UserResponse>("/users/changePassword", {
+      method: "POST",
       refreshToken: true,
-      data,
+      data
     });
   },
 
   delete: (id: string) => {
-    return apiRequest<{ message: string }>(`/users/delete/${id}`, "DELETE", {
-      refreshToken: true,
+    return apiRequest<{ message: string }>(`/users/delete/${id}`, {
+      method: "DELETE",
+      refreshToken: true
     });
   },
 
   deleteMany: (ids: string[]) => {
-    return apiRequest<{ message: string }>("/users/delete-many", "DELETE", {
+    return apiRequest<{ message: string }>("/users/delete-many", {
+      method: "DELETE",
       refreshToken: true,
-      data: { ids },
+      data: { ids }
     });
-  },
+  }
 };
 
 export default userService;

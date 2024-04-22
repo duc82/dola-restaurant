@@ -7,19 +7,29 @@ class CategoryService {
     return await Category.findById(id).populate("parentCategory");
   }
 
-  async getAll(search, page, limit) {
-    const filter = {
-      name: { $regex: search, $options: "i" },
-    };
-    const skip = (page - 1) * limit;
+  async getAll(query) {
+    const { page, limit, search } = query;
 
-    const categories = await Category.find(filter)
-      .skip(skip)
-      .limit(limit)
-      .populate("parentCategory");
+    const filter = search
+      ? {
+          name: { $regex: search, $options: "i" }
+        }
+      : {};
 
-    const total = await Category.countDocuments(filter);
-    return { categories, total, page, limit };
+    if (limit) {
+      const skip = (page - 1) * limit;
+
+      const categories = await Category.find(filter)
+        .skip(skip)
+        .limit(limit)
+        .populate("parentCategory");
+
+      const total = await Category.countDocuments(filter);
+
+      return { categories, total, page, limit };
+    }
+
+    return await Category.find(filter).populate("parentCategory");
   }
 
   async create(body) {
@@ -29,7 +39,7 @@ class CategoryService {
 
     return {
       message: "Tạo danh mục sản phẩm thành công",
-      category,
+      category
     };
   }
 
@@ -38,23 +48,23 @@ class CategoryService {
       name: body.name,
       image: file ? file.path : body.image,
       description: body.description,
-      parentCategory: body.parentCategory || null,
+      parentCategory: body.parentCategory || null
     };
 
     const category = await Category.findByIdAndUpdate(id, update, {
-      new: true,
+      new: true
     }).populate("parentCategory");
 
     if (!category) {
       throw new CustomError({
         message: "Không tìm thấy danh mục sản phẩm",
-        status: 404,
+        status: 404
       });
     }
 
     return {
       message: "Cập nhật danh mục sản phẩm thành công",
-      category,
+      category
     };
   }
 
@@ -64,12 +74,12 @@ class CategoryService {
     if (!category) {
       throw new CustomError({
         message: "Không tìm thấy danh mục sản phẩm",
-        status: 404,
+        status: 404
       });
     }
 
     await Product.deleteMany({
-      $or: [{ childCategory: id }, { parentCategory: id }],
+      $or: [{ childCategory: id }, { parentCategory: id }]
     });
 
     // check if category is parent category
@@ -78,7 +88,7 @@ class CategoryService {
     }
 
     return {
-      message: "Xóa danh mục sản phẩm thành công",
+      message: "Xóa danh mục sản phẩm thành công"
     };
   }
 
@@ -88,17 +98,17 @@ class CategoryService {
     if (categories.length === 0) {
       throw new CustomError({
         message: "Không tìm thấy danh mục sản phẩm",
-        status: 404,
+        status: 404
       });
     }
 
     await Category.deleteMany({ _id: { $in: ids } });
     await Product.deleteMany({
-      $or: [{ childCategory: { $in: ids } }, { parentCategory: { $in: ids } }],
+      $or: [{ childCategory: { $in: ids } }, { parentCategory: { $in: ids } }]
     });
 
     return {
-      message: "Xóa danh mục sản phẩm thành công",
+      message: "Xóa danh mục sản phẩm thành công"
     };
   }
 }

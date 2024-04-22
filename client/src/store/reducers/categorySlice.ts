@@ -4,7 +4,7 @@ import {
   CategoriesResponse,
   CategoryDto,
   CategoryResponse,
-  FullCategory,
+  FullCategory
 } from "@/types/category";
 import handlingAxiosError from "@/utils/handlingAxiosError";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
@@ -19,7 +19,7 @@ const initialState: CategoryState = {
   total: 0,
   page: 1,
   limit: 10,
-  skip: 0,
+  skip: 0
 };
 
 export const createCategory = createAsyncThunk<
@@ -39,18 +39,14 @@ const categorySlice = createSlice({
   name: "category",
   initialState,
   reducers: {
-    setCategories(state, { payload }: PayloadAction<CategoriesResponse>) {
-      state.categories = payload.categories;
-      state.total = payload.total;
-      state.page = payload.page;
-      state.limit = payload.limit;
-      state.skip = (payload.page - 1) * payload.limit;
+    setCategories(state, { payload }: PayloadAction<FullCategory[]>) {
+      state.categories = payload;
     },
 
     sortCategories(
       state,
       {
-        payload,
+        payload
       }: PayloadAction<{
         key: "name" | "createdAt";
         order: "asc" | "desc";
@@ -80,7 +76,7 @@ const categorySlice = createSlice({
         (category) => category._id !== payload
       );
       state.total -= 1;
-    },
+    }
   },
 
   extraReducers: (builder) => {
@@ -88,14 +84,14 @@ const categorySlice = createSlice({
       state.categories.push(payload.category);
       state.total += 1;
     });
-  },
+  }
 });
 
 export const {
   setCategories,
   updateCategories,
   deleteCategory,
-  sortCategories,
+  sortCategories
 } = categorySlice.actions;
 
 export default categorySlice.reducer;

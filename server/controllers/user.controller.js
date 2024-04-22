@@ -1,10 +1,9 @@
 const asyncHandler = require("../middlewares/asyncHandler.middleware");
 const UserService = require("../services/user.service");
-const BaseController = require("./base.controller");
+const logger = require("../utils/logger.util");
 
-class UserController extends BaseController {
+class UserController {
   constructor() {
-    super();
     this.userService = new UserService();
     this.getCurrent = asyncHandler(this.getCurrent.bind(this));
     this.getAll = asyncHandler(this.getAll.bind(this));
@@ -21,11 +20,9 @@ class UserController extends BaseController {
   }
 
   async getAll(req, res) {
-    const search = req.query.search || "";
-    const page = req.query.page > 0 ? +req.query.page : this.defaultPage;
-    const limit = req.query.limit > 0 ? +req.query.limit : this.defaultLimit;
+    logger.info(typeof req.query.limit);
 
-    res.json(await this.userService.getAll(search, page, limit));
+    res.json(await this.userService.getAll(req.query));
   }
 
   async create(req, res) {
@@ -44,7 +41,7 @@ class UserController extends BaseController {
     res.json(
       await this.userService.changePassword({
         userId: req.user.userId,
-        ...req.body,
+        ...req.body
       })
     );
   }

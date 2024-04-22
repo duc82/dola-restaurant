@@ -1,8 +1,5 @@
 const asyncHandler = require("../middlewares/asyncHandler.middleware");
-const Product = require("../models/product.model");
-const CustomError = require("../utils/error.util");
-const Category = require("../models/category.model");
-const Image = require("../models/image.model");
+
 const ProductService = require("../services/product.service");
 
 class ProductController {

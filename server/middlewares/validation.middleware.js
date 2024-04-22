@@ -1,38 +1,55 @@
 const CustomError = require("../utils/error.util");
 
-const Joi = require("joi");
+const Body = (schema) => {
+  return (req, res, next) => {
+    const { error, value } = schema.validate(req.body);
+    if (error) {
+      throw new CustomError({
+        status: 400,
+        message: error.message
+      });
+    }
 
-class Validation {
-  constructor() {}
-  validateDto(schema) {
-    return (req, _res, next) => {
-      const { error } = Joi.object().keys(schema).validate(req.body);
-      if (error) {
-        throw new CustomError({ message: error.message, status: 400 });
-      }
-      next();
-    };
-  }
+    req.body = value;
 
-  validateQuery(schema) {
-    return (req, _res, next) => {
-      const { error } = Joi.object().keys(schema).validate(req.query);
-      if (error) {
-        throw new CustomError({ message: error.message, status: 400 });
-      }
-      next();
-    };
-  }
+    next();
+  };
+};
 
-  validateParams(schema) {
-    return (req, _res, next) => {
-      const { error } = Joi.object().keys(schema).validate(req.params);
-      if (error) {
-        throw new CustomError({ message: error.message, status: 400 });
-      }
-      next();
-    };
-  }
-}
+const Query = (schema) => {
+  return (req, res, next) => {
+    const { error, value } = schema.validate(req.query);
+    if (error) {
+      throw new CustomError({
+        status: 400,
+        message: error.message
+      });
+    }
 
-module.exports = new Validation();
+    req.query = value;
+
+    next();
+  };
+};
+
+const Params = (schema) => {
+  return (req, res, next) => {
+    const { error, value } = schema.validate(req.params);
+    if (error) {
+      throw new CustomError({
+        status: 400,
+        message: error.message
+      });
+    }
+
+    req.params = value;
+
+    next();
+  };
+};
+
+module.exports = {
+  Body,
+  Query,
+  Params
+};

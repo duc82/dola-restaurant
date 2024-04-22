@@ -3,23 +3,22 @@ const winston = require("winston");
 const logger = winston.createLogger({
   level: "info",
   format: winston.format.json(),
-  defaultMeta: { service: "user-service" },
   transports: [
     new winston.transports.Console({
       format: winston.format.combine(
-        winston.format.colorize(),
-        winston.format.simple()
-      ),
-      level: "info",
-    }),
-    new winston.transports.File({ filename: "logger.log" }),
-  ],
-});
+        winston.format.timestamp({
+          format: "YYYY-MM-DD HH:mm:ss A"
+        }),
 
-logger.stream = {
-  write: function (message, encoding) {
-    logger.info(message);
-  },
-};
+        winston.format.printf(
+          (info) =>
+            `[${info.level.toUpperCase()}] ${info.timestamp}: ${info.message}`
+        ),
+        winston.format.colorize({ all: true })
+      )
+    }),
+    new winston.transports.File({ filename: "error.log", level: "error" })
+  ]
+});
 
 module.exports = logger;

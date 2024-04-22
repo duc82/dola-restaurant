@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const orderController = require("../controllers/order.controller");
-const validation = require("../middlewares/validation.middleware");
+const { Body } = require("../middlewares/validation.middleware");
 const OrderDto = require("../dtos/order.dto");
 const authenticationMiddleware = require("../middlewares/authentication.middleware");
 
@@ -10,7 +10,7 @@ const router = Router();
 
 router.post(
   "/create",
-  validation.validateDto(orderDto.create),
+  Body(orderDto.create),
   authenticationMiddleware,
   orderController.create
 );

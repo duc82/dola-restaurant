@@ -1,23 +1,15 @@
 const { Router } = require("express");
 const authController = require("../controllers/auth.controller");
-const validation = require("../middlewares/validation.middleware");
 const AuthDto = require("../dtos/auth.dto");
+const { Body } = require("../middlewares/validation.middleware");
 
 const authDto = new AuthDto();
 
 const router = Router();
 
-router.post(
-  "/signup",
-  validation.validateDto(authDto.signUp),
-  authController.signUp
-);
+router.post("/signup", Body(authDto.signUp), authController.signUp);
 
-router.post(
-  "/login",
-  validation.validateDto(authDto.login),
-  authController.login
-);
+router.post("/login", Body(authDto.login), authController.login);
 
 router.post("/logout", authController.logout);
 
@@ -25,19 +17,19 @@ router.post("/refreshToken", authController.refreshToken);
 
 router.post(
   "/login/google",
-  validation.validateDto(authDto.loginGoogle),
+  Body(authDto.loginGoogle),
   authController.loginGoogle
 );
 
 router.post(
   "/login/facebook",
-  validation.validateDto(authDto.loginFacebook),
+  Body(authDto.loginFacebook),
   authController.loginFacebook
 );
 
 router.post(
   "/forgotPassword",
-  validation.validateDto(authDto.forgotPassword),
+  Body(authDto.forgotPassword),
   authController.forgotPassword
 );
 router.post("/forgotPassword/verify", authController.verifyPasswordResetToken);

@@ -2,45 +2,49 @@ import {
   FullVoucher,
   Voucher,
   VoucherResponse,
-  VouchersResponse,
+  VouchersResponse
 } from "@/types/voucher";
 import apiRequest from "./api";
 
 const voucherService = {
   getAll: () => {
-    return apiRequest<VouchersResponse>("/vouchers", "GET");
+    return apiRequest<VouchersResponse>("/vouchers");
   },
 
   create: (data: Voucher) => {
-    return apiRequest<VoucherResponse>("/vouchers/create", "POST", {
+    return apiRequest<VoucherResponse>("/vouchers/create", {
+      method: "POST",
       refreshToken: true,
-      data,
+      data
     });
   },
 
   getById: (id: string) => {
-    return apiRequest<FullVoucher>(`/vouchers/${id}`, "GET");
+    return apiRequest<FullVoucher>(`/vouchers/${id}`);
   },
 
   update: (id: string, data: Voucher) => {
-    return apiRequest<VoucherResponse>(`/vouchers/update/${id}`, "PUT", {
+    return apiRequest<VoucherResponse>(`/vouchers/update/${id}`, {
+      method: "PUT",
       refreshToken: true,
-      data,
+      data
     });
   },
 
   delete: (id: string) => {
-    return apiRequest<{ message: string }>(`/vouchers/delete/${id}`, "DELETE", {
-      refreshToken: true,
+    return apiRequest<{ message: string }>(`/vouchers/delete/${id}`, {
+      method: "DELETE",
+      refreshToken: true
     });
   },
 
   deleteMany: (ids: string[]) => {
-    return apiRequest<{ message: string }>("/vouchers/delete-many", "DELETE", {
+    return apiRequest<{ message: string }>("/vouchers/delete-many", {
+      method: "DELETE",
       refreshToken: true,
-      data: { ids },
+      data: { ids }
     });
-  },
+  }
 };
 
 export default voucherService;

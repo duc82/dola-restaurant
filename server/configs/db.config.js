@@ -5,6 +5,7 @@ const MONGODB_URI = process.env.MONGODB_URI;
 
 if (!MONGODB_URI) {
   logger.error("Please provide MONGODB_URI in .env");
+  process.exit(1);
 }
 
 const connectDB = async () => {

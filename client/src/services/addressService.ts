@@ -6,7 +6,7 @@ import {
   District,
   FullAddress,
   Province,
-  Ward,
+  Ward
 } from "@/types/address";
 
 const addressService = {
@@ -34,30 +34,33 @@ const addressService = {
   },
 
   getCurrent: async () => {
-    return apiRequest<FullAddress[]>("addresses/current", "GET", {
-      refreshToken: true,
+    return apiRequest<FullAddress[]>("addresses/current", {
+      refreshToken: true
     });
   },
 
   create: (data: Address) => {
-    return apiRequest<AddressResponse>("addresses/create", "POST", {
+    return apiRequest<AddressResponse>("addresses/create", {
+      method: "POST",
       refreshToken: true,
-      data,
+      data
     });
   },
 
   update: (id: string, data: Address) => {
-    return apiRequest<AddressResponse>(`addresses/update/${id}`, "PUT", {
+    return apiRequest<AddressResponse>(`addresses/update/${id}`, {
+      method: "PUT",
       refreshToken: true,
-      data,
+      data
     });
   },
 
   deleteOne: (id: string) => {
-    return apiRequest<{ message: string }>(`addresses/delete/${id}`, "DELETE", {
-      refreshToken: true,
+    return apiRequest<{ message: string }>(`addresses/delete/${id}`, {
+      method: "DELETE",
+      refreshToken: true
     });
-  },
+  }
 };
 
 export default addressService;

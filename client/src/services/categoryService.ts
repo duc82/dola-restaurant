@@ -2,59 +2,68 @@ import {
   CategoriesResponse,
   CategoryDto,
   CategoryResponse,
+  FullCategory
 } from "@/types/category";
 import apiRequest from "./api";
 import { Filter } from "@/types";
 
 const categoryService = {
-  getAll: (filter?: Filter) => {
-    let query = `?search=${filter?.search ?? ""}`;
+  getAll: () => {
+    return apiRequest<FullCategory[]>("/categories");
+  },
+
+  getAllPaginate: (filter?: Filter) => {
+    let query = "";
 
     if (filter?.page) {
-      query += `&page=${filter.page}`;
+      query += query ? `&page=${filter.page}` : `?page=${filter.page}`;
     }
 
     if (filter?.limit) {
-      query += `&limit=${filter.limit}`;
+      query += query ? `&limit=${filter.limit}` : `?limit=${filter.limit}`;
     }
 
-    return apiRequest<CategoriesResponse>("/categories" + query, "GET");
+    if (filter?.search) {
+      query += query ? `&search=${filter.search}` : `?search=${filter.search}`;
+    }
+
+    return apiRequest<CategoriesResponse>("/categories" + query);
   },
 
   create: (data: CategoryDto) => {
-    return apiRequest<CategoryResponse>("/categories/create", "POST", {
+    return apiRequest<CategoryResponse>("/categories/create", {
+      method: "POST",
+      accessToken: true,
       refreshToken: true,
-      data,
+      data
     });
   },
 
   update: (id: string, formData: FormData) => {
-    return apiRequest<CategoryResponse>(`/categories/update/${id}`, "PUT", {
+    return apiRequest<CategoryResponse>(`/categories/update/${id}`, {
+      method: "PUT",
+      accessToken: true,
       refreshToken: true,
-      data: formData,
+      data: formData
     });
   },
 
   delete: (id: string) => {
-    return apiRequest<{ message: string }>(
-      `/categories/delete/${id}`,
-      "DELETE",
-      {
-        refreshToken: true,
-      }
-    );
+    return apiRequest<{ message: string }>(`/categories/delete/${id}`, {
+      method: "DELETE",
+      accessToken: true,
+      refreshToken: true
+    });
   },
 
   deleteMany: (ids: string[]) => {
-    return apiRequest<{ message: string }>(
-      "/categories/delete-many",
-      "DELETE",
-      {
-        refreshToken: true,
-        data: { ids },
-      }
-    );
-  },
+    return apiRequest<{ message: string }>("/categories/delete-many", {
+      method: "DELETE",
+      accessToken: true,
+      refreshToken: true,
+      data: { ids }
+    });
+  }
 };
 
 export default categoryService;

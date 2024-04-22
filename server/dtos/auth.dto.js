@@ -2,61 +2,58 @@ const Joi = require("joi");
 const UserDto = require("./user.dto");
 
 class AuthDto extends UserDto {
-  constructor() {
-    super();
-    this.code = Joi.string().required().messages({
-      "string.empty": "Code không được bỏ trống!",
-    });
-    this.accessToken = Joi.string().required().messages({
-      "string.empty": "AccessToken không được bỏ trống!",
-    });
-  }
+  code = Joi.string().required().messages({
+    "string.empty": "Code không được bỏ trống!"
+  });
+  accessToken = Joi.string().required().messages({
+    "string.empty": "AccessToken không được bỏ trống!"
+  });
 
   get signUp() {
-    return {
+    return Joi.object({
       fullName: this.fullName,
       email: this.email,
       phone: this.phone,
-      password: this.password,
-    };
+      password: this.password
+    });
   }
 
   get login() {
-    return {
+    return Joi.object({
       email: this.email,
-      password: this.password,
-    };
+      password: this.password
+    });
   }
 
   get forgotPassword() {
-    return {
-      email: this.email,
-    };
+    return Joi.object({
+      email: this.email
+    });
   }
 
   get verifyPasswordResetToken() {
-    return {
-      token: this.token,
-    };
+    return Joi.object({
+      token: this.token
+    });
   }
 
   get resetPassword() {
-    return {
+    return Joi.object({
       token: this.token,
-      newPassword: this.password,
-    };
+      newPassword: this.password
+    });
   }
 
   get loginGoogle() {
-    return {
-      code: this.code,
-    };
+    return Joi.object({
+      code: this.code
+    });
   }
 
   get loginFacebook() {
-    return {
-      accessToken: this.accessToken,
-    };
+    return Joi.object({
+      accessToken: this.accessToken
+    });
   }
 }
 

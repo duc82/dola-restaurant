@@ -1,39 +1,40 @@
 const { model, Schema } = require("mongoose");
-const toLowerCaseNonAccentVietnamese = require("../utils/toLowerCaseNonAccentVietnamese.util");
+const slug = require("slug");
 
 const categorySchema = new Schema(
   {
     name: {
       type: String,
       required: true,
-      index: true,
+      index: true
     },
-    slug: String,
+    slug: {
+      type: String,
+      required: true
+    },
     image: {
       type: String,
-      required: false,
+      required: false
     },
     description: {
       type: String,
-      required: false,
+      required: false
     },
     // subdocument nested
     parentCategory: {
       type: Schema.Types.ObjectId,
-      ref: "Category",
-    },
+      ref: "Category"
+    }
   },
   {
     timestamps: true,
-    versionKey: false,
+    versionKey: false
   }
 );
 
 categorySchema.pre("save", function (next) {
   if (this.name && !this.slug) {
-    this.slug = toLowerCaseNonAccentVietnamese(
-      this.name.replace(/[-\s]+/g, "-")
-    );
+    this.slug = slug(this.title);
   }
   next();
 });

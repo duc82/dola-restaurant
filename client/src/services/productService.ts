@@ -1,7 +1,7 @@
 import {
   FullProduct,
   ProductResponse,
-  ProductsResponse,
+  ProductsResponse
 } from "@/types/product";
 import apiRequest from "./api";
 
@@ -27,32 +27,35 @@ const productService = {
       endpoint += query;
     }
 
-    return apiRequest<ProductsResponse>(endpoint, "GET");
+    return apiRequest<ProductsResponse>(endpoint);
   },
 
   getBySlug: (slug: string) => {
-    return apiRequest<FullProduct>(`/products/by-slug/${slug}`, "GET");
+    return apiRequest<FullProduct>(`/products/by-slug/${slug}`);
   },
 
   create: (formData: FormData) => {
-    return apiRequest<ProductResponse>("/products/create", "POST", {
+    return apiRequest<ProductResponse>("/products/create", {
+      method: "POST",
       refreshToken: true,
-      data: formData,
+      data: formData
     });
   },
 
   update: (id: string, formData: FormData) => {
-    return apiRequest<ProductResponse>(`/products/update/${id}`, "PUT", {
+    return apiRequest<ProductResponse>(`/products/update/${id}`, {
+      method: "PUT",
       refreshToken: true,
-      data: formData,
+      data: formData
     });
   },
 
   delete: (id: string) => {
-    return apiRequest<{ message: string }>(`/products/delete/${id}`, "DELETE", {
-      refreshToken: true,
+    return apiRequest<{ message: string }>(`/products/delete/${id}`, {
+      method: "DELETE",
+      refreshToken: true
     });
-  },
+  }
 };
 
 export default productService;

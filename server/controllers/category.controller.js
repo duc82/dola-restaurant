@@ -1,10 +1,8 @@
 const asyncHandler = require("../middlewares/asyncHandler.middleware");
 const CategoryService = require("../services/category.service");
-const BaseController = require("./base.controller");
 
-class CategoryController extends BaseController {
+class CategoryController {
   constructor() {
-    super();
     this.categoryService = new CategoryService();
     this.getAll = asyncHandler(this.getAll.bind(this));
     this.create = asyncHandler(this.create.bind(this));
@@ -18,13 +16,7 @@ class CategoryController extends BaseController {
   }
 
   async getAll(req, res) {
-    const {
-      search = "",
-      page = this.defaultPage,
-      limit = this.defaultLimit,
-    } = req.query;
-
-    res.json(await this.categoryService.getAll(search, +page, +limit));
+    res.json(await this.categoryService.getAll(req.query));
   }
 
   async update(req, res) {

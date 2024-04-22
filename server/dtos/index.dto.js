@@ -1,23 +1,32 @@
 const Joi = require("joi");
 
 class BaseDto {
-  constructor() {
-    this.id = Joi.string().required().messages({
-      "string.empty": "Id không được bỏ trống!",
-    });
-    this.ids = Joi.array().items(this.id);
-  }
+  id = Joi.string().required().messages({
+    "string.empty": "Id không được bỏ trống!"
+  });
+  ids = Joi.array().items(this.id);
+  limit = Joi.number().integer().min(1).max(100);
+  page = Joi.number().integer().min(1).default(1);
+  search = Joi.string().allow("");
 
   get getById() {
-    return {
-      id: this.id,
-    };
+    return Joi.object({
+      id: this.id
+    });
   }
 
   get deleteMany() {
-    return {
-      ids: this.ids,
-    };
+    return Joi.object({
+      ids: this.ids
+    });
+  }
+
+  get getAll() {
+    return Joi.object({
+      limit: this.limit,
+      page: this.page,
+      search: this.search
+    });
   }
 }
 

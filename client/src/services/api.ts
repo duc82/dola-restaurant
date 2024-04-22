@@ -1,18 +1,12 @@
-import axios, { AxiosError } from "axios";
+import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import authService from "./authService";
 import { ToolkitStore } from "@reduxjs/toolkit/dist/configureStore";
 import { loginSuccess } from "@/store/reducers/authSlice";
 
-const API_BASE_URL: string | undefined = import.meta.env.VITE_API;
+const API_URL = import.meta.env.VITE_API_URL;
 
-if (!API_BASE_URL) {
+if (!API_URL) {
   throw new Error("Vui lòng nhập VITE_API ở env!");
-}
-
-interface Option {
-  data?: any;
-  refreshToken?: boolean;
-  withCredentials?: boolean;
 }
 
 let store: ToolkitStore;
@@ -22,16 +16,18 @@ export const injectStore = (s: ToolkitStore) => {
 };
 
 const api = axios.create({
-  baseURL: API_BASE_URL + "/api/v1",
+  baseURL: API_URL + "/api/v1"
 });
 
 export default async function apiRequest<T>(
   endpoint: string,
-  method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE",
-  options?: Option
+  config?: AxiosRequestConfig & {
+    refreshToken?: boolean;
+    accessToken?: boolean;
+  }
 ): Promise<T> {
   // Auto refresh token when token expired
-  if (options?.refreshToken) {
+  if (config?.refreshToken) {
     api.interceptors.response.use(
       (res) => res,
       async (error: AxiosError) => {
@@ -51,19 +47,20 @@ export default async function apiRequest<T>(
     );
   }
 
-  api.interceptors.request.use((config) => {
-    const accessToken = store.getState().auth.accessToken;
-    if (accessToken) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
-    }
-    return config;
-  });
+  if (config?.accessToken) {
+    api.interceptors.request.use((config) => {
+      const accessToken = store.getState().auth.accessToken;
+      if (accessToken) {
+        config.headers.Authorization = `Bearer ${accessToken}`;
+      }
+      return config;
+    });
+  }
 
   const res = await api<T>({
-    method,
     url: endpoint,
-    data: options?.data,
-    withCredentials: options?.withCredentials,
+    withCredentials: true,
+    ...config
   });
 
   return res.data;

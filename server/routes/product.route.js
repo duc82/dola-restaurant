@@ -64,28 +64,21 @@
 
 const { Router } = require("express");
 const productController = require("../controllers/product.controller");
-const upload = require("../middlewares/upload.middleware");
 const authorizationMiddleware = require("../middlewares/authorization.middleware");
+const ProductDto = require("../dtos/product.dto");
+const { Query } = require("../middlewares/validation.middleware");
 
 const router = Router();
 
-router.get("/", productController.getAll);
+const productDto = new ProductDto();
+
+router.get("/", Query(productDto.getAll), productController.getAll);
 
 router.get("/by-slug/:slug", productController.getBySlug);
 
-router.post(
-  "/create",
-  authorizationMiddleware,
-  upload.array("image[]", 12),
-  productController.create
-);
+router.post("/create", authorizationMiddleware, productController.create);
 
-router.put(
-  "/update/:id",
-  authorizationMiddleware,
-  upload.array("image[]", 12),
-  productController.update
-);
+router.put("/update/:id", authorizationMiddleware, productController.update);
 
 router.delete("/delete/:id", productController.delete);
 
