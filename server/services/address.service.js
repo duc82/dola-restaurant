@@ -1,42 +1,31 @@
 const Address = require("../models/address.model");
 const CustomError = require("../utils/error.util");
-const User = require("../models/user.model");
 
 class AddressService {
-  async getAll() {
-    const addresses = await Address.find().sort({ createdAt: -1 });
+  async getByUserId(userId) {
+    const addresses = await Address.findOne({
+      user: userId,
+    }).sort({ createdAt: -1 });
+
     return addresses;
   }
 
-  async getCurrent(userId) {
-    const user = await User.findById(userId)
-      .populate({
-        path: "addresses",
-        options: { sort: { createdAt: -1 } },
-      })
-      .select("addresses");
-    return user.addresses;
-  }
-
   async create(body, userId) {
-    const user = await User.findById(userId).select("addresses");
+    const addresses = await Address.find({ user: userId });
 
-    if (user.addresses.length === 0) {
+    if (addresses.length === 0) {
       body.isDefault = true;
     }
 
-    if (body.isDefault && user.addresses.length > 0) {
-      await Address.updateMany(
-        { _id: { $in: user.addresses } },
-        { isDefault: false }
-      );
+    if (body.isDefault && addresses.length > 0) {
+      await Address.updateOne({ isDefault: true }, { isDefault: false });
     }
 
     const address = await Address.create(body);
 
-    user.addresses.push(address._id);
+    addresses.push(address._id);
 
-    await user.save();
+    await addresses.save();
 
     return {
       message: "Thêm địa chỉ mới thành công",
@@ -44,14 +33,9 @@ class AddressService {
     };
   }
 
-  async update(id, body, userId) {
-    const user = await User.findById(userId).select("addresses");
-
+  async update(id, body) {
     if (body.isDefault) {
-      await Address.updateMany(
-        { _id: { $in: user.addresses } },
-        { isDefault: false }
-      );
+      await Address.updateOne({ isDefault: true }, { isDefault: false });
     }
 
     const updatedAddress = await Address.findByIdAndUpdate(id, body, {
@@ -71,17 +55,11 @@ class AddressService {
     };
   }
 
-  async delete(id, userId) {
+  async delete(id) {
     const address = await Address.findById(id);
 
     if (!address) {
       throw new CustomError({ message: "Không tìm thấy địa chỉ", status: 404 });
-    }
-
-    const user = await User.findById(userId).select("addresses");
-    if (user) {
-      user.addresses.pull(id);
-      await user.save();
     }
 
     await Address.deleteOne({ _id: id });

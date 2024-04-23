@@ -6,7 +6,7 @@ const swaggerUi = require("swagger-ui-express");
 const swaggerSpec = require("./utils/swagger.util");
 const cors = require("cors");
 const logger = require("./utils/logger.util");
-const morganLogger = require("./utils/morganLogger.util");
+const morganLogger = require("./middlewares/morganLogger.middleware");
 
 const app = express();
 
@@ -18,24 +18,19 @@ app.use(express.urlencoded({ extended: true }));
 app.use(
   morganLogger(process.env.NODE_ENV === "production" ? "combined" : "dev")
 );
-
-// ip address
-app.set("trust proxy", true);
-
 // CORS
 const allowedOrigins = [
   "http://localhost:4173",
   "http://localhost:3000",
   "https://localhost:3000",
-  process.env.CLIENT_URL
+  process.env.CLIENT_URL,
 ];
 app.use(
   cors({
     origin: allowedOrigins,
-    credentials: true
+    credentials: true,
   })
 );
-
 // Cookie parser
 app.use(cookieParser());
 
@@ -49,7 +44,7 @@ app.use(
   swaggerUi.setup(swaggerSpec, {
     explorer: true,
     customfavIcon: "/favicon.ico",
-    customSiteTitle: "Dola Restaurant Swagger API"
+    customSiteTitle: "Dola Restaurant Swagger API",
   })
 );
 

@@ -7,7 +7,7 @@ async function authenticationMiddleware(req, res, next) {
 
   if (!accessToken) {
     return res.status(401).json({
-      message: "Access token là bắt buộc"
+      message: "Access token là bắt buộc",
     });
   }
 
@@ -17,7 +17,7 @@ async function authenticationMiddleware(req, res, next) {
     next();
   } catch (error) {
     return res.status(401).json({
-      message: "Token không hợp lệ"
+      message: "Token không hợp lệ",
     });
   }
 }

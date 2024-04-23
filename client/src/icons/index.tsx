@@ -432,7 +432,7 @@ export const Spinner = ({ className }: ClassName) => {
 export const Edit = ({ className }: ClassName) => {
   return (
     <svg
-      className={className}
+      className={cn("w-5 h-5", className)}
       fill="currentColor"
       viewBox="0 0 20 20"
       xmlns="http://www.w3.org/2000/svg"
@@ -450,7 +450,7 @@ export const Edit = ({ className }: ClassName) => {
 export const Dustbin = ({ className }: ClassName) => {
   return (
     <svg
-      className={className}
+      className={cn("w-5 h-5", className)}
       fill="currentColor"
       viewBox="0 0 20 20"
       xmlns="http://www.w3.org/2000/svg"

@@ -3,20 +3,19 @@ import { ChangeEvent, useCallback, useRef, useState } from "react";
 const initialActiveModal = {
   create: false,
   update: false,
-  delete: false
+  delete: false,
 };
 
 const useAdminModal = () => {
   const [activeModal, setActiveModal] = useState(initialActiveModal);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [id, setId] = useState("");
-  const [isDeleteMany, setIsDeleteMany] = useState(false);
   const selectedRowsRef = useRef<HTMLInputElement | null>(null);
 
   const openCreateModal = () => {
     setActiveModal((prev) => ({
       ...prev,
-      create: true
+      create: true,
     }));
   };
 
@@ -24,22 +23,7 @@ const useAdminModal = () => {
     setId(id);
     setActiveModal((prev) => ({
       ...prev,
-      update: true
-    }));
-  };
-
-  const openDeleteModal = (data: string | string[]) => {
-    if (typeof data === "string") {
-      setId(data);
-      setIsDeleteMany(false);
-    } else {
-      setSelectedRows(data);
-      setIsDeleteMany(true);
-    }
-
-    setActiveModal((prev) => ({
-      ...prev,
-      delete: true
+      update: true,
     }));
   };
 
@@ -52,11 +36,7 @@ const useAdminModal = () => {
     selectedRows: string[]
   ) => {
     const isSelectAll = e.target.checked;
-    if (isSelectAll) {
-      setSelectedRows(selectedRows);
-    } else {
-      setSelectedRows([]);
-    }
+    setSelectedRows(isSelectAll ? selectedRows : []);
   };
 
   const handleSelect = useCallback(
@@ -85,25 +65,16 @@ const useAdminModal = () => {
     [selectedRows]
   );
 
-  const clearDeleteMany = () => {
-    setSelectedRows([]);
-    selectedRowsRef.current!.checked = false;
-    setIsDeleteMany(false);
-  };
-
   return {
     activeModal,
     id,
     selectedRows,
-    isDeleteMany,
     openCreateModal,
     openUpdateModal,
-    openDeleteModal,
     closeModal,
     selectedRowsRef,
     handleSelectAll,
     handleSelect,
-    clearDeleteMany
   };
 };
 

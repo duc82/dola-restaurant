@@ -1,5 +1,3 @@
-import { ReactNode } from "react";
-
 interface Timestamp {
   createdAt: string;
   updatedAt: string;
@@ -16,10 +14,6 @@ interface FilePreview extends File {
 interface BreadcrumbItem {
   name: string;
   url?: string;
-}
-
-interface ChildrenProps {
-  children?: ReactNode;
 }
 
 interface RedirectProps {
@@ -46,7 +40,6 @@ interface Pagination {
 }
 
 export type {
-  ChildrenProps,
   RedirectProps,
   RejectValue,
   BreadcrumbItem,
@@ -54,5 +47,5 @@ export type {
   FullType,
   FilePreview,
   Filter,
-  Pagination
+  Pagination,
 };

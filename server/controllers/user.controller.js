@@ -1,6 +1,5 @@
 const asyncHandler = require("../middlewares/asyncHandler.middleware");
 const UserService = require("../services/user.service");
-const logger = require("../utils/logger.util");
 
 class UserController {
   constructor() {
@@ -20,8 +19,6 @@ class UserController {
   }
 
   async getAll(req, res) {
-    logger.info(typeof req.query.limit);
-
     res.json(await this.userService.getAll(req.query));
   }
 
@@ -39,10 +36,11 @@ class UserController {
 
   async changePassword(req, res) {
     res.json(
-      await this.userService.changePassword({
-        userId: req.user.userId,
-        ...req.body
-      })
+      await this.userService.changePassword(
+        req.user.userId,
+        req.body.oldPassword,
+        req.body.newPassword
+      )
     );
   }
 

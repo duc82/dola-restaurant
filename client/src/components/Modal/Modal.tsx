@@ -1,9 +1,8 @@
 import { Close } from "@/icons";
-import { ChildrenProps } from "@/types";
 import cn from "@/utils/cn";
 import React, { useEffect } from "react";
 
-interface ModalProps extends ChildrenProps {
+interface ModalProps extends React.PropsWithChildren {
   show: boolean;
   onHide: () => void;
   animation?: boolean;
@@ -12,19 +11,16 @@ interface ModalProps extends ChildrenProps {
   wrapperClassName?: string;
 }
 
-interface ModalHeaderProps extends ChildrenProps {
+interface ModalHeaderProps extends React.PropsWithChildren {
   closeButton?: boolean;
   onHide?: () => void;
 }
 
-interface ModalBodyProps extends ChildrenProps {
+interface ModalContentProps extends React.PropsWithChildren {
   className?: string;
 }
 
-const ModalTitle = ({
-  children,
-  className,
-}: ChildrenProps & { className?: string }) => (
+const ModalTitle = ({ children, className }: ModalContentProps) => (
   <h3 className={cn("text-lg font-semibold", className)}>{children}</h3>
 );
 
@@ -43,12 +39,14 @@ const ModalHeader = ({
   </div>
 );
 
-const ModalBody = ({ children, className }: ModalBodyProps) => (
+const ModalBody = ({ children, className }: ModalContentProps) => (
   <div className={cn("p-4", className)}>{children}</div>
 );
 
-const ModalFooter = ({ children }: ChildrenProps) => (
-  <div className="p-4 border-t border-t-gray-600">{children}</div>
+const ModalFooter = ({ children, className }: ModalContentProps) => (
+  <div className={cn("p-4 border-t border-t-gray-600", className)}>
+    {children}
+  </div>
 );
 
 const Modal = ({

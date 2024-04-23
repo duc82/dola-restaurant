@@ -10,7 +10,7 @@ import {
   deleteCategory,
   setCategories,
   setCategoriesPagination,
-  sortCategories
+  sortCategories,
 } from "@/store/reducers/categorySlice";
 import formatDate from "@/utils/formatDate";
 import handlingAxiosError from "@/utils/handlingAxiosError";
@@ -22,6 +22,7 @@ import { useSearchParams } from "react-router-dom";
 import limits from "@/data/limits.json";
 import Limit from "@/components/Limit";
 import cn from "@/utils/cn";
+import useLimit from "@/hooks/useLimit";
 
 interface Sort {
   key: "name" | "createdAt";
@@ -41,14 +42,16 @@ const Category = () => {
     selectedRowsRef,
     handleSelect,
     handleSelectAll,
-    clearDeleteMany
+    clearDeleteMany,
   } = useAdminModal();
   const dispatch = useAppDispatch();
   const [urlSearchParams, setUrlSearchParams] = useSearchParams();
-  const [activeLimit, setActiveLimit] = useState(limits[0]);
+
+  const { activeLimit, handleChangeLimit } = useLimit();
+
   const [sort, setSort] = useState<Sort>({
     key: "createdAt",
-    order: "asc"
+    order: "asc",
   });
   const search = urlSearchParams.get("search") ?? "";
   const page = parseInt(urlSearchParams.get("page") ?? "1");
@@ -80,21 +83,12 @@ const Category = () => {
     setUrlSearchParams(urlSearchParams);
   };
 
-  const handleActiveLimit = (limit: number) => {
-    setActiveLimit(limit);
-    const pageCount = Math.ceil(total / limit);
-    if (page > pageCount) {
-      urlSearchParams.set("page", pageCount.toString());
-      setUrlSearchParams(urlSearchParams);
-    }
-  };
-
   useEffect(() => {
     categoryService
       .getAllPaginate({
         search,
         page,
-        limit: activeLimit
+        limit: activeLimit,
       })
       .then((data) => {
         dispatch(setCategories(data.categories));
@@ -103,7 +97,7 @@ const Category = () => {
             total: data.total,
             skip: data.skip,
             limit: data.limit,
-            page: data.page
+            page: data.page,
           })
         );
       });
@@ -195,7 +189,7 @@ const Category = () => {
                   onClick={() => {
                     setSort((prev) => ({
                       key: "name",
-                      order: prev.order === "asc" ? "desc" : "asc"
+                      order: prev.order === "asc" ? "desc" : "asc",
                     }));
                   }}
                 >
@@ -220,7 +214,7 @@ const Category = () => {
                   onClick={() => {
                     setSort((prev) => ({
                       key: "createdAt",
-                      order: prev.order === "asc" ? "desc" : "asc"
+                      order: prev.order === "asc" ? "desc" : "asc",
                     }));
                   }}
                 >
@@ -323,7 +317,10 @@ const Category = () => {
           currentPage={page}
           onPageChange={onPageChange}
         />
-        <Limit activeLimit={activeLimit} handleClick={handleActiveLimit} />
+        <Limit
+          activeLimit={activeLimit}
+          handleClick={(limit) => handleChangeLimit(limit, total, page)}
+        />
       </div>
 
       <CreateModal show={activeModal.create} onClose={closeModal} />
@@ -332,7 +329,7 @@ const Category = () => {
         show={activeModal.delete}
         onClose={closeModal}
         handleDelete={handleDelete}
-        alert="Bạn có muốn xóa danh mục sản phẩm này không?"
+        content="Bạn có muốn xóa danh mục sản phẩm này không?"
       />
     </div>
   );

@@ -18,35 +18,32 @@ class AuthController {
   }
 
   async loginGoogle(req, res) {
+    const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
     res
       .status(200)
-      .json(await this.authService.loginGoogle(req.body.code, res));
+      .json(await this.authService.loginGoogle(req.body.code, ip, res));
   }
 
   async loginFacebook(req, res) {
-    res
-      .status(200)
-      .json(await this.authService.loginFacebook(req.body.accessToken, res));
-  }
-
-  async signUp(req, res) {
-    const ipAddress =
-      req.headers["x-forwarded-for"] || req.connection.remoteAddress;
-    res.status(201).json(await this.authService.signUp(req.body, ipAddress));
-  }
-
-  async login(req, res) {
-    const ipAddress =
-      req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+    const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
     res
       .status(200)
       .json(
-        await this.authService.login(
-          req.body.email,
-          req.body.password,
-          ipAddress,
-          res
-        )
+        await this.authService.loginFacebook(req.body.accessToken, ip, res)
+      );
+  }
+
+  async signUp(req, res) {
+    const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+    res.status(201).json(await this.authService.signUp(req.body, ip));
+  }
+
+  async login(req, res) {
+    const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+    res
+      .status(200)
+      .json(
+        await this.authService.login(req.body.email, req.body.password, ip, res)
       );
   }
 

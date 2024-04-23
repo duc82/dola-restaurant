@@ -1,7 +1,9 @@
 const User = require("../models/user.model");
 const CustomError = require("../utils/error.util");
-const Address = require("../models/address.model");
 const Token = require("../models/token.model");
+const Order = require("../models/order.model");
+const Review = require("../models/review.model");
+const Address = require("../models/address.model");
 
 class UserService {
   async findOneOrCreate(filter, doc, { exclude }) {
@@ -22,9 +24,9 @@ class UserService {
       $or: [
         { email },
         {
-          phone
-        }
-      ]
+          phone,
+        },
+      ],
     });
 
     return isExists ? true : false;
@@ -38,17 +40,12 @@ class UserService {
   }
 
   async getCurrent(userId) {
-    const user = await User.findById(userId)
-      .populate({
-        path: "addresses",
-        options: { sort: { isDefault: -1 } }
-      })
-      .select("-password");
+    const user = await User.findById(userId).select("-password");
 
     if (!user) {
       throw new CustomError({
         message: "Không tìm thấy người dùng",
-        status: 404
+        status: 404,
       });
     }
 
@@ -67,33 +64,31 @@ class UserService {
         {
           email: {
             $regex: search,
-            $options: "i"
-          }
+            $options: "i",
+          },
         },
         {
           phone: {
             $regex: search,
-            $options: "i"
-          }
+            $options: "i",
+          },
         },
         {
           fullName: {
             $regex: search,
-            $options: "i"
-          }
-        }
+            $options: "i",
+          },
+        },
       ];
     }
 
     const users = await User.find(filter)
       .skip(skip)
       .limit(limit)
-      .select("-password")
-      .sort({ createdAt: -1 })
-      .populate("addresses");
+      .select("-password");
     const total = await User.countDocuments(filter);
 
-    return { users, limit, total };
+    return { users, limit, total, skip, page };
   }
 
   async create(body) {
@@ -102,7 +97,7 @@ class UserService {
     if (isUserExists) {
       throw new CustomError({
         message: "Email hoặc số điện thoại đã tồn tại.",
-        status: 400
+        status: 400,
       });
     }
 
@@ -116,44 +111,44 @@ class UserService {
   async updateCurrent(userId, body) {
     const emailExists = await User.findOne({
       email: body.email,
-      _id: { $ne: userId }
+      _id: { $ne: userId },
     });
 
     if (emailExists) {
       throw new CustomError({
         message: "Email đã được sử dụng",
-        status: 400
+        status: 400,
       });
     }
 
     const phoneExists = await User.findOne({
       phone: body.phone,
-      _id: { $ne: userId }
+      _id: { $ne: userId },
     });
 
     if (phoneExists) {
       throw new CustomError({
         message: "Số điện thoại đã được sử dụng",
-        status: 400
+        status: 400,
       });
     }
 
     const user = await this.updateUser(userId, {
       fullName: value.fullName,
       email: value.email,
-      phone: value.phone
+      phone: value.phone,
     });
 
     if (!user) {
       throw new CustomError({
         message: "Cập nhật người dùng thất bại!",
-        status: 400
+        status: 400,
       });
     }
 
     return {
       message: "Cập nhật tài khoản thành công",
-      user
+      user,
     };
   }
 
@@ -163,20 +158,20 @@ class UserService {
     if (!user) {
       throw new CustomError({
         message: "Cập nhật người dùng thất bại!",
-        status: 400
+        status: 400,
       });
     }
 
     return { user, message: "Cập nhật người dùng thành công" };
   }
 
-  async changePassword({ userId, oldPassword, newPassword }) {
+  async changePassword(userId, oldPassword, newPassword) {
     const user = await User.findById(userId);
 
     if (!user) {
       throw new CustomError({
         message: "Người dùng không tồn tại",
-        status: 404
+        status: 404,
       });
     }
 
@@ -185,7 +180,7 @@ class UserService {
       if (!isCorrectPassword) {
         throw new CustomError({
           message: "Mật khẩu cũ không đúng",
-          status: 400
+          status: 400,
         });
       }
     }
@@ -199,52 +194,61 @@ class UserService {
   async delete(id, userId) {
     if (id === userId) {
       throw new CustomError({
-        message: "Không thể xóa tài khoản của chính mình",
-        status: 400
+        message: "Không thể xóa tài khoản này",
+        status: 400,
       });
     }
 
-    const user = await User.findByIdAndDelete(id);
+    const user = await User.findByIdAndDelete(id).select("token");
+
+    await Promise.all([
+      Token.deleteMany({ _id: user.token }),
+      Order.deleteMany({ user: id }),
+      Address.deleteMany({ user: id }),
+      Review.deleteMany({ user: id }),
+    ]);
 
     if (!user) {
       throw new CustomError({
         message: "Xóa người dùng thất bại",
-        status: 400
+        status: 400,
       });
     }
 
     return {
-      message: "Xóa người dùng thành công"
+      message: "Xóa người dùng thành công",
     };
   }
 
   async deleteMany(ids, userId) {
-    const users = await User.find({ _id: { $in: ids } }).select("-password");
+    const users = await User.find({ _id: { $in: ids } }).select("email");
 
     if (!users.length) {
       throw new CustomError({
         message: "Xóa người dùng thất bại!",
-        status: 400
+        status: 400,
       });
     }
 
-    if (users.some((user) => user._id === userId)) {
+    const currentUser = users.find((user) => user._id.equals(userId));
+
+    if (currentUser) {
       throw new CustomError({
-        message: "Không thể xóa tài khoản của chính mình",
-        status: 400
+        message: `Không thể xóa tài khoản ${currentUser.email}`,
+        status: 400,
       });
     }
 
     await Promise.all([
       User.deleteMany({ _id: { $in: ids } }),
       Token.deleteMany({ _id: { $in: users.map((user) => user.token) } }),
-      Address.deleteMany({
-        _id: { $in: users.flatMap((user) => user.addresses) }
-      })
+      Order.deleteMany({ user: { $in: ids } }),
+      Address.deleteMany({ user: { $in: ids } }),
+      Review.deleteMany({ user: { $in: ids } }),
     ]);
 
     return {
-      message: "Xóa người dùng thành công"
+      message: "Xóa người dùng thành công",
     };
   }
 }

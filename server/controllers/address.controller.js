@@ -4,19 +4,16 @@ const AddressService = require("../services/address.service");
 class AddressController {
   constructor() {
     this.addressService = new AddressService();
-    this.getAll = asyncHandler(this.getAll.bind(this));
-    this.getCurrent = asyncHandler(this.getCurrent.bind(this));
+    this.getByUserId = asyncHandler(this.getByUserId.bind(this));
     this.create = asyncHandler(this.create.bind(this));
     this.update = asyncHandler(this.update.bind(this));
     this.delete = asyncHandler(this.delete.bind(this));
   }
 
-  async getAll(req, res) {
-    res.status(200).json(await this.addressService.getAll());
-  }
-
-  async getCurrent(req, res) {
-    res.status(200).json(await this.addressService.getCurrent(req.user.userId));
+  async getByUserId(req, res) {
+    res
+      .status(200)
+      .json(await this.addressService.getByUserId(req.user.userId));
   }
 
   async create(req, res) {
@@ -28,19 +25,11 @@ class AddressController {
   async update(req, res) {
     res
       .status(200)
-      .json(
-        await this.addressService.update(
-          req.params.id,
-          req.body,
-          req.user.userId
-        )
-      );
+      .json(await this.addressService.update(req.params.id, req.body));
   }
 
   async delete(req, res) {
-    res
-      .status(200)
-      .json(await this.addressService.delete(req.params.id, req.user.userId));
+    res.status(200).json(await this.addressService.delete(req.params.id));
   }
 }
 

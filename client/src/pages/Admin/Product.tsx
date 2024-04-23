@@ -28,7 +28,7 @@ const Product = () => {
     selectedRows,
     selectedRowsRef,
     handleSelect,
-    handleSelectAll
+    handleSelectAll,
   } = useAdminModal();
   const [urlSearchParams, setUrlSearchParams] = useSearchParams();
   const { products, total, limit } = useAppSelector((state) => state.product);
@@ -233,7 +233,7 @@ const Product = () => {
       <CreateModal show={activeModal.create} onClose={closeModal} />
       <UpdateModal show={activeModal.update} onClose={closeModal} id={id} />
       <DeleteModal
-        alert="Bạn có muốn xóa sản phẩm này không?"
+        content="Bạn có muốn xóa sản phẩm này không?"
         show={activeModal.delete}
         handleDelete={handleDelete}
         onClose={closeModal}

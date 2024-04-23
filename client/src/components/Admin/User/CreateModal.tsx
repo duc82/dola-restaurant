@@ -99,10 +99,10 @@ const CreateModal = ({ show, onClose }: CreateModalProps) => {
             <Select.Option value="admin">Admin</Select.Option>
           </Select>
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer className="flex justify-end">
           <button
             type="submit"
-            className="bg-blue-600 text-white font-medium py-2.5 px-5 text-sm rounded-lg hover:bg-blue-700 text-center focus:ring-4 focus:ring-blue-800 transition"
+            className="flex items-center bg-blue-600 text-white font-medium py-2.5 px-5 text-sm rounded-lg hover:bg-blue-700 text-center focus:ring-4 focus:ring-blue-900 transition"
           >
             Thêm mới
           </button>

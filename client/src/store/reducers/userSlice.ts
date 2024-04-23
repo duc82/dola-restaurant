@@ -84,6 +84,7 @@ const initialState = {
   users: [] as FullUser[],
   limit: 0,
   total: 0,
+  skip: 0,
 };
 
 const userSlice = createSlice({
@@ -104,6 +105,7 @@ const userSlice = createSlice({
       state.users = payload.users;
       state.limit = payload.limit;
       state.total = payload.total;
+      state.skip = payload.skip;
     });
 
     builder.addCase(createUser.fulfilled, (state, { payload }) => {

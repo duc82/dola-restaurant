@@ -2,6 +2,7 @@ const { Router } = require("express");
 const authController = require("../controllers/auth.controller");
 const AuthDto = require("../dtos/auth.dto");
 const { Body } = require("../middlewares/validation.middleware");
+const { lowLimiter } = require("../middlewares/limiter.middleware");
 
 const authDto = new AuthDto();
 
@@ -29,6 +30,7 @@ router.post(
 
 router.post(
   "/forgotPassword",
+  lowLimiter,
   Body(authDto.forgotPassword),
   authController.forgotPassword
 );

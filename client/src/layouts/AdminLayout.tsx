@@ -5,6 +5,7 @@ import Sidebar from "../components/Admin/Sidebar";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { getCurrentUser } from "@/store/reducers/userSlice";
 import { resetAuth } from "@/store/reducers/authSlice";
+import LimitProvider from "@/providers/LimitProvider";
 
 const AdminLayout = () => {
   const dispatch = useAppDispatch();
@@ -28,13 +29,13 @@ const AdminLayout = () => {
   }, [user, dispatch, navigate]);
 
   return (
-    <>
+    <LimitProvider>
       <Header toggleSidebar={() => setSidebarOpen(!isSidebarOpen)} />
       <Sidebar isOpen={isSidebarOpen} />
       <div className="pt-[66px] md:pt-20 lg:pt-[88px] flex h-full overflow-y-auto lg:ml-64">
         <Outlet />
       </div>
-    </>
+    </LimitProvider>
   );
 };
 

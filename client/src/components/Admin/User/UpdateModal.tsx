@@ -16,11 +16,11 @@ const UpdateModal = ({ show, onClose, id }: UpdateModalProps) => {
 
   const formik = useFormik({
     initialValues: {
-      fullName: user?.fullName ?? "",
-      email: user?.email ?? "",
-      phone: user?.phone ?? "",
+      fullName: user?.fullName || "",
+      email: user?.email || "",
+      phone: user?.phone || "",
       password: "" as string | undefined,
-      role: "user" as "user" | "admin",
+      role: user?.role || "user",
     },
     enableReinitialize: true,
 
@@ -49,7 +49,7 @@ const UpdateModal = ({ show, onClose, id }: UpdateModalProps) => {
       contentClassName="bg-emerald-secondary text-white"
     >
       <Modal.Header>
-        <Modal.Title className="text-xl">Chỉnh sửa sản phẩm</Modal.Title>
+        <Modal.Title className="text-xl">Sửa người dùng</Modal.Title>
       </Modal.Header>
       <form onSubmit={formik.handleSubmit}>
         <Modal.Body className="grid grid-cols-1 md:grid-cols-2 gap-6 max-h-96 overflow-auto">
@@ -93,7 +93,7 @@ const UpdateModal = ({ show, onClose, id }: UpdateModalProps) => {
             id="updatePassword"
             autoComplete="off"
             placeholder="Để trống nếu không muốn thay đổi mật khẩu"
-            value={formik.values.password ?? ""}
+            value={formik.values.password}
             onChange={formik.handleChange}
             error={formik.errors.password}
           />
@@ -109,10 +109,10 @@ const UpdateModal = ({ show, onClose, id }: UpdateModalProps) => {
             <Select.Option value="admin">Admin</Select.Option>
           </Select>
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer className="flex justify-end">
           <button
             type="submit"
-            className="bg-blue-600 text-white font-medium py-2.5 px-5 text-sm rounded-lg hover:bg-blue-700 text-center focus:ring-4 focus:ring-blue-800 transition"
+            className="bg-amber-600 text-white font-medium py-2.5 px-5 text-sm rounded-lg hover:bg-amber-700 text-center focus:ring-4 focus:ring-amber-900 transition"
           >
             Cập nhật
           </button>

@@ -2,11 +2,8 @@ const { Router } = require("express");
 const router = Router();
 const addressController = require("../controllers/address.controller");
 const authentication = require("../middlewares/authentication.middleware");
-const authorization = require("../middlewares/authorization.middleware");
 
-router.get("/", authorization, addressController.getAll);
-
-router.get("/current", authentication, addressController.getCurrent);
+router.get("/by-user", authentication, addressController.getByUserId);
 
 router.post("/create", authentication, addressController.create);
 

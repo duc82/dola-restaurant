@@ -6,21 +6,22 @@ const authService = {
   loginGoogle: (code: string) => {
     return apiRequest<LoginResponse>("/auth/login/google", {
       method: "POST",
-      data: { code }
+      data: { code },
     });
   },
 
   loginFacebook: (accessToken: string) => {
     return apiRequest<LoginResponse>("/auth/login/facebook", {
       method: "POST",
-      data: { accessToken }
+      data: { accessToken },
     });
   },
 
   login: (data: LoginDTO) => {
     return apiRequest<LoginResponse>("/auth/login", {
       method: "POST",
-      data
+      withCredentials: true,
+      data,
     });
   },
 
@@ -31,21 +32,21 @@ const authService = {
   forgotPassword: (email: string) => {
     return apiRequest<{ message: string }>("/auth/forgotPassword", {
       method: "POST",
-      data: { email }
+      data: { email },
     });
   },
 
   verifyPasswordResetToken: (data: { email: string; token: string }) => {
     return apiRequest<{ verified: boolean }>("/auth/forgotPassword/verify", {
       method: "POST",
-      data
+      data,
     });
   },
 
   resetPassword: (data: LoginDTO) => {
     return apiRequest<{ message: string }>("/auth/forgotPassword/reset", {
       method: "POST",
-      data
+      data,
     });
   },
 
@@ -54,7 +55,8 @@ const authService = {
       "/auth/refreshToken",
       {
         method: "POST",
-        data: { refreshToken: true }
+        refreshToken: true,
+        data: { refreshToken: true },
       }
     );
   },
@@ -62,9 +64,10 @@ const authService = {
   logout: () => {
     return apiRequest<{ message: string }>("/auth/logout", {
       method: "POST",
-      data: { logout: true }
+      refreshToken: true,
+      data: { logout: true },
     });
-  }
+  },
 };
 
 export default authService;

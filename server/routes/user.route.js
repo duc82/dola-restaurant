@@ -4,6 +4,7 @@ const UserDto = require("../dtos/user.dto");
 const authorization = require("../middlewares/authorization.middleware");
 const authentication = require("../middlewares/authentication.middleware");
 const { Body, Params, Query } = require("../middlewares/validation.middleware");
+const { lowLimiter } = require("../middlewares/limiter.middleware");
 
 const userDto = new UserDto();
 
@@ -14,6 +15,7 @@ router.get("/", Query(userDto.getAll), userController.getAll);
 
 router.post(
   "/create",
+  lowLimiter,
   authorization,
   Body(userDto.create),
   userController.create
@@ -21,6 +23,7 @@ router.post(
 
 router.put(
   "/update/current",
+  lowLimiter,
   authentication,
   Body(userDto.updateCurrent),
   userController.updateCurrent
@@ -28,6 +31,7 @@ router.put(
 
 router.put(
   "/update/:id",
+  lowLimiter,
   authorization,
   Params(userDto.getById),
   userController.update
@@ -42,6 +46,7 @@ router.post(
 
 router.delete(
   "/delete/:id",
+  lowLimiter,
   authorization,
   Params(userDto.getById),
   userController.delete
@@ -49,6 +54,7 @@ router.delete(
 
 router.delete(
   "/delete-many",
+  lowLimiter,
   authorization,
   Body(userDto.deleteMany),
   userController.deleteMany

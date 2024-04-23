@@ -16,7 +16,7 @@ export const injectStore = (s: ToolkitStore) => {
 };
 
 const api = axios.create({
-  baseURL: API_URL + "/api/v1"
+  baseURL: API_URL + "/api/v1",
 });
 
 export default async function apiRequest<T>(
@@ -45,6 +45,8 @@ export default async function apiRequest<T>(
         return Promise.reject(error);
       }
     );
+
+    config.withCredentials = true;
   }
 
   if (config?.accessToken) {
@@ -59,8 +61,7 @@ export default async function apiRequest<T>(
 
   const res = await api<T>({
     url: endpoint,
-    withCredentials: true,
-    ...config
+    ...config,
   });
 
   return res.data;

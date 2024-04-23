@@ -28,7 +28,7 @@ const Voucher = () => {
     selectedRowsRef,
     handleSelect,
     handleSelectAll,
-    clearDeleteMany
+    clearDeleteMany,
   } = useAdminModal();
   const dispatch = useAppDispatch();
   const { vouchers } = useAppSelector((state) => state.voucher);
@@ -212,7 +212,7 @@ const Voucher = () => {
         show={activeModal.delete}
         onClose={closeModal}
         handleDelete={handleDelete}
-        alert="Bạn có muốn xóa mã giảm giá này không?"
+        content="Bạn có muốn xóa mã giảm giá này không?"
       />
     </div>
   );

@@ -4,14 +4,14 @@ import Modal from "../Modal/Modal";
 interface DeleteModalProps {
   show: boolean;
   onClose: () => void;
-  alert: string;
+  content: string;
   handleDelete: () => void;
 }
 
 const DeleteModal = ({
   show,
   onClose,
-  alert,
+  content,
   handleDelete,
 }: DeleteModalProps) => {
   return (
@@ -32,7 +32,7 @@ const DeleteModal = ({
       </div>
       <div className="pt-0 p-6 text-center">
         <Warning className="w-16 h-16 text-red-600 mx-auto" />
-        <h3 className="text-lg mt-5 mb-6 text-gray-400">{alert}</h3>
+        <h3 className="text-lg mt-5 mb-6 text-gray-400">{content}</h3>
         <button
           type="button"
           onClick={handleDelete}
