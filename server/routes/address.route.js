@@ -3,7 +3,7 @@ const router = Router();
 const addressController = require("../controllers/address.controller");
 const authentication = require("../middlewares/authentication.middleware");
 
-router.get("/by-user", authentication, addressController.getByUserId);
+router.get("/current", authentication, addressController.getCurrent);
 
 router.post("/create", authentication, addressController.create);
 

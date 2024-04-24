@@ -1,8 +1,7 @@
 import { Right } from "@/icons";
-import { ChildrenProps } from "@/types";
 import { Link } from "react-router-dom";
 
-interface BreadcrumbItemProps extends ChildrenProps {
+interface BreadcrumbItemProps extends React.PropsWithChildren {
   href?: string;
   active?: boolean;
 }

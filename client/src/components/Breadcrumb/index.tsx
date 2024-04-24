@@ -1,8 +1,8 @@
-import { ChildrenProps } from "@/types";
+import React from "react";
 import Container from "../Container";
 import BreadcrumbItem from "./BreadcrumbItem";
 
-const Breadcrumb = ({ children }: ChildrenProps) => {
+const Breadcrumb = ({ children }: React.PropsWithChildren) => {
   return (
     <section className="bg-black-primary mb-[30px] lg:mb-10">
       <Container>

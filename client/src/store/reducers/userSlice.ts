@@ -1,6 +1,6 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import handlingAxiosError from "@/utils/handlingAxiosError";
-import type { Filter, RejectValue } from "@/types";
+import type { QueryOptions, RejectValue } from "@/types";
 import { FullUser, User, UserResponse, UsersResponse } from "@/types/user";
 import userService from "@/services/userService";
 
@@ -16,17 +16,18 @@ export const getCurrentUser = createAsyncThunk<FullUser, void, RejectValue>(
   }
 );
 
-export const getAllUser = createAsyncThunk<UsersResponse, Filter, RejectValue>(
-  "user/getAllUser",
-  async (filter, thunkApi) => {
-    try {
-      const data = await userService.getAll(filter);
-      return data;
-    } catch (error) {
-      return thunkApi.rejectWithValue(handlingAxiosError(error));
-    }
+export const getAllUser = createAsyncThunk<
+  UsersResponse,
+  QueryOptions,
+  RejectValue
+>("user/getAllUser", async (queryOptions, thunkApi) => {
+  try {
+    const data = await userService.getAll(queryOptions);
+    return data;
+  } catch (error) {
+    return thunkApi.rejectWithValue(handlingAxiosError(error));
   }
-);
+});
 
 export const createUser = createAsyncThunk<UserResponse, User, RejectValue>(
   "user/createUser",
@@ -85,6 +86,7 @@ const initialState = {
   limit: 0,
   total: 0,
   skip: 0,
+  page: 0
 };
 
 const userSlice = createSlice({
@@ -94,7 +96,7 @@ const userSlice = createSlice({
     resetUser: () => initialState,
     setUser: (state, { payload }: PayloadAction<FullUser>) => {
       state.user = payload;
-    },
+    }
   },
   extraReducers: (builder) => {
     builder.addCase(getCurrentUser.fulfilled, (state, { payload }) => {
@@ -106,6 +108,7 @@ const userSlice = createSlice({
       state.limit = payload.limit;
       state.total = payload.total;
       state.skip = payload.skip;
+      state.page = payload.page;
     });
 
     builder.addCase(createUser.fulfilled, (state, { payload }) => {
@@ -142,7 +145,7 @@ const userSlice = createSlice({
       );
       state.total -= payload.ids.length;
     });
-  },
+  }
 });
 
 export const { resetUser, setUser } = userSlice.actions;

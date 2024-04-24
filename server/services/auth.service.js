@@ -33,7 +33,7 @@ class AuthService {
 
     throw new CustomError({
       message: "Lỗi xác thực tài khoản Facebook",
-      status: 400,
+      status: 400
     });
   }
 
@@ -53,37 +53,37 @@ class AuthService {
     const payload = await verifyGoogleToken(code);
 
     const filter = {
-      email: payload.email,
+      email: payload.email
     };
 
     const doc = {
       fullName: `${payload.given_name} ${payload.family_name}`,
       email: payload.email,
-      ip,
+      ip
     };
 
     const user = await this.userService.findOneOrCreate(filter, doc, {
-      exclude: "password",
+      exclude: "password"
     });
 
     const userPayload = {
       userId: user._id,
-      role: user.role,
+      role: user.role
     };
 
     const accessToken = await this.generateJwtToken(userPayload, {
-      expiresIn: this.accessTokenExpiresIn / 1000,
+      expiresIn: this.accessTokenExpiresIn / 1000
     });
 
     const refreshToken = await this.generateJwtToken(userPayload, {
-      expiresIn: this.refreshTokenExpiresIn / 1000,
+      expiresIn: this.refreshTokenExpiresIn / 1000
     });
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: true,
       sameSite: "none",
-      maxAge: this.refreshTokenExpiresIn,
+      maxAge: this.refreshTokenExpiresIn
     });
 
     return { message: "Đăng nhập thành công", user, accessToken };
@@ -98,35 +98,35 @@ class AuthService {
       {
         fullName: payload.name,
         email: payload.email,
-        ip,
+        ip
       },
       { exclude: "password" }
     );
 
     const userPayload = {
       userId: user._id,
-      role: user.role,
+      role: user.role
     };
 
     const accessTokenJwt = await this.generateJwtToken(userPayload, {
-      expiresIn: this.accessTokenExpiresIn / 1000,
+      expiresIn: this.accessTokenExpiresIn / 1000
     });
 
     const refreshToken = await this.generateJwtToken(userPayload, {
-      expiresIn: this.refreshTokenExpiresIn / 1000,
+      expiresIn: this.refreshTokenExpiresIn / 1000
     });
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: true,
       sameSite: "none",
-      maxAge: this.refreshTokenExpiresIn,
+      maxAge: this.refreshTokenExpiresIn
     });
 
     return {
       message: "Đăng nhập thành công",
       user,
-      accessToken: accessTokenJwt,
+      accessToken: accessTokenJwt
     };
   }
 
@@ -139,7 +139,7 @@ class AuthService {
     if (isUserExists) {
       throw new CustomError({
         message: "Email hoặc số điện thoại đã tồn tại.",
-        status: 400,
+        status: 400
       });
     }
 
@@ -149,21 +149,21 @@ class AuthService {
 
     return {
       user: data,
-      message: "Đăng ký tài khoản thành công",
+      message: "Đăng ký tài khoản thành công"
     };
   }
 
   async login(email, password, ip, res) {
     const user = await User.findOne({
-      email,
-    }).populate("addresses");
+      email
+    });
 
     const isCorrectPassword = await user?.comparePassword(password);
 
     if (!user || !isCorrectPassword) {
       throw new CustomError({
         message: "Email hoặc mật khẩu không hợp lệ",
-        status: 400,
+        status: 400
       });
     }
 
@@ -172,22 +172,22 @@ class AuthService {
 
     const userPayload = {
       userId: user._id,
-      role: user.role,
+      role: user.role
     };
 
     const accessToken = await this.generateJwtToken(userPayload, {
-      expiresIn: this.accessTokenExpiresIn / 1000,
+      expiresIn: this.accessTokenExpiresIn / 1000
     });
 
     const refreshToken = await this.generateJwtToken(userPayload, {
-      expiresIn: this.refreshTokenExpiresIn / 1000,
+      expiresIn: this.refreshTokenExpiresIn / 1000
     });
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: true,
       sameSite: "none",
-      maxAge: this.refreshTokenExpiresIn,
+      maxAge: this.refreshTokenExpiresIn
     });
 
     delete user.password;
@@ -203,23 +203,23 @@ class AuthService {
     if (!user) {
       throw new CustomError({
         message: "Tài khoản không tồn tại",
-        status: 400,
+        status: 400
       });
     }
 
     const newAccessToken = await this.generateJwtToken(userPayload, {
-      expiresIn: this.accessTokenExpiresIn / 1000,
+      expiresIn: this.accessTokenExpiresIn / 1000
     });
 
     return {
       accessToken: newAccessToken,
-      message: "Refresh token thành công",
+      message: "Refresh token thành công"
     };
   }
 
   async forgotPassword(email) {
     const user = await User.findOne({
-      email,
+      email
     })
       .populate("token")
       .select("_id email fullName token");
@@ -235,11 +235,11 @@ class AuthService {
       user.token?._id ?? new mongoose.Types.ObjectId(),
       {
         passwordResetToken: newToken,
-        passwordResetTokenExpirationAt: new Date(Date.now() + oneHour),
+        passwordResetTokenExpirationAt: new Date(Date.now() + oneHour)
       },
       {
         new: true,
-        upsert: true,
+        upsert: true
       }
     );
 
@@ -249,7 +249,7 @@ class AuthService {
     await this.sendResetPasswordEmail({
       to: user.email,
       token: newToken,
-      fullName: user.fullName,
+      fullName: user.fullName
     });
 
     return { message: "Gửi email thành công" };
@@ -259,12 +259,12 @@ class AuthService {
     if (!email || !token) {
       throw new CustomError({
         message: "Token không hợp lệ hoặc đã hết hạn",
-        status: 401,
+        status: 401
       });
     }
 
     const user = await User.findOne({
-      email,
+      email
     })
       .populate("token")
       .select("token");
@@ -277,7 +277,7 @@ class AuthService {
       throw new CustomError({
         message: "Token không hợp lệ hoặc đã hết hạn",
         status: 401,
-        verified: false,
+        verified: false
       });
     }
 
@@ -286,13 +286,13 @@ class AuthService {
 
   async resetPassword(email, password) {
     const user = await User.findOne({
-      email,
+      email
     }).select("token");
 
     if (!user) {
       throw new CustomError({
         message: "Người dùng không tồn tại!",
-        status: 404,
+        status: 404
       });
     }
 
@@ -302,7 +302,7 @@ class AuthService {
     await user.save();
 
     return {
-      message: "Đổi mật khẩu thành công",
+      message: "Đổi mật khẩu thành công"
     };
   }
 
@@ -321,7 +321,7 @@ class AuthService {
     Xin cảm ơn,<br>
     Dola Restaurant
     </p>
-    `,
+    `
     };
 
     const info = await transporter.sendMail(mailOptions);
@@ -338,7 +338,7 @@ class AuthService {
       <p>Anh/chị đã yêu cầu đổi mật khẩu tại <b>Dola Restaurant.<b></p>
       <p>Anh/chị vui lòng truy cập vào liên kết dưới đây để thay đổi mật khẩu của Anh/chị nhé.</p>
       <a href='${this.origin}/doi-mat-khau/${to}/${token}'>Đặt lại mật khẩu</a>
-      `,
+      `
     };
     const info = await transporter.sendMail(mailOptions);
     return info;

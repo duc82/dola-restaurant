@@ -1,5 +1,4 @@
-import { FullType } from ".";
-import { FullAddress } from "./address";
+import { FullType, Pagination } from ".";
 
 interface User {
   fullName: string;
@@ -9,9 +8,8 @@ interface User {
 }
 
 interface FullUser extends FullType, User {
-  ipAddress: string;
+  ip: string;
   isHavePassword: boolean;
-  addresses: FullAddress[];
 }
 
 interface UserResponse {
@@ -19,11 +17,8 @@ interface UserResponse {
   message: string;
 }
 
-interface UsersResponse {
+interface UsersResponse extends Pagination {
   users: FullUser[];
-  skip: number;
-  limit: number;
-  total: number;
 }
 
 interface UserUpdateCurrentDTO {
@@ -37,5 +32,5 @@ export type {
   FullUser,
   UserResponse,
   UsersResponse,
-  UserUpdateCurrentDTO,
+  UserUpdateCurrentDTO
 };

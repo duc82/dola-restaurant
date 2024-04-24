@@ -3,25 +3,31 @@ import {
   User,
   UserResponse,
   UserUpdateCurrentDTO,
-  UsersResponse,
+  UsersResponse
 } from "@/types/user";
 import apiRequest from "./api";
-import { Filter } from "@/types";
+import { QueryOptions } from "@/types";
 
 const userService = {
-  getAll: (filter?: Filter) => {
+  getAll: (queryOptions?: QueryOptions) => {
     let query = "";
 
-    if (filter?.page) {
-      query += query ? `&page=${filter.page}` : `?page=${filter.page}`;
+    if (queryOptions?.page) {
+      query += query
+        ? `&page=${queryOptions.page}`
+        : `?page=${queryOptions.page}`;
     }
 
-    if (filter?.limit) {
-      query += query ? `&limit=${filter.limit}` : `?limit=${filter.limit}`;
+    if (queryOptions?.limit) {
+      query += query
+        ? `&limit=${queryOptions.limit}`
+        : `?limit=${queryOptions.limit}`;
     }
 
-    if (filter?.search) {
-      query += query ? `&search=${filter.search}` : `?search=${filter.search}`;
+    if (queryOptions?.search) {
+      query += query
+        ? `&search=${queryOptions.search}`
+        : `?search=${queryOptions.search}`;
     }
 
     return apiRequest<UsersResponse>("/users" + query);
@@ -30,7 +36,7 @@ const userService = {
   getCurrent: () => {
     return apiRequest<FullUser>("/users/current", {
       accessToken: true,
-      refreshToken: true,
+      refreshToken: true
     });
   },
 
@@ -39,7 +45,7 @@ const userService = {
       method: "POST",
       accessToken: true,
       refreshToken: true,
-      data: user,
+      data: user
     });
   },
 
@@ -48,7 +54,7 @@ const userService = {
       method: "PUT",
       accessToken: true,
       refreshToken: true,
-      data,
+      data
     });
   },
 
@@ -56,7 +62,7 @@ const userService = {
     return apiRequest<UserResponse>(`/users/update/${id}`, {
       method: "PUT",
       refreshToken: true,
-      data,
+      data
     });
   },
 
@@ -65,7 +71,7 @@ const userService = {
       method: "POST",
       accessToken: true,
       refreshToken: true,
-      data,
+      data
     });
   },
 
@@ -73,7 +79,7 @@ const userService = {
     return apiRequest<{ message: string }>(`/users/delete/${id}`, {
       method: "DELETE",
       accessToken: true,
-      refreshToken: true,
+      refreshToken: true
     });
   },
 
@@ -82,9 +88,9 @@ const userService = {
       method: "DELETE",
       accessToken: true,
       refreshToken: true,
-      data: { ids },
+      data: { ids }
     });
-  },
+  }
 };
 
 export default userService;

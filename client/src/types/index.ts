@@ -11,11 +11,6 @@ interface FilePreview extends File {
   preview: string;
 }
 
-interface BreadcrumbItem {
-  name: string;
-  url?: string;
-}
-
 interface RedirectProps {
   redirect: string;
 }
@@ -26,7 +21,7 @@ interface RejectValue {
   };
 }
 
-interface Filter {
+interface QueryOptions {
   search?: string;
   page?: number;
   limit?: number;
@@ -42,10 +37,9 @@ interface Pagination {
 export type {
   RedirectProps,
   RejectValue,
-  BreadcrumbItem,
   Timestamp,
   FullType,
   FilePreview,
-  Filter,
-  Pagination,
+  QueryOptions,
+  Pagination
 };

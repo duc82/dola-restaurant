@@ -1,8 +1,7 @@
 import { Ref, forwardRef } from "react";
-import { ChildrenProps } from "../types";
 import { twMerge } from "tailwind-merge";
 
-interface ContainerProps extends ChildrenProps {
+interface ContainerProps extends React.PropsWithChildren {
   className?: string;
 }
 

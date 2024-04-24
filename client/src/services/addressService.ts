@@ -6,7 +6,7 @@ import {
   District,
   FullAddress,
   Province,
-  Ward,
+  Ward
 } from "@/types/address";
 
 const addressService = {
@@ -36,7 +36,7 @@ const addressService = {
   getCurrent: async () => {
     return apiRequest<FullAddress[]>("addresses/current", {
       accessToken: true,
-      refreshToken: true,
+      refreshToken: true
     });
   },
 
@@ -45,7 +45,7 @@ const addressService = {
       method: "POST",
       refreshToken: true,
       accessToken: true,
-      data,
+      data
     });
   },
 
@@ -54,7 +54,7 @@ const addressService = {
       method: "PUT",
       refreshToken: true,
       accessToken: true,
-      data,
+      data
     });
   },
 
@@ -62,9 +62,9 @@ const addressService = {
     return apiRequest<{ message: string }>(`addresses/delete/${id}`, {
       method: "DELETE",
       refreshToken: true,
-      accessToken: true,
+      accessToken: true
     });
-  },
+  }
 };
 
 export default addressService;

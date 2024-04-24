@@ -5,14 +5,14 @@ import {
   FullCategory
 } from "@/types/category";
 import apiRequest from "./api";
-import { Filter } from "@/types";
+import { QueryOptions } from "@/types";
 
 const categoryService = {
   getAll: () => {
     return apiRequest<FullCategory[]>("/categories");
   },
 
-  getAllPaginate: (filter?: Filter) => {
+  getAllPaginate: (filter?: QueryOptions) => {
     let query = "";
 
     if (filter?.page) {

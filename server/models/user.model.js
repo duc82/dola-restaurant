@@ -5,11 +5,11 @@ const userSchema = new Schema(
   {
     fullName: {
       type: String,
-      required: true,
+      required: true
     },
     email: {
       type: String,
-      required: true,
+      required: true
     },
     phone: String,
     password: String,
@@ -17,22 +17,22 @@ const userSchema = new Schema(
     role: {
       type: String,
       enum: ["user", "admin"],
-      default: "user",
+      default: "user"
     },
     isHavePassword: {
       type: Boolean,
       default: function () {
         return Boolean(this.password);
-      },
+      }
     },
     token: {
       type: Schema.Types.ObjectId,
-      ref: "Token",
-    },
+      ref: "Token"
+    }
   },
   {
     timestamps: true,
-    versionKey: false,
+    versionKey: false
   }
 );
 
