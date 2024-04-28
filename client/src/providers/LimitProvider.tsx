@@ -4,11 +4,11 @@ import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 const LimitProvider = ({ children }: { children: React.ReactNode }) => {
-  const [activeLimit, setActiveLimit] = useState(limits[0]);
+  const [currentLimit, setCurrentLimit] = useState(limits[0]);
   const [urlSearchParams, setUrlSearchParams] = useSearchParams();
 
   const handleChangeLimit = (limit: number, total: number, page: number) => {
-    setActiveLimit(limit);
+    setCurrentLimit(limit);
     const pageCount = Math.ceil(total / limit);
     if (page > pageCount) {
       urlSearchParams.set("page", pageCount.toString());
@@ -17,7 +17,7 @@ const LimitProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <LimitContext.Provider value={{ activeLimit, handleChangeLimit }}>
+    <LimitContext.Provider value={{ currentLimit, handleChangeLimit }}>
       {children}
     </LimitContext.Provider>
   );

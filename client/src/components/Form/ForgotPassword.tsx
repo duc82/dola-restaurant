@@ -1,28 +1,13 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import InputGroup from "./InputGroup";
-import { motion } from "framer-motion";
 import handlingAxiosError from "@/utils/handlingAxiosError";
 import { toast } from "react-hot-toast";
 import authService from "@/services/authService";
 import Button from "./Button";
 import { Spinner } from "@/icons";
+import cn from "@/utils/cn";
 
-const variants = {
-  open: {
-    height: "auto",
-    display: "block",
-    overflow: "hidden",
-  },
-  closed: {
-    height: 0,
-    transitionEnd: {
-      display: "none",
-    },
-    overflow: "hidden",
-  },
-};
-
-const ForgotPassword = ({ active }: { active: boolean }) => {
+const ForgotPassword = ({ isOpen }: { isOpen: boolean }) => {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -46,14 +31,13 @@ const ForgotPassword = ({ active }: { active: boolean }) => {
   };
 
   return (
-    <motion.div
-      className="mb-4 mt-2"
-      initial="closed"
-      animate={active ? "open" : "closed"}
-      variants={variants}
-      transition={{ duration: 0.3 }}
+    <div
+      className={cn(
+        "transition-all duration-500 grid grid-rows-[0fr] invisible",
+        isOpen && "grid-rows-[1fr] visible"
+      )}
     >
-      <form onSubmit={onSubmit}>
+      <form onSubmit={onSubmit} className="overflow-hidden">
         <InputGroup
           type="text"
           id="emailForgot"
@@ -76,7 +60,7 @@ const ForgotPassword = ({ active }: { active: boolean }) => {
           )}
         </Button>
       </form>
-    </motion.div>
+    </div>
   );
 };
 

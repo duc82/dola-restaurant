@@ -1,5 +1,5 @@
 import { useAppSelector } from "@/store/hooks";
-import { formatAddress } from "@/utils/formatAddress";
+import formatAddress from "@/utils/formatAddress";
 
 const AccountInfo = () => {
   const { user } = useAppSelector((state) => state.user);

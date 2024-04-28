@@ -15,6 +15,7 @@ export default {
         "yellow-primary": "rgb(214 156 82)",
         "yellow-secondary": "rgb(177 118 42)",
         "black-primary": "rgb(7 21 19)",
+        warning: "rgb(133 100 4)",
       },
       boxShadow: {
         card: "4px 4px rgb(172 172 172)",

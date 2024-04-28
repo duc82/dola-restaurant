@@ -2,11 +2,11 @@ import limits from "@/data/limits.json";
 import cn from "@/utils/cn";
 
 const Limit = ({
-  activeLimit,
+  currentLimit,
   handleClick,
   variant = "yellow",
 }: {
-  activeLimit: number;
+  currentLimit: number;
   handleClick: (limit: number) => void;
   variant?: "yellow" | "blue";
 }) => {
@@ -30,7 +30,7 @@ const Limit = ({
               type="button"
               className={cn(
                 "cursor-pointer w-9 h-9 leading-9 rounded-lg text-white text-center border border-white flex items-center justify-center",
-                limit === activeLimit
+                limit === currentLimit
                   ? limitVariants[variant].default
                   : limitVariants[variant].hover
               )}

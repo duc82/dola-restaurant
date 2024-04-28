@@ -12,11 +12,17 @@ import { Upload } from "@/icons";
 import toast from "react-hot-toast";
 import handlingAxiosError from "@/utils/handlingAxiosError";
 import categoryService from "@/services/categoryService";
-import { updateCategories } from "@/store/reducers/categorySlice";
+import { updateCategory } from "@/store/reducers/categorySlice";
+import useCategory from "@/hooks/useCategory";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { storage } from "@/configs/firebase";
 
 const UpdateModal = ({ show, onClose, id }: UpdateModalProps) => {
   const dispatch = useAppDispatch();
   const { categories } = useAppSelector((state) => state.category);
+  const { parentCategories } = useCategory();
+  const [file, setFile] = useState<FilePreview | null>(null);
+
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
       "image/*": [],
@@ -26,53 +32,54 @@ const UpdateModal = ({ show, onClose, id }: UpdateModalProps) => {
     onDrop: (acceptedFiles) => {
       const file = acceptedFiles[0];
       if (file) {
-        const reader = new FileReader();
-        reader.onload = () => {
-          const filePreview = Object.assign(file, {
-            preview: reader.result as string,
-          });
-          setFile(filePreview);
-        };
-        reader.readAsDataURL(file);
+        const filePreview = Object.assign(file, {
+          preview: URL.createObjectURL(file),
+        });
+        setFile(filePreview);
       }
     },
   });
 
   const category = categories.find((category) => category._id === id);
 
-  const [file, setFile] = useState<FilePreview | null>(null);
-
   const formik = useFormik({
     initialValues: {
-      name: category?.name ?? "",
-      description: category?.description ?? "",
-      image: category?.image ?? "",
-      parentCategory: category?.parentCategory?._id ?? "",
+      name: category?.name || "",
+      description: category?.description || "",
+      image: category?.image || "",
+      parentCategory: (category?.parentCategory?._id || "") as
+        | string
+        | undefined,
     },
     enableReinitialize: true,
     onSubmit: async (values) => {
       try {
-        const formData = new FormData();
-        formData.append("name", values.name);
-        formData.append("image", file ? file : values.image);
-        formData.append("description", values.description);
-        formData.append("parentCategory", values.parentCategory);
+        const storageRef = ref(storage, `categories/${file?.name}`);
 
-        const data = await categoryService.update(id, formData);
+        if (!values.parentCategory) {
+          delete values.parentCategory;
+        }
 
-        dispatch(updateCategories(data.category));
-        toast.success(data.message);
+        if (file) {
+          await uploadBytes(storageRef, file as File)
+            .then((snapshot) => getDownloadURL(snapshot.ref))
+            .then((url) => {
+              values.image = url;
+            });
+        }
+
+        const data = await categoryService.update(id, values);
+
+        dispatch(updateCategory(data.category));
+
         setFile(null);
         onClose();
+        toast.success(data.message);
       } catch (error) {
         toast.error(handlingAxiosError(error).message);
       }
     },
   });
-
-  const parentCategories = categories.filter(
-    (category) => !category.parentCategory
-  );
 
   return (
     <Modal
@@ -140,6 +147,11 @@ const UpdateModal = ({ show, onClose, id }: UpdateModalProps) => {
                   effect="opacity"
                   wrapperClassName="mb-2"
                   className="rounded-md"
+                  onLoad={() => {
+                    if (file) {
+                      URL.revokeObjectURL(file.preview);
+                    }
+                  }}
                 />
               )}
               <div
@@ -158,10 +170,10 @@ const UpdateModal = ({ show, onClose, id }: UpdateModalProps) => {
             </div>
           </div>
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer className="flex justify-end">
           <button
             type="submit"
-            className="bg-blue-600 text-white font-medium py-2.5 px-5 text-sm rounded-lg hover:bg-blue-700 text-center focus:ring-4 focus:ring-blue-800 transition"
+            className="bg-amber-600 text-white font-medium py-2.5 px-5 text-sm rounded-lg hover:bg-amber-700 text-center focus:ring-4 focus:ring-amber-900 transition"
           >
             Cập nhật
           </button>

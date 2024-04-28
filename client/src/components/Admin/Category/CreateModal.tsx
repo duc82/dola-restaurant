@@ -1,5 +1,5 @@
 import Modal from "@/components/Modal/Modal";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { useAppDispatch } from "@/store/hooks";
 import { createCategory } from "@/store/reducers/categorySlice";
 import { FilePreview } from "@/types";
 import { CreateModalProps } from "@/types/admin";
@@ -14,32 +14,29 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Upload } from "@/icons";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "@/configs/firebase";
+import useCategory from "@/hooks/useCategory";
 
 const CreateModal = ({ show, onClose }: CreateModalProps) => {
-  const { categories } = useAppSelector((state) => state.category);
   const dispatch = useAppDispatch();
   const [file, setFile] = useState<FilePreview | null>(null);
+  const { parentCategories } = useCategory();
+
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
       "image/*": [],
     },
     maxSize: 10485760, // 10MB
     multiple: false,
-    onDrop: (acceptedFiles) => {
+    onDrop: async (acceptedFiles) => {
       const file = acceptedFiles[0];
       if (file) {
-        const reader = new FileReader();
-        reader.onload = () => {
-          const filePreview = Object.assign(file, {
-            preview: reader.result as string,
-          });
-          setFile(filePreview);
-        };
-        reader.readAsDataURL(file);
+        const filePreview = Object.assign(file, {
+          preview: URL.createObjectURL(file),
+        });
+        setFile(filePreview);
       }
     },
   });
-  const storageRef = ref(storage, `categories/${file?.name}`);
 
   const formik = useFormik({
     initialValues: {
@@ -50,29 +47,29 @@ const CreateModal = ({ show, onClose }: CreateModalProps) => {
     },
     onSubmit: async (values, { resetForm }) => {
       try {
-        console.time("Upload file");
         if (!values.parentCategory) {
           delete values.parentCategory;
         }
-        await uploadBytes(storageRef, file as File)
-          .then((snapshot) => getDownloadURL(snapshot.ref))
-          .then((url) => {
-            values.image = url;
-          });
+
+        if (file) {
+          const storageRef = ref(storage, `categories/${file?.name}`);
+          const snapshot = await uploadBytes(storageRef, file as File);
+          const url = await getDownloadURL(snapshot.ref);
+          values.image = url;
+        }
+
         const data = await dispatch(createCategory(values)).unwrap();
-        onClose();
-        toast.success(data.message);
+
         resetForm();
         setFile(null);
+        onClose();
+
+        toast.success(data.message);
       } catch (error) {
         toast.error(handlingAxiosError(error).message);
       }
     },
   });
-
-  const parentCategories = categories.filter(
-    (category) => !category.parentCategory
-  );
 
   return (
     <Modal
@@ -138,6 +135,7 @@ const CreateModal = ({ show, onClose }: CreateModalProps) => {
                   effect="opacity"
                   wrapperClassName="mb-2"
                   className="rounded-md"
+                  onLoad={() => URL.revokeObjectURL(file.preview)}
                 />
               )}
               <div
@@ -156,10 +154,10 @@ const CreateModal = ({ show, onClose }: CreateModalProps) => {
             </div>
           </div>
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer className="flex justify-end">
           <button
             type="submit"
-            className="bg-blue-600 text-white font-medium py-2.5 px-5 text-sm rounded-lg hover:bg-blue-700 text-center focus:ring-4 focus:ring-blue-800 transition"
+            className="bg-blue-600 text-white font-medium py-2.5 px-5 text-sm rounded-lg hover:bg-blue-700 text-center focus:ring-4 focus:ring-blue-900 transition"
           >
             Thêm mới
           </button>

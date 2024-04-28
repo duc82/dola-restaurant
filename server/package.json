@@ -6,7 +6,6 @@
   "scripts": {
     "start": "node server",
     "dev": "nodemon server",
-    "seed": "node ./seeders/seed",
     "vercel-build": "echo build"
   },
   "keywords": [],

@@ -4,7 +4,7 @@ import Button from "@/components/Form/Button";
 import addressService from "@/services/addressService";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { removeAddress } from "@/store/reducers/addressSlice";
-import { formatAddress } from "@/utils/formatAddress";
+import formatAddress from "@/utils/formatAddress";
 import handlingAxiosError from "@/utils/handlingAxiosError";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -14,7 +14,7 @@ const Address = () => {
   const { addresses } = useAppSelector((state) => state.address);
   const [openModal, setOpenModal] = useState({
     create: false,
-    edit: false
+    edit: false,
   });
 
   const [id, setId] = useState("");

@@ -78,12 +78,9 @@ const UpdateModal = ({ show, onClose, id }: UpdateModalProps) => {
     multiple: true,
     onDrop: (acceptedFiles) => {
       const files = acceptedFiles.map((file) => {
-        const filePreview = Object.assign(file, {
-          preview: URL.createObjectURL(file),
-        });
-        return filePreview;
+        const preview = URL.createObjectURL(file);
+        return Object.assign(file, { preview });
       });
-
       setFiles(files);
     },
   });

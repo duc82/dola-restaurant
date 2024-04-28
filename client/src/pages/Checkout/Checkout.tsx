@@ -4,7 +4,6 @@ import Select from "@/components/Form/Select";
 import { CreditCart, IdCard, Truck } from "@/icons";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import VnPay from "@/utils/VnPay";
-import { formatAddress } from "@/utils/formatAddress";
 import formatVnd from "@/utils/formatVnd";
 import { useFormik } from "formik";
 import { Link, Navigate, useNavigate, useSearchParams } from "react-router-dom";
@@ -16,6 +15,7 @@ import orderService from "@/services/orderService";
 import toast from "react-hot-toast";
 import handlingAxiosError from "@/utils/handlingAxiosError";
 import { resetCart } from "@/store/reducers/cartSlice";
+import formatAddress from "@/utils/formatAddress";
 
 const shippingFee = 40000;
 
@@ -28,13 +28,13 @@ const Checkout = () => {
   const dispatch = useAppDispatch();
   const [urlSearchParams] = useSearchParams();
 
-  const initialAddress = addresses.find((address) => address.isDefault);
+  const defaultAddress = addresses.find((address) => address.isDefault);
 
   const formik = useFormik({
     initialValues: {
-      fullName: initialAddress?.fullName,
-      phone: initialAddress?.phone,
-      shippingAddress: initialAddress?._id ?? "",
+      fullName: defaultAddress?.fullName,
+      phone: defaultAddress?.phone,
+      shippingAddress: defaultAddress?._id ?? "",
       user: user?._id ?? "",
       total: subTotal + shippingFee,
       shippingFee,

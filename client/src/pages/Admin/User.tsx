@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { Dustbin, Edit, Plus2 } from "@/icons";
 import { Helmet } from "react-helmet-async";
-import DeleteModal from "@/components/Admin/DeleteModal";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { useSearchParams } from "react-router-dom";
 import Pagination from "@/components/Pagination";
@@ -23,7 +22,13 @@ import useLimit from "@/hooks/useLimit";
 const title = "Quản lý người dùng";
 
 const User = () => {
-  const { users, total, limit, skip } = useAppSelector((state) => state.user);
+  const {
+    users,
+    total,
+    limit,
+    skip,
+    page: currentPage,
+  } = useAppSelector((state) => state.user);
   const {
     activeModal,
     openCreateModal,
@@ -36,7 +41,7 @@ const User = () => {
     selectedRowsRef,
   } = useAdminModal();
   const [urlSearchParams, setUrlSearchParams] = useSearchParams();
-  const { activeLimit, handleChangeLimit } = useLimit();
+  const { currentLimit, handleChangeLimit } = useLimit();
 
   const dispatch = useAppDispatch();
 
@@ -50,6 +55,10 @@ const User = () => {
 
   const handleDelete = async (id: string) => {
     try {
+      const confirm = window.confirm(
+        "Bạn có chắc chắn muốn xóa người dùng này?"
+      );
+      if (!confirm) return;
       const { message } = await dispatch(deleteUser(id)).unwrap();
       closeModal();
       toast.success(message);
@@ -60,8 +69,11 @@ const User = () => {
 
   const handleDeleteMany = async (selectedRows: string[]) => {
     try {
+      const confirm = window.confirm(
+        `Bạn có chắc chắn muốn xóa ${selectedRows.length} người dùng này?`
+      );
+      if (!confirm) return;
       const { message } = await dispatch(deleteManyUser(selectedRows)).unwrap();
-      closeModal();
       toast.success(message);
     } catch (error) {
       toast.error(handlingAxiosError(error).message);
@@ -69,8 +81,8 @@ const User = () => {
   };
 
   useEffect(() => {
-    dispatch(getAllUser({ limit: activeLimit, page, search }));
-  }, [dispatch, page, search, activeLimit]);
+    dispatch(getAllUser({ limit: currentLimit, page, search }));
+  }, [dispatch, page, search, currentLimit]);
 
   const pageCount = Math.ceil(total / limit);
 
@@ -82,7 +94,7 @@ const User = () => {
         <title>{title}</title>
       </Helmet>
 
-      <div className="p-4">
+      <div className="p-4 lg:px-6 lg:pt-6">
         <h1 className="text-2xl font-semibold mb-4">Danh sách người dùng</h1>
         <div className="flex flex-wrap justify-between items-center gap-y-4">
           <form className="w-64 xl:w-96 mr-2">
@@ -110,7 +122,7 @@ const User = () => {
         </div>
       </div>
 
-      <div className="p-4 flex items-center">
+      <div className="p-4 lg:px-6 flex items-center">
         <button
           type="button"
           onClick={() => handleDeleteMany(selectedRows)}
@@ -128,10 +140,10 @@ const User = () => {
         </span>
       </div>
 
-      <table className="w-full text-left divide-y divide-gray-600">
-        <thead className="bg-emerald-secondary">
+      <table className="table-admin">
+        <thead>
           <tr className="text-base">
-            <th className="px-2 py-4">
+            <th>
               <div className="flex items-center">
                 <input
                   type="checkbox"
@@ -144,33 +156,33 @@ const User = () => {
                       users.map((user) => user._id)
                     )
                   }
-                  className="w-3.5 h-3.5 rounded bg-emerald-primary focus:ring-offset-emerald-primary"
+                  className="w-4 h-4 cursor-pointer rounded bg-emerald-primary focus:ring-2 focus:ring-offset-emerald-primary"
                 />
                 <label htmlFor="all" className="sr-only">
                   checkbox
                 </label>
               </div>
             </th>
-            <th className="px-2 py-4">Id</th>
-            <th className="px-2 py-4">Họ tên</th>
-            <th className="px-2 py-4">Email</th>
-            <th className="px-2 py-4">Số điện thoại</th>
-            <th className="px-2 py-4">Vai trò</th>
-            <th className="px-2 py-4">Địa chỉ IP</th>
-            <th className="px-2 py-4">Ngày tạo</th>
-            <th className="px-2 py-4">Chức năng</th>
+            <th>Id</th>
+            <th>Họ tên</th>
+            <th>Email</th>
+            <th>Số điện thoại</th>
+            <th>Vai trò</th>
+            <th>Địa chỉ IP</th>
+            <th>Ngày tạo</th>
+            <th>Chức năng</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-600">
+        <tbody>
           {users.map((user) => (
             <tr
               key={user._id}
               className={cn(
-                "hover:bg-emerald-secondary",
+                "hover:bg-emerald-secondary transition",
                 selectedRows.includes(user._id) && "bg-emerald-secondary"
               )}
             >
-              <td className="px-2 py-4">
+              <td>
                 <div className="flex items-center">
                   <input
                     type="checkbox"
@@ -178,25 +190,23 @@ const User = () => {
                     id={user._id}
                     checked={selectedRows.includes(user._id)}
                     onChange={(e) => handleSelect(e, user._id, users.length)}
-                    className="w-3.5 h-3.5 bg-emerald-primary rounded focus:ring-offset-emerald-primary"
+                    className="w-4 h-4 cursor-pointer bg-emerald-primary rounded focus:ring-2 focus:ring-offset-emerald-primary"
                   />
                   <label htmlFor={user._id} className="sr-only">
                     userId
                   </label>
                 </div>
               </td>
-              <td className="px-2 py-4">{user._id}</td>
-              <td className="px-2 py-4">{user.fullName}</td>
-              <td className="px-2 py-4">{user.email}</td>
-              <td className="px-2 py-4">
-                {user.phone ? user.phone : "Không có"}
-              </td>
-              <td className="px-2 py-4 capitalize">
+              <td>{user._id}</td>
+              <td>{user.fullName}</td>
+              <td>{user.email}</td>
+              <td>{user.phone ? user.phone : "Không có"}</td>
+              <td className="capitalize">
                 {user.role === "user" ? "Người dùng" : user.role}
               </td>
-              <td className="px-2 py-4">{user.ipAddress}</td>
-              <td className="px-2 py-4">{formatDate(user.createdAt)}</td>
-              <td className="px-2 py-4 whitespace-nowrap space-x-2.5">
+              <td>{user.ip}</td>
+              <td>{formatDate(user.createdAt)}</td>
+              <td className="whitespace-nowrap space-x-2.5">
                 <button
                   type="button"
                   onClick={() => {
@@ -223,20 +233,20 @@ const User = () => {
         </tbody>
       </table>
 
-      <div className="p-4 flex items-center justify-between border-t border-t-gray-600">
-        <div>
-          <span className="text-sm text-gray-400">
-            Hiển thị {skip + 1} - {skip + users.length} trên tổng số {total}
-          </span>
-        </div>
+      <div className="p-4 lg:px-6 flex items-center justify-between border-t border-t-gray-600">
+        <span className="text-sm text-gray-400">
+          Hiển thị {skip + 1 > total ? 0 : skip + 1} -{" "}
+          {skip + users.length > total ? 0 : skip + users.length} trên tổng số{" "}
+          {total}
+        </span>
         <Pagination
           pageCount={pageCount}
-          currentPage={page}
+          currentPage={currentPage}
           onPageChange={onPageChange}
           variant="blue"
         />
         <Limit
-          activeLimit={activeLimit}
+          currentLimit={currentLimit}
           handleClick={(limit) => handleChangeLimit(limit, total, page)}
           variant="blue"
         />

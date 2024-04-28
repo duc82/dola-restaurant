@@ -1,31 +1,9 @@
-import { Search } from "../../icons";
+import { Search } from "@/icons";
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import formatVnd from "../../utils/formatVnd";
-import useSearchProduct from "../../hooks/useSearchProduct";
-
-const searchMobileVariants = {
-  open: {
-    height: "auto",
-    transition: {
-      duration: 0.3,
-    },
-    transitionEnd: {
-      overflow: "visible",
-    },
-  },
-  closed: {
-    height: 0,
-    transition: {
-      duration: 0.3,
-    },
-    transitionEnd: {
-      display: "none",
-      overflow: "hidden",
-    },
-  },
-};
+import formatVnd from "@/utils/formatVnd";
+import useSearchProduct from "@/hooks/useSearchProduct";
+import cn from "@/utils/cn";
 
 const HeaderSearch = ({ active }: { active: boolean }) => {
   const { search, products, handleSearchChange, resetSearch } =
@@ -33,11 +11,11 @@ const HeaderSearch = ({ active }: { active: boolean }) => {
 
   return (
     <div className="lg:hidden w-full">
-      <motion.div
-        initial="closed"
-        variants={searchMobileVariants}
-        animate={active ? "open" : "closed"}
-        className="bg-emerald-secondary"
+      <div
+        className={cn(
+          "bg-emerald-secondary overflow-hidden max-h-0 transition-all duration-300",
+          active && "max-h-16"
+        )}
       >
         <form className="p-2.5" action="/danh-muc-san-pham/tat-ca-san-pham">
           <div className="relative">
@@ -119,7 +97,7 @@ const HeaderSearch = ({ active }: { active: boolean }) => {
             )}
           </div>
         </form>
-      </motion.div>
+      </div>
     </div>
   );
 };

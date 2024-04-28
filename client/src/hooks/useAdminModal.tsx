@@ -3,7 +3,6 @@ import { ChangeEvent, useCallback, useRef, useState } from "react";
 const initialActiveModal = {
   create: false,
   update: false,
-  delete: false,
 };
 
 const useAdminModal = () => {
@@ -13,18 +12,18 @@ const useAdminModal = () => {
   const selectedRowsRef = useRef<HTMLInputElement | null>(null);
 
   const openCreateModal = () => {
-    setActiveModal((prev) => ({
-      ...prev,
+    setActiveModal({
       create: true,
-    }));
+      update: false,
+    });
   };
 
   const openUpdateModal = (id: string) => {
     setId(id);
-    setActiveModal((prev) => ({
-      ...prev,
+    setActiveModal({
+      create: false,
       update: true,
-    }));
+    });
   };
 
   const closeModal = () => {
@@ -65,6 +64,13 @@ const useAdminModal = () => {
     [selectedRows]
   );
 
+  const clearSelectedRows = () => {
+    setSelectedRows([]);
+    if (selectedRowsRef.current) {
+      selectedRowsRef.current.checked = false;
+    }
+  };
+
   return {
     activeModal,
     id,
@@ -75,6 +81,7 @@ const useAdminModal = () => {
     selectedRowsRef,
     handleSelectAll,
     handleSelect,
+    clearSelectedRows,
   };
 };
 

@@ -30,7 +30,7 @@ const Navbar = ({ active, onClose }: NavbarProps) => {
 
   return (
     <>
-      <Overlay active={active} onClick={onClose} />
+      <Overlay show={active} onClick={onClose} />
       <nav
         className={cn(
           "fixed top-0 left-0 h-full z-[99999] w-64 transition-[transform,visibility] duration-500 bg-emerald-primary",

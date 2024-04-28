@@ -5,6 +5,8 @@ class CategoryController {
   constructor() {
     this.categoryService = new CategoryService();
     this.getAll = asyncHandler(this.getAll.bind(this));
+    this.getAllChilds = asyncHandler(this.getAllChilds.bind(this));
+    this.getAllParents = asyncHandler(this.getAllParents.bind(this));
     this.create = asyncHandler(this.create.bind(this));
     this.update = asyncHandler(this.update.bind(this));
     this.delete = asyncHandler(this.delete.bind(this));
@@ -17,6 +19,14 @@ class CategoryController {
 
   async getAll(req, res) {
     res.json(await this.categoryService.getAll(req.query));
+  }
+
+  async getAllChilds(req, res) {
+    res.json(await this.categoryService.getAllChilds());
+  }
+
+  async getAllParents(req, res) {
+    res.json(await this.categoryService.getAllParents());
   }
 
   async update(req, res) {

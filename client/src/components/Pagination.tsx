@@ -8,6 +8,7 @@ interface PaginationProps {
   onPageChange: (page: number) => void;
   pageClassName?: string;
   pageActiveClassName?: string;
+  wrapperClassName?: string;
   variant?: "yellow" | "blue";
 }
 
@@ -23,6 +24,7 @@ const Pagination = ({
   onPageChange,
   pageClassName,
   pageActiveClassName,
+  wrapperClassName,
   variant = "yellow",
 }: PaginationProps) => {
   const paginationRange = useMemo(() => {
@@ -78,51 +80,56 @@ const Pagination = ({
   };
 
   return (
-    <div>
-      <ul className="flex items-center space-x-1.5">
-        {currentPage > 1 && (
-          <li
-            className={cn(pageClasses, variants[variant].hover, pageClassName)}
-            onClick={() => onPageChange(currentPage - 1)}
-          >
-            &#171;
-          </li>
-        )}
+    <ul
+      className={cn(
+        "flex items-center justify-center space-x-1.5",
+        wrapperClassName
+      )}
+    >
+      {currentPage > 1 && (
+        <li
+          className={cn(pageClasses, variants[variant].hover, pageClassName)}
+          onClick={() => onPageChange(currentPage - 1)}
+        >
+          &#171;
+        </li>
+      )}
 
-        {paginationRange.map((page, i) => {
-          if (page === "DOTS")
-            return (
-              <li key={i} className={cn(pageClasses, "text-lg", pageClassName)}>
-                ...
-              </li>
-            );
-
+      {paginationRange.map((page, i) => {
+        if (page === "DOTS")
           return (
-            <li
-              key={i}
-              className={cn(
-                pageClasses,
-                pageClassName,
-                page === currentPage &&
-                  cn(variants[variant].default, pageActiveClassName)
-              )}
-              onClick={() => onPageChange(page as number)}
-            >
-              {page}
+            <li key={i} className={cn(pageClasses, "text-lg", pageClassName)}>
+              ...
             </li>
           );
-        })}
 
-        {currentPage < pageCount && (
+        return (
           <li
-            className={cn(pageClasses, variants[variant].hover, pageClassName)}
-            onClick={() => onPageChange(currentPage + 1)}
+            key={i}
+            className={cn(
+              pageClasses,
+              pageClassName,
+              page === currentPage
+                ? variants[variant].default
+                : variants[variant].hover,
+              page === currentPage && pageActiveClassName
+            )}
+            onClick={() => onPageChange(page as number)}
           >
-            &#187;
+            {page}
           </li>
-        )}
-      </ul>
-    </div>
+        );
+      })}
+
+      {currentPage < pageCount && (
+        <li
+          className={cn(pageClasses, variants[variant].hover, pageClassName)}
+          onClick={() => onPageChange(currentPage + 1)}
+        >
+          &#187;
+        </li>
+      )}
+    </ul>
   );
 };
 

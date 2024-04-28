@@ -1,11 +1,10 @@
 import Modal from "@/components/Modal/Modal";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { useAppDispatch } from "@/store/hooks";
 import type { CreateModalProps } from "@/types/admin";
 import { useFormik } from "formik";
 import Input from "../Input";
-import ReactQuill from "react-quill";
 import Select from "../Select";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FilePreview } from "@/types";
 import { useDropzone } from "react-dropzone";
 import { Upload } from "@/icons";
@@ -14,40 +13,16 @@ import { createProduct } from "@/store/reducers/productSlice";
 import toast from "react-hot-toast";
 import handlingAxiosError from "@/utils/handlingAxiosError";
 import { productSchema, sizes, tastes } from "@/schemas/productSchema";
-
-const modules = {
-  toolbar: [
-    [{ header: [1, 2, 3, false] }],
-    ["bold", "italic", "underline", "strike", "blockquote"],
-    [
-      { list: "ordered" },
-      { list: "bullet" },
-      { indent: "-1" },
-      { indent: "+1" },
-    ],
-  ],
-};
-
-const formats = [
-  "header",
-  "bold",
-  "italic",
-  "underline",
-  "strike",
-  "blockquote",
-  "list",
-  "bullet",
-  "indent",
-];
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { storage } from "@/configs/firebase";
+import TextEditor from "@/libs/TextEditor";
+import { FullCategory } from "@/types/category";
+import categoryService from "@/services/categoryService";
 
 const CreateModal = ({ show, onClose }: CreateModalProps) => {
-  const { categories } = useAppSelector((state) => state.category);
   const [files, setFiles] = useState<FilePreview[]>([]);
+  const [childCategories, setChildCategories] = useState<FullCategory[]>([]);
   const dispatch = useAppDispatch();
-
-  const childCategories = categories.filter(
-    (category) => category.parentCategory
-  );
 
   const formik = useFormik({
     initialValues: {
@@ -59,29 +34,35 @@ const CreateModal = ({ show, onClose }: CreateModalProps) => {
       price: "0",
       discountPercent: 0,
       stock: 0,
+      images: [] as string[],
     },
     validationSchema: productSchema,
     validateOnChange: true,
     enableReinitialize: true,
-    onSubmit: async (values, { resetForm }) => {
+    onSubmit: async (values, { resetForm, setFieldError }) => {
       try {
-        const formData = new FormData();
-        formData.append("title", values.title);
-        formData.append("category", values.category);
-        formData.append("taste", values.taste);
-        formData.append("size", values.size);
-        formData.append("price", values.price.replace(/\D/g, ""));
-        formData.append("discountPercent", values.discountPercent.toString());
-        formData.append("stock", values.stock.toString());
-        formData.append("description", values.description);
-        files.forEach((file) => {
-          formData.append("image[]", file);
-        });
+        if (files.length === 0) {
+          setFieldError("images", "Ít nhất 1 hình ảnh");
+          return;
+        }
 
-        const data = await dispatch(createProduct(formData)).unwrap();
-        resetForm();
+        for (const file of files) {
+          const storageRef = ref(storage, `products/${file?.name}`);
+          const snapshot = await uploadBytes(storageRef, file as File);
+          const url = await getDownloadURL(snapshot.ref);
+          values.images.push(url);
+        }
         setFiles([]);
+
+        const price = +values.price.replace(/\D/g, "");
+
+        const data = await dispatch(
+          createProduct({ ...values, price })
+        ).unwrap();
+
+        resetForm();
         onClose();
+
         toast.success(data.message);
       } catch (error) {
         toast.error(handlingAxiosError(error).message);
@@ -93,19 +74,25 @@ const CreateModal = ({ show, onClose }: CreateModalProps) => {
     accept: {
       "image/*": [],
     },
-    maxSize: 10485760, // 10MB
+    maxSize: 20 * 1024 * 1024, // 20MB
     multiple: true,
     onDrop: (acceptedFiles) => {
       const files = acceptedFiles.map((file) => {
-        const filePreview = Object.assign(file, {
-          preview: URL.createObjectURL(file),
-        });
-        return filePreview;
+        const preview = URL.createObjectURL(file);
+        return Object.assign(file, { preview });
       });
-
       setFiles(files);
     },
   });
+
+  useEffect(() => {
+    if (show) {
+      categoryService
+        .getAllChilds()
+        .then((data) => setChildCategories(data))
+        .catch((error) => console.error(error));
+    }
+  }, [show]);
 
   return (
     <Modal
@@ -202,22 +189,18 @@ const CreateModal = ({ show, onClose }: CreateModalProps) => {
             <label htmlFor="description" className="mb-2 inline-block">
               Mô tả
             </label>
-            <ReactQuill
+            <TextEditor
               value={formik.values.description}
-              modules={modules}
-              formats={formats}
-              onChange={(description) => {
-                formik.setFieldValue("description", description);
-              }}
+              onChange={(value) => formik.setFieldValue("description", value)}
               className="bg-emerald-primary"
             />
           </div>
-          <div className="col-span-2">
+          <div className="col-span-2 ">
             <label htmlFor="images" className="mb-2 inline-block">
               Hình ảnh
             </label>
 
-            <div className="flex flex-wrap items-center mb-2 space-x-2">
+            <div className="flex flex-wrap items-center mb-2 space-x-4">
               {files.map((file, i) => (
                 <LazyLoadImage
                   key={i}
@@ -226,7 +209,7 @@ const CreateModal = ({ show, onClose }: CreateModalProps) => {
                   width={100}
                   id="image"
                   effect="opacity"
-                  className="rounded-md"
+                  className="rounded-md object-cover"
                   onLoad={() => URL.revokeObjectURL(file.preview)}
                 />
               ))}
@@ -245,9 +228,15 @@ const CreateModal = ({ show, onClose }: CreateModalProps) => {
               </p>
               <input {...getInputProps()} />
             </div>
+
+            {formik.errors.images && (
+              <p className="text-red-500 mt-2 text-xs">
+                {formik.errors.images}
+              </p>
+            )}
           </div>
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer className="flex justify-end">
           <button
             type="submit"
             className="bg-blue-600 text-white font-medium py-2.5 px-5 text-sm rounded-lg hover:bg-blue-700 text-center focus:ring-4 focus:ring-blue-800 transition"

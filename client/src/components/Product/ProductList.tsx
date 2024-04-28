@@ -21,7 +21,11 @@ const ProductList = ({
   }
 
   if (!isLoading && products.length < 1)
-    return <div className="text-center">Món ăn đang được cập nhật</div>;
+    return (
+      <div className="py-3 px-5 rounded-md mb-5 text-warning bg-[rgb(255,243,205)]">
+        Món ăn đang được cập nhật.
+      </div>
+    );
 
   return (
     <section

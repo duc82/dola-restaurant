@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Breadcrumb from "../components/Breadcrumb/index";
 import { useParams, Link } from "react-router-dom";
 import { toast } from "react-hot-toast";
@@ -20,6 +20,7 @@ import ProductRelate from "@/components/ProductDetail/ProductRelate";
 import productService from "@/services/productService";
 import ProductViewed from "@/components/ProductDetail/ProductViewed";
 import { FullProduct } from "@/types/product";
+import Fancybox from "@/libs/Fancybox";
 
 const ProductDetail = () => {
   const dispatch = useAppDispatch();
@@ -35,11 +36,12 @@ const ProductDetail = () => {
   } = useQuantity({ max: product?.stock });
 
   const [indexActiveImage, setIndexActiveImage] = useState(0);
-  const [swiper, setSwiper] = useState<SwiperType | null>(null);
+  const swiperRef = useRef<SwiperType | null>(null);
 
+  // confuse
   const handleChangeActiveImage = (index: number) => {
     setIndexActiveImage(index);
-    swiper?.slideTo(index);
+    swiperRef.current?.slideTo(index);
   };
 
   const handleAddQuantity = () => {
@@ -94,24 +96,26 @@ const ProductDetail = () => {
           <div className="md:flex">
             {/* Image */}
             <div className="relative md:max-w-[50%] lg:max-w-[41%] md:pr-4 w-full">
-              <div className="!sticky top-4 mb-[30px]">
+              <Fancybox className="sticky top-4 mb-[30px]">
                 <Swiper
                   modules={[Navigation]}
                   navigation
-                  onSwiper={(swiper) => setSwiper(swiper)}
+                  onSwiper={(swiper) => (swiperRef.current = swiper)}
                   onSlideChange={(swiper) =>
                     setIndexActiveImage(swiper.activeIndex)
                   }
                 >
                   {product?.images.map((image) => (
                     <SwiperSlide key={image._id}>
-                      <LazyLoadImage
-                        src={image.url}
-                        alt={product.title}
-                        effect="opacity"
-                        wrapperClassName="!block"
-                        className="w-full"
-                      />
+                      <Link data-fancybox="product-images" to={image.url}>
+                        <LazyLoadImage
+                          src={image.url}
+                          alt={product.title}
+                          effect="opacity"
+                          wrapperClassName="!block"
+                          className="w-full"
+                        />
+                      </Link>
                     </SwiperSlide>
                   ))}
                 </Swiper>
@@ -151,7 +155,7 @@ const ProductDetail = () => {
                     ))}
                   </Swiper>
                 )}
-              </div>
+              </Fancybox>
             </div>
             <div className="block relative w-full md:pl-4">
               <h1 className="text-[40px] leading-[48px] font-medium mb-1 font-dancing_script">
@@ -193,7 +197,8 @@ const ProductDetail = () => {
                       name="quantity"
                       value={quantity}
                       onChange={handleChangeQuantity}
-                      className="no-spin w-10 h-10 text-black text-center outline-none rounded-md text-[15px] border border-yellow-primary"
+                      autoComplete="off"
+                      className="no-spin w-10 h-10 p-0 text-black text-center outline-none rounded-md text-[15px] border border-yellow-primary"
                     />
                     <button
                       type="button"
@@ -229,7 +234,7 @@ const ProductDetail = () => {
           {/* Product relate */}
           <ProductRelate parentCategorySlug={product?.parentCategory.slug} />
           {/* Product viewed  */}
-          <ProductViewed product={product} />
+          {product && <ProductViewed product={product} />}
         </div>
 
         <div className="mb-10 lg:w-1/4">

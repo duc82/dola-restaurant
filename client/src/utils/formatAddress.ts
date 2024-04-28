@@ -1,13 +1,27 @@
 import { Address } from "@/types/address";
 
-export function formatAddress(address?: Address, isShort?: boolean) {
+interface FormatAddressOptions {
+  short: boolean;
+  medium: boolean;
+}
+
+export default function formatAddress(
+  address?: Address,
+  options?: Partial<FormatAddressOptions>
+) {
   if (!address) {
     return "";
   }
 
-  if (isShort) {
-    return `${address.district}, ${address.province}`;
+  let str = "";
+
+  if (options?.short) {
+    str = `${address.district}, ${address.province}`;
+  } else if (options?.medium) {
+    str = `${address.ward}, ${address.district}, ${address.province}`;
+  } else {
+    str = `${address.detail}, ${address.ward}, ${address.district}, ${address.province}`;
   }
 
-  return `${address.detail}, ${address.ward}, ${address.district}, ${address.province}`;
+  return str;
 }

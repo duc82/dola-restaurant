@@ -2,7 +2,7 @@ import {
   CategoriesResponse,
   CategoryDto,
   CategoryResponse,
-  FullCategory
+  FullCategory,
 } from "@/types/category";
 import apiRequest from "./api";
 import { QueryOptions } from "@/types";
@@ -10,6 +10,14 @@ import { QueryOptions } from "@/types";
 const categoryService = {
   getAll: () => {
     return apiRequest<FullCategory[]>("/categories");
+  },
+
+  getAllChilds: () => {
+    return apiRequest<FullCategory[]>("/categories/childs");
+  },
+
+  getAllParents: () => {
+    return apiRequest<FullCategory[]>("/categories/parents");
   },
 
   getAllPaginate: (filter?: QueryOptions) => {
@@ -35,16 +43,16 @@ const categoryService = {
       method: "POST",
       accessToken: true,
       refreshToken: true,
-      data
+      data,
     });
   },
 
-  update: (id: string, formData: FormData) => {
+  update: (id: string, data: CategoryDto) => {
     return apiRequest<CategoryResponse>(`/categories/update/${id}`, {
       method: "PUT",
       accessToken: true,
       refreshToken: true,
-      data: formData
+      data,
     });
   },
 
@@ -52,7 +60,7 @@ const categoryService = {
     return apiRequest<{ message: string }>(`/categories/delete/${id}`, {
       method: "DELETE",
       accessToken: true,
-      refreshToken: true
+      refreshToken: true,
     });
   },
 
@@ -61,9 +69,9 @@ const categoryService = {
       method: "DELETE",
       accessToken: true,
       refreshToken: true,
-      data: { ids }
+      data: { ids },
     });
-  }
+  },
 };
 
 export default categoryService;

@@ -4,7 +4,7 @@ import { Helmet } from "react-helmet-async";
 
 const Dashboard = () => {
   return (
-    <main className="pt-6 px-4 lg:px-6 w-full">
+    <main className="py-6 px-4 lg:px-6 w-full">
       <Helmet>
         <title>Admin - Bảng điều khiển</title>
       </Helmet>

@@ -1,25 +1,22 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import handlingAxiosError from "../../utils/handlingAxiosError";
-import { RejectValue } from "@/types";
+import { Pagination, QueryOptions, RejectValue } from "@/types";
 import productService from "@/services/productService";
 import {
   FullProduct,
+  Product,
   ProductResponse,
   ProductsResponse,
 } from "@/types/product";
+import limits from "@/data/limits.json";
 
 export const getAllProduct = createAsyncThunk<
   ProductsResponse,
-  | {
-      category?: string;
-      query?: string;
-      limit?: number;
-    }
-  | undefined,
+  (QueryOptions & { category?: string }) | undefined,
   RejectValue
->("products/getAll", async (param, thunkApi) => {
+>("products/getAll", async (queryOptions, thunkApi) => {
   try {
-    const data = await productService.getAll(param);
+    const data = await productService.getAll(queryOptions);
     return data;
   } catch (error) {
     return thunkApi.rejectWithValue(handlingAxiosError(error));
@@ -28,11 +25,11 @@ export const getAllProduct = createAsyncThunk<
 
 export const createProduct = createAsyncThunk<
   ProductResponse,
-  FormData,
+  Product,
   RejectValue
->("products/create", async (formData, thunkApi) => {
+>("products/create", async (product, thunkApi) => {
   try {
-    const data = await productService.create(formData);
+    const data = await productService.create(product);
     return data;
   } catch (error) {
     return thunkApi.rejectWithValue(handlingAxiosError(error));
@@ -65,18 +62,53 @@ export const deleteProduct = createAsyncThunk<
   }
 });
 
-const initialState = {
-  products: [] as FullProduct[],
-  limit: 0,
+export const deleteManyProduct = createAsyncThunk<
+  { message: string },
+  string[],
+  RejectValue
+>("products/deleteMany", async (ids, thunkApi) => {
+  try {
+    const data = await productService.deleteMany(ids);
+    return data;
+  } catch (error) {
+    return thunkApi.rejectWithValue(handlingAxiosError(error));
+  }
+});
+
+export interface ProductState extends Pagination {
+  products: FullProduct[];
+  viewedProducts: FullProduct[];
+  favoriteProducts: FullProduct[];
+  isLoading: boolean;
+}
+
+const initialState: ProductState = {
+  products: [],
+  viewedProducts: [],
+  favoriteProducts: [],
+  limit: limits[0],
   skip: 0,
   total: 0,
+  page: 1,
   isLoading: false,
 };
 
 const productSlice = createSlice({
   name: "products",
   initialState,
-  reducers: {},
+  reducers: {
+    addViewedProducts: (state, { payload }: PayloadAction<FullProduct>) => {
+      state.viewedProducts.push(payload);
+    },
+    addFavoriteProducts: (state, { payload }: PayloadAction<FullProduct>) => {
+      state.favoriteProducts.push(payload);
+    },
+
+    removeFavoriteProducts: (state, { payload }: PayloadAction<string>) => {
+      const index = state.favoriteProducts.findIndex((p) => p._id === payload);
+      state.favoriteProducts.splice(index, 1);
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(getAllProduct.pending, (state) => {
       state.isLoading = true;
@@ -128,3 +160,8 @@ const productSlice = createSlice({
 });
 
 export default productSlice.reducer;
+export const {
+  addViewedProducts,
+  addFavoriteProducts,
+  removeFavoriteProducts,
+} = productSlice.actions;

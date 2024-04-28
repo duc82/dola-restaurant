@@ -1,37 +1,36 @@
 import { createContext, useContext, useState } from "react";
-import { ChildrenProps } from "../types";
 import { Cart } from "@/types/cart";
 
 interface AddedCartContextType {
-  active: boolean;
+  isOpen: boolean;
   closeModalCart: () => void;
   updateAddedCart: (cart: Cart) => void;
   addedCart: Cart | null;
 }
 
 const AddedCartContext = createContext<AddedCartContextType>({
-  active: false,
+  isOpen: false,
   closeModalCart: () => {},
   updateAddedCart: () => {},
   addedCart: null,
 });
 
-export const AddedCartProvider = ({ children }: ChildrenProps) => {
-  const [isActive, setIsActive] = useState(false);
+export const AddedCartProvider = ({ children }: React.PropsWithChildren) => {
+  const [isOpen, setIsOpen] = useState(false);
   const [addedCart, setAddedCart] = useState<Cart | null>(null);
 
   const closeModalCart = () => {
-    setIsActive(false);
+    setIsOpen(false);
   };
 
   const updateAddedCart = (cart: Cart) => {
-    setIsActive(true);
+    setIsOpen(true);
     setAddedCart(cart);
   };
 
   return (
     <AddedCartContext.Provider
-      value={{ active: isActive, closeModalCart, addedCart, updateAddedCart }}
+      value={{ isOpen, closeModalCart, addedCart, updateAddedCart }}
     >
       {children}
     </AddedCartContext.Provider>

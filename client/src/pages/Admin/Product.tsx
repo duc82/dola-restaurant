@@ -1,8 +1,12 @@
 import { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
-import { Dustbin, Edit, Search } from "@/icons";
+import { Dustbin, Edit, Plus2, Search } from "@/icons";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { deleteProduct, getAllProduct } from "@/store/reducers/productSlice";
+import {
+  deleteManyProduct,
+  deleteProduct,
+  getAllProduct,
+} from "@/store/reducers/productSlice";
 import formatVnd from "@/utils/formatVnd";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import Pagination from "@/components/Pagination";
@@ -10,12 +14,16 @@ import { useSearchParams } from "react-router-dom";
 import useAdminModal from "@/hooks/useAdminModal";
 import formatDate from "@/utils/formatDate";
 import CreateModal from "@/components/Admin/Product/CreateModal";
-import DeleteModal from "@/components/Admin/DeleteModal";
 import handlingAxiosError from "@/utils/handlingAxiosError";
 import toast from "react-hot-toast";
 import UpdateModal from "@/components/Admin/Product/UpdateModal";
+import useLimit from "@/hooks/useLimit";
+import cn from "@/utils/cn";
+import Limit from "@/components/Limit";
+import Fancybox from "@/libs/Fancybox";
+import { Link } from "react-router-dom";
 
-const title = "Admin - Danh sách sản phẩm";
+const title = "Danh sách sản phẩm";
 
 const Product = () => {
   const {
@@ -23,43 +31,65 @@ const Product = () => {
     closeModal,
     openCreateModal,
     openUpdateModal,
-    openDeleteModal,
     id,
     selectedRows,
     selectedRowsRef,
     handleSelect,
     handleSelectAll,
+    clearSelectedRows,
   } = useAdminModal();
   const [urlSearchParams, setUrlSearchParams] = useSearchParams();
-  const { products, total, limit } = useAppSelector((state) => state.product);
+  const {
+    products,
+    total,
+    limit,
+    skip,
+    page: currentPage,
+  } = useAppSelector((state) => state.product);
 
   const dispatch = useAppDispatch();
+  const { currentLimit, handleChangeLimit } = useLimit();
 
-  const page = parseInt(urlSearchParams.get("page") ?? "1");
   const search = urlSearchParams.get("search") ?? "";
+  const page = +(urlSearchParams.get("page") ?? "1");
 
   const onPageChange = (page: number) => {
     urlSearchParams.set("page", page.toString());
     setUrlSearchParams(urlSearchParams);
   };
 
-  const handleDelete = async () => {
+  const handleDelete = async (id: string) => {
     try {
+      const confirm = window.confirm("Bạn có chắc chắn muốn xóa sản phẩm này?");
+      if (!confirm) return;
       const data = await dispatch(deleteProduct(id)).unwrap();
-      closeModal();
       toast.success(data.message);
     } catch (error) {
       toast.error(handlingAxiosError(error).message);
     }
   };
 
-  const pageCount = limit > 0 ? Math.ceil(total / limit) : 0;
+  const handleDeleteMany = async (selectedRows: string[]) => {
+    try {
+      const confirm = window.confirm(
+        `Bạn có chắc chắn muốn xóa ${selectedRows.length} sản phẩm này?`
+      );
+      if (!confirm) return;
+      const data = await dispatch(deleteManyProduct(selectedRows)).unwrap();
+      clearSelectedRows();
+      toast.success(data.message);
+    } catch (error) {
+      toast.error(handlingAxiosError(error).message);
+    }
+  };
+
+  const pageCount = Math.ceil(total / limit);
+
+  const hasSelected = selectedRows.length > 0;
 
   useEffect(() => {
-    const limit = 3;
-    const query = urlSearchParams.toString();
-    dispatch(getAllProduct({ query, limit }));
-  }, [dispatch, urlSearchParams]);
+    dispatch(getAllProduct({ limit: currentLimit, page, search }));
+  }, [dispatch, page, search, currentLimit]);
 
   return (
     <div className="overflow-y-auto w-full">
@@ -67,7 +97,7 @@ const Product = () => {
         <title>{title}</title>
       </Helmet>
 
-      <div className="p-4">
+      <div className="p-4 lg:px-6 lg:pt-6">
         <h1 className="text-2xl font-semibold mb-4">Danh sách sản phẩm</h1>
         <div className="flex flex-wrap justify-between items-center gap-y-4">
           <div className="flex items-center">
@@ -86,12 +116,6 @@ const Product = () => {
               />
               <Search className="absolute top-1/2 left-4 -translate-y-1/2 w-4 h-4 text-gray-400" />
             </form>
-            <button
-              type="button"
-              className="p-1 group hover:bg-emerald-secondary rounded cursor-pointer transition"
-            >
-              <Dustbin className="w-6 h-6 text-gray-400 group-hover:text-white transition" />
-            </button>
           </div>
 
           <button
@@ -99,145 +123,168 @@ const Product = () => {
             onClick={openCreateModal}
             className="px-3 py-2 bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-900 rounded-lg inline-flex items-center font-medium justify-center text-sm transition"
           >
-            Thêm sản phẩm
+            <Plus2 className="w-6 h-6 mr-1" />
+            <span>Thêm sản phẩm</span>
           </button>
         </div>
       </div>
 
-      <div className="mb-[30px]">
-        <table className="w-full text-left divide-y divide-gray-600">
-          <thead className="bg-emerald-secondary">
-            <tr className="text-base">
-              <th scope="col" className="px-2 py-4">
+      <div className="p-4 lg:px-6 flex items-center">
+        <button
+          type="button"
+          onClick={() => handleDeleteMany(selectedRows)}
+          disabled={!hasSelected}
+          className={cn(
+            "px-3 py-2 bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-900 rounded-lg inline-flex items-center font-medium justify-center text-sm transition",
+            !hasSelected && "hover:bg-red-600 opacity-50 cursor-not-allowed"
+          )}
+        >
+          <Dustbin className="mr-2" />
+          <span>Xóa</span>
+        </button>
+        <span className="ml-2">
+          {hasSelected ? `Đã chọn ${selectedRows.length} hàng` : ""}
+        </span>
+      </div>
+
+      <table className="table-admin">
+        <thead>
+          <tr className="text-base">
+            <th>
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  name="all"
+                  id="all"
+                  ref={selectedRowsRef}
+                  onChange={(e) =>
+                    handleSelectAll(
+                      e,
+                      products.map((product) => product._id)
+                    )
+                  }
+                  className="w-4 h-4 cursor-pointer rounded bg-emerald-primary focus:ring-2 focus:ring-offset-emerald-primary"
+                />
+                <label htmlFor="all" className="sr-only">
+                  checkbox
+                </label>
+              </div>
+            </th>
+            <th>Id</th>
+            <th>Hình ảnh</th>
+            <th>Tiêu đề</th>
+            <th>Danh mục</th>
+            <th>Giảm giá</th>
+            <th>Giá</th>
+            <th>Tồn kho</th>
+            <th>Ngày tạo</th>
+            <th>Chức năng</th>
+          </tr>
+        </thead>
+        <tbody>
+          {products.map((product) => (
+            <tr
+              key={product._id}
+              className={cn(
+                "hover:bg-emerald-secondary transition",
+                selectedRows.includes(product._id) && "bg-emerald-secondary"
+              )}
+            >
+              <td>
                 <div className="flex items-center">
                   <input
                     type="checkbox"
-                    name="all"
-                    id="all"
-                    ref={selectedRowsRef}
+                    name="productId"
+                    id={product._id}
+                    checked={selectedRows.includes(product._id)}
                     onChange={(e) =>
-                      handleSelectAll(
-                        e,
-                        products.map((product) => product._id)
-                      )
+                      handleSelect(e, product._id, products.length)
                     }
-                    className="w-3.5 h-3.5 rounded bg-emerald-primary focus:ring-offset-emerald-primary"
+                    className="w-4 h-4 cursor-pointer rounded bg-emerald-primary focus:ring-2 focus:ring-offset-emerald-primary"
                   />
-                  <label htmlFor="all" className="sr-only">
-                    checkbox
+                  <label htmlFor={product._id} className="sr-only">
+                    productId
                   </label>
                 </div>
-              </th>
-              <th scope="col" className="px-2 py-4"></th>
-              <th scope="col" className="px-2 py-4">
-                Tiêu đề
-              </th>
-
-              <th scope="col" className="px-2 py-4">
-                Danh mục
-              </th>
-
-              <th scope="col" className="px-2 py-4">
-                Giảm giá
-              </th>
-              <th scope="col" className="px-2 py-4">
-                Giá
-              </th>
-              <th scope="col" className="px-2 py-4">
-                Tồn kho
-              </th>
-
-              <th scope="col" className="px-2 py-4">
-                Ngày tạo
-              </th>
-              <th scope="col" className="px-2 py-4">
-                Chức năng
-              </th>
+              </td>
+              <td>{product._id}</td>
+              <td>
+                <Fancybox>
+                  {product.images.map((image, i) => (
+                    <Link
+                      data-fancybox="imageGallery"
+                      to={image.url}
+                      hidden={i !== 0}
+                      key={image._id}
+                    >
+                      <LazyLoadImage
+                        src={image.url}
+                        alt={product.title}
+                        width={60}
+                        height={60}
+                        effect="opacity"
+                        className="rounded-md"
+                      />
+                    </Link>
+                  ))}
+                </Fancybox>
+              </td>
+              <td>{product.title}</td>
+              <td>
+                {product.childCategory.name} ({product.parentCategory.name})
+              </td>
+              <td>
+                {product.discountPercent
+                  ? `${product.discountPercent}%`
+                  : "Không"}
+              </td>
+              <td>{formatVnd(product.discountedPrice)}</td>
+              <td>{product.stock}</td>
+              <td>{formatDate(product.createdAt)}</td>
+              <td className="whitespace-nowrap space-x-2.5">
+                <button
+                  type="button"
+                  onClick={() => openUpdateModal(product._id)}
+                  className="px-3 py-2 bg-amber-600 hover:bg-yellow-700 focus:ring-4 focus:ring-yellow-900 rounded-lg inline-flex items-center font-medium justify-center text-sm transition"
+                >
+                  <Edit className="w-4 h-4 mr-2" />
+                  Sửa
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleDelete(product._id)}
+                  className="px-3 py-2 bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-900 rounded-lg inline-flex items-center justify-center font-medium text-sm transition"
+                >
+                  <Dustbin className="w-4 h-4 mr-2" />
+                  Xóa
+                </button>
+              </td>
             </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-600">
-            {products.map((product) => (
-              <tr key={product._id} className="hover:bg-emerald-secondary">
-                <td className="px-2 py-4">
-                  <div className="flex items-center">
-                    <input
-                      type="checkbox"
-                      name="productId"
-                      id={product._id}
-                      checked={selectedRows.includes(product._id)}
-                      onChange={(e) =>
-                        handleSelect(e, product._id, products.length)
-                      }
-                      className="w-3.5 h-3.5 bg-emerald-primary rounded focus:ring-offset-emerald-primary"
-                    />
-                    <label htmlFor={product._id} className="sr-only">
-                      productId
-                    </label>
-                  </div>
-                </td>
+          ))}
+        </tbody>
+      </table>
 
-                <td className="px-2 py-4">
-                  <LazyLoadImage
-                    src={product.images[0]?.url}
-                    alt={product.title}
-                    width={50}
-                    effect="opacity"
-                    className="rounded-md"
-                  />
-                </td>
-                <td className="px-2 py-4">{product.title}</td>
-                <td className="px-2 py-4">
-                  {product.childCategory.name} ({product.parentCategory.name})
-                </td>
-                <td className="px-2 py-4">
-                  {product.discountPercent
-                    ? `${product.discountPercent}%`
-                    : "Không"}
-                </td>
-                <td className="px-2 py-4">
-                  {formatVnd(product.discountedPrice)}
-                </td>
-                <td className="px-2 py-4">{product.stock}</td>
-                <td className="px-2 py-4">{formatDate(product.createdAt)}</td>
-                <td className="p-4 whitespace-nowrap space-x-2.5">
-                  <button
-                    type="button"
-                    onClick={() => openUpdateModal(product._id)}
-                    className="px-3 py-2 bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-900 rounded-lg inline-flex items-center font-medium justify-center text-sm transition"
-                  >
-                    <Edit className="w-4 h-4 mr-2" />
-                    Sửa
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => openDeleteModal(product._id)}
-                    className="px-3 py-2 bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-900 rounded-lg inline-flex items-center justify-center font-medium text-sm transition"
-                  >
-                    <Dustbin className="w-4 h-4 mr-2" />
-                    Xóa
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      {total > 0 && (
+      <div className="p-4 lg:px-6 flex items-center justify-between border-t border-t-gray-600">
+        <span className="text-sm text-gray-400">
+          Hiển thị {skip + 1 > total ? 0 : skip + 1} -{" "}
+          {skip + products.length > total ? 0 : skip + products.length} trên
+          tổng số {total}
+        </span>
         <Pagination
           pageCount={pageCount}
-          currentPage={page}
+          currentPage={currentPage}
           onPageChange={onPageChange}
+          variant="blue"
         />
-      )}
+        <Limit
+          currentLimit={currentLimit}
+          handleClick={(limit) => handleChangeLimit(limit, total, page)}
+          variant="blue"
+        />
+      </div>
+
       <CreateModal show={activeModal.create} onClose={closeModal} />
       <UpdateModal show={activeModal.update} onClose={closeModal} id={id} />
-      <DeleteModal
-        content="Bạn có muốn xóa sản phẩm này không?"
-        show={activeModal.delete}
-        handleDelete={handleDelete}
-        onClose={closeModal}
-      />
     </div>
   );
 };

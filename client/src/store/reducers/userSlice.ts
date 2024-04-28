@@ -3,6 +3,7 @@ import handlingAxiosError from "@/utils/handlingAxiosError";
 import type { QueryOptions, RejectValue } from "@/types";
 import { FullUser, User, UserResponse, UsersResponse } from "@/types/user";
 import userService from "@/services/userService";
+import limits from "@/data/limits.json";
 
 export const getCurrentUser = createAsyncThunk<FullUser, void, RejectValue>(
   "user/getCurrentUser",
@@ -83,10 +84,10 @@ export const deleteManyUser = createAsyncThunk<
 const initialState = {
   user: null as FullUser | null,
   users: [] as FullUser[],
-  limit: 0,
+  limit: limits[0],
   total: 0,
   skip: 0,
-  page: 0
+  page: 1,
 };
 
 const userSlice = createSlice({
@@ -96,7 +97,7 @@ const userSlice = createSlice({
     resetUser: () => initialState,
     setUser: (state, { payload }: PayloadAction<FullUser>) => {
       state.user = payload;
-    }
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getCurrentUser.fulfilled, (state, { payload }) => {
@@ -145,7 +146,7 @@ const userSlice = createSlice({
       );
       state.total -= payload.ids.length;
     });
-  }
+  },
 });
 
 export const { resetUser, setUser } = userSlice.actions;

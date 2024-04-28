@@ -1,6 +1,6 @@
 import { combineReducers } from "@reduxjs/toolkit";
 import categoryReducer from "./categorySlice";
-import productReducer from "./productSlice";
+import productReducer, { ProductState } from "./productSlice";
 import authReducer, { AuthState } from "./authSlice";
 import userReducer from "./userSlice";
 import cartReducer from "./cartSlice";
@@ -18,9 +18,16 @@ const authPersistConfig: PersistConfig<AuthState> = {
   whitelist: ["accessToken"],
 };
 
+const viewedProductsPersistConfig: PersistConfig<ProductState> = {
+  key: "viewedProducts",
+  version: 1,
+  storage,
+  whitelist: ["viewedProducts", "favoriteProducts"],
+};
+
 const rootReducer = combineReducers({
   category: categoryReducer,
-  product: productReducer,
+  product: persistReducer(viewedProductsPersistConfig, productReducer),
   auth: persistReducer(authPersistConfig, authReducer),
   user: userReducer,
   cart: cartReducer,

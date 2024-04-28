@@ -26,7 +26,7 @@ import { loginSchema } from "@/schemas/authSchema";
 const title = "Đăng nhập tài khoản";
 
 const Login = () => {
-  const [isActiveForgotPassword, setActiveForgotPassword] = useState(false);
+  const [isOpenForgotPassword, setIsOpenForgotPassword] = useState(false);
   const { isLoading } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
 
@@ -119,7 +119,7 @@ const Login = () => {
             <div className="flex justify-center">
               <button
                 type="button"
-                onClick={() => setActiveForgotPassword((prev) => !prev)}
+                onClick={() => setIsOpenForgotPassword(!isOpenForgotPassword)}
                 className="my-4 text-center block hover:text-yellow-secondary"
               >
                 Quên mật khẩu
@@ -127,8 +127,8 @@ const Login = () => {
             </div>
           </form>
           {/* Forgot Password */}
-          <ForgotPassword active={isActiveForgotPassword} />
-          <div className="flex flex-col items-center">
+          <ForgotPassword isOpen={isOpenForgotPassword} />
+          <div className="flex flex-col items-center mt-4">
             <p className="text-center mb-4">Hoặc đăng nhập bằng</p>
             <div className="flex flex-wrap space-x-2">
               <FacebookLogin />

@@ -33,3 +33,20 @@ table#cart {
 #cart td:not(:first-child) {
   @apply text-center;
 }
+
+.table-admin {
+  @apply w-full text-left divide-y divide-gray-600;
+}
+
+.table-admin tbody {
+  @apply divide-y divide-gray-600;
+}
+
+.table-admin thead {
+  @apply bg-emerald-secondary;
+}
+
+.table-admin th,
+.table-admin td {
+  @apply p-4 lg:px-6;
+}

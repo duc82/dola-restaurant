@@ -1,6 +1,5 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
-import { useAppSelector } from "@/store/hooks";
 import ProductCard from "./ProductCard";
 import { FullProduct } from "@/types/product";
 
@@ -9,11 +8,13 @@ interface ProductListSliderProps {
 }
 
 const ProductListSlider = ({ products }: ProductListSliderProps) => {
-  const { isLoading } = useAppSelector((state) => state.product);
   return (
     <Swiper
       slidesPerView={2}
       spaceBetween={12}
+      grabCursor={true}
+      roundLengths={true}
+      slideToClickedSlide={true}
       pagination={{
         clickable: true,
       }}
@@ -21,9 +22,11 @@ const ProductListSlider = ({ products }: ProductListSliderProps) => {
       breakpoints={{
         640: {
           slidesPerView: 3,
+          spaceBetween: 24,
         },
         992: {
           slidesPerView: 4,
+          spaceBetween: 24,
         },
       }}
     >

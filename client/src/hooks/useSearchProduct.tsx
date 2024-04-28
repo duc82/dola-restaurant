@@ -21,7 +21,7 @@ const useSearchProduct = (options?: Options) => {
     if (!value) return setProducts([]);
     try {
       const data = await productService.getAll({
-        query: `search=${search}`,
+        search,
         limit: 4,
       });
       setProducts(data.products);

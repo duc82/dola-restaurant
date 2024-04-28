@@ -22,13 +22,11 @@ class ProductController {
   }
 
   async create(req, res) {
-    res.status(201).json(await this.productService.create(req.body, req.files));
+    res.status(201).json(await this.productService.create(req.body));
   }
 
   async update(req, res) {
-    res.json(
-      await this.productService.update(req.params.id, req.body, req.files)
-    );
+    res.json(await this.productService.update(req.params.id, req.body));
   }
 
   async delete(req, res) {

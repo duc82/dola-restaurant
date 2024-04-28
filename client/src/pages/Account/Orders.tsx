@@ -1,7 +1,7 @@
 import orderService from "@/services/orderService";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { getAllOrders, getOrder } from "@/store/reducers/orderSlice";
-import { formatAddress } from "@/utils/formatAddress";
+import formatAddress from "@/utils/formatAddress";
 import formatDate from "@/utils/formatDate";
 import formatVnd from "@/utils/formatVnd";
 import { useEffect } from "react";
@@ -59,7 +59,7 @@ const Orders = () => {
                 {formatDate(order.createdAt)}
               </td>
               <td className="text-center py-5 px-1 border border-gray-200">
-                {formatAddress(order.shippingAddress, true)}
+                {formatAddress(order.shippingAddress)}
               </td>
               <td className="text-center py-5 px-1 border border-gray-200">
                 {formatVnd(order.total)}

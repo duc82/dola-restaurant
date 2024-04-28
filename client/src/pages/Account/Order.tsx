@@ -4,7 +4,7 @@ import Container from "@/components/Container";
 import orderService from "@/services/orderService";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { getOrder } from "@/store/reducers/orderSlice";
-import { formatAddress } from "@/utils/formatAddress";
+import formatAddress from "@/utils/formatAddress";
 import formatDate from "@/utils/formatDate";
 import formatVnd from "@/utils/formatVnd";
 import { useEffect } from "react";

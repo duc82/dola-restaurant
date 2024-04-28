@@ -1,8 +1,6 @@
-import DeleteModal from "@/components/Admin/DeleteModal";
 import CreateModal from "@/components/Admin/Voucher/CreateModal";
 import UpdateModal from "@/components/Admin/Voucher/UpdateModal";
 import useAdminModal from "@/hooks/useAdminModal";
-import useSearch from "@/hooks/useSearch";
 import { Dustbin, Edit } from "@/icons";
 import voucherService from "@/services/voucherService";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
@@ -15,41 +13,30 @@ import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
 
 const Voucher = () => {
-  const { search, handleSearch } = useSearch();
   const {
     activeModal,
     openCreateModal,
     openUpdateModal,
-    openDeleteModal,
     closeModal,
     id,
     selectedRows,
-    isDeleteMany,
     selectedRowsRef,
     handleSelect,
     handleSelectAll,
-    clearDeleteMany,
   } = useAdminModal();
   const dispatch = useAppDispatch();
   const { vouchers } = useAppSelector((state) => state.voucher);
 
-  const handleDelete = async () => {
+  const handleDelete = async (id: string) => {
     try {
-      if (isDeleteMany) {
-        const data = await voucherService.deleteMany(selectedRows);
-        dispatch(
-          setVouchers(
-            vouchers.filter((voucher) => !selectedRows.includes(voucher._id))
-          )
-        );
-        toast.success(data.message);
-        clearDeleteMany();
-      } else {
-        const data = await voucherService.delete(id);
-        dispatch(setVouchers(vouchers.filter((voucher) => voucher._id !== id)));
-        toast.success(data.message);
-      }
-      closeModal();
+      const confirm = window.confirm(
+        "Bạn có chắc chắn muốn xóa mã giảm giá này?"
+      );
+      if (!confirm) return;
+
+      const data = await voucherService.delete(id);
+
+      toast.success(data.message);
     } catch (error) {
       toast.error(handlingAxiosError(error).message);
     }
@@ -83,21 +70,12 @@ const Voucher = () => {
               <input
                 type="text"
                 id="search"
-                name="email"
+                name="search"
                 autoComplete="off"
                 placeholder="Tìm kiếm mã giảm giá"
-                value={search}
-                onChange={handleSearch}
                 className="w-full bg-emerald-secondary p-2.5 border border-gray-600 rounded-lg text-sm placeholder:text-gray-400 transition"
               />
             </form>
-            <button
-              type="button"
-              onClick={() => openDeleteModal(selectedRows)}
-              className="p-1 group hover:bg-emerald-secondary rounded cursor-pointer transition"
-            >
-              <Dustbin className="w-6 h-6 text-gray-400 group-hover:text-white transition" />
-            </button>
           </div>
           <div>
             <button
@@ -111,109 +89,101 @@ const Voucher = () => {
         </div>
       </div>
 
-      <div className="mb-[30px]">
-        <table className="w-full text-left divide-y divide-gray-600 ">
-          <thead className="bg-emerald-secondary">
-            <tr className="text-base">
-              <th scope="col" className="px-2 py-4">
+      <table className="table-admin">
+        <thead>
+          <tr className="text-base">
+            <th scope="col" className="px-2 py-4">
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  name="all"
+                  id="all"
+                  ref={selectedRowsRef}
+                  onChange={(e) =>
+                    handleSelectAll(
+                      e,
+                      vouchers.map((voucher) => voucher._id)
+                    )
+                  }
+                  className="w-3.5 h-3.5 rounded bg-emerald-primary focus:ring-offset-emerald-primary"
+                />
+                <label htmlFor="all" className="sr-only">
+                  checkbox
+                </label>
+              </div>
+            </th>
+            <th scope="col" className="px-2 py-4">
+              Mã
+            </th>
+            <th scope="col" className="px-2 py-4">
+              Giảm giá
+            </th>
+            <th scope="col" className="px-2 py-4">
+              Chi phí tối thiểu
+            </th>
+            <th scope="col" className="px-2 py-4">
+              Trạng thái
+            </th>
+            <th scope="col" className="px-2 py-4">
+              Ngày tạo
+            </th>
+            <th scope="col" className="px-2 py-4">
+              Chức năng
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {vouchers.map((voucher) => (
+            <tr key={voucher._id} className="hover:bg-emerald-secondary">
+              <td className="px-2 py-4">
                 <div className="flex items-center">
                   <input
                     type="checkbox"
-                    name="all"
-                    id="all"
-                    ref={selectedRowsRef}
+                    name="userId"
+                    id={voucher._id}
+                    checked={selectedRows.includes(voucher._id)}
                     onChange={(e) =>
-                      handleSelectAll(
-                        e,
-                        vouchers.map((voucher) => voucher._id)
-                      )
+                      handleSelect(e, voucher._id, vouchers.length)
                     }
-                    className="w-3.5 h-3.5 rounded bg-emerald-primary focus:ring-offset-emerald-primary"
+                    className="w-3.5 h-3.5 bg-emerald-primary rounded focus:ring-offset-emerald-primary"
                   />
-                  <label htmlFor="all" className="sr-only">
-                    checkbox
+                  <label htmlFor={voucher._id} className="sr-only">
+                    voucherId
                   </label>
                 </div>
-              </th>
-              <th scope="col" className="px-2 py-4">
-                Mã
-              </th>
-              <th scope="col" className="px-2 py-4">
-                Giảm giá
-              </th>
-              <th scope="col" className="px-2 py-4">
-                Chi phí tối thiểu
-              </th>
-              <th scope="col" className="px-2 py-4">
-                Trạng thái
-              </th>
-              <th scope="col" className="px-2 py-4">
-                Ngày tạo
-              </th>
-              <th scope="col" className="px-2 py-4">
-                Chức năng
-              </th>
+              </td>
+              <td className="px-2 py-4">{voucher.code}</td>
+              <td className="px-2 py-4">{formatVnd(voucher.discount)}</td>
+              <td className="px-2 py-4">{formatVnd(voucher.minimumCost)}</td>
+              <td className="px-2 py-4">
+                {voucher.isActive ? "Kích hoạt" : "Chưa kích hoạt"}
+              </td>
+              <td className="px-2 py-4">{formatDate(voucher.createdAt)}</td>
+              <td className="px-2 py-4 whitespace-nowrap space-x-2.5">
+                <button
+                  type="button"
+                  onClick={() => openUpdateModal(voucher._id)}
+                  className="px-3 py-2 bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-900 rounded-lg inline-flex items-center font-medium justify-center text-sm transition"
+                >
+                  <Edit className="w-4 h-4 mr-2" />
+                  Sửa
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleDelete(voucher._id)}
+                  className="px-3 py-2 bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-900 rounded-lg inline-flex items-center justify-center font-medium text-sm transition"
+                >
+                  <Dustbin className="w-4 h-4 mr-2" />
+                  Xóa
+                </button>
+              </td>
             </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-600">
-            {vouchers.map((voucher) => (
-              <tr key={voucher._id} className="hover:bg-emerald-secondary">
-                <td className="px-2 py-4">
-                  <div className="flex items-center">
-                    <input
-                      type="checkbox"
-                      name="userId"
-                      id={voucher._id}
-                      checked={selectedRows.includes(voucher._id)}
-                      onChange={(e) =>
-                        handleSelect(e, voucher._id, vouchers.length)
-                      }
-                      className="w-3.5 h-3.5 bg-emerald-primary rounded focus:ring-offset-emerald-primary"
-                    />
-                    <label htmlFor={voucher._id} className="sr-only">
-                      voucherId
-                    </label>
-                  </div>
-                </td>
-                <td className="px-2 py-4">{voucher.code}</td>
-                <td className="px-2 py-4">{formatVnd(voucher.discount)}</td>
-                <td className="px-2 py-4">{formatVnd(voucher.minimumCost)}</td>
-                <td className="px-2 py-4">
-                  {voucher.isActive ? "Kích hoạt" : "Chưa kích hoạt"}
-                </td>
-                <td className="px-2 py-4">{formatDate(voucher.createdAt)}</td>
-                <td className="px-2 py-4 whitespace-nowrap space-x-2.5">
-                  <button
-                    type="button"
-                    onClick={() => openUpdateModal(voucher._id)}
-                    className="px-3 py-2 bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-900 rounded-lg inline-flex items-center font-medium justify-center text-sm transition"
-                  >
-                    <Edit className="w-4 h-4 mr-2" />
-                    Sửa
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => openDeleteModal(voucher._id)}
-                    className="px-3 py-2 bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-900 rounded-lg inline-flex items-center justify-center font-medium text-sm transition"
-                  >
-                    <Dustbin className="w-4 h-4 mr-2" />
-                    Xóa
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+          ))}
+        </tbody>
+      </table>
 
       <CreateModal show={activeModal.create} onClose={closeModal} />
       <UpdateModal show={activeModal.update} onClose={closeModal} id={id} />
-      <DeleteModal
-        show={activeModal.delete}
-        onClose={closeModal}
-        handleDelete={handleDelete}
-        content="Bạn có muốn xóa mã giảm giá này không?"
-      />
     </div>
   );
 };

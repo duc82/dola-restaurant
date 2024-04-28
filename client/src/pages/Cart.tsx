@@ -31,7 +31,6 @@ const Cart = () => {
       <Container className="h-full flex flex-col lg:flex-row">
         {count > 0 ? (
           <>
-            {" "}
             <div className="lg:w-2/3 flex-none lg:pr-4 mb-10">
               <h1 className="text-[22px] font-medium mb-5">Giỏ hàng của bạn</h1>
               {windowWidth <= 768 ? (
@@ -90,10 +89,7 @@ const Cart = () => {
                           </span>
                         </td>
                         <td>
-                          <QuantityCounterCart
-                            cart={cart}
-                            disabledLabel={true}
-                          />
+                          <QuantityCounterCart cart={cart} disabledLabel />
                         </td>
                         <td>
                           <span className="font-semibold text-yellow-primary">

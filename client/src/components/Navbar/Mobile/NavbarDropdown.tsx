@@ -1,6 +1,6 @@
 import { FullCategory } from "@/types/category";
-import { motion } from "framer-motion";
 import NavbarDropdownItem from "./NavbarDropdownItem";
+import cn from "@/utils/cn";
 
 interface NavbarDropdownProps {
   active?: boolean;
@@ -8,41 +8,13 @@ interface NavbarDropdownProps {
   depthLevel: number;
 }
 
-const variants = {
-  open: {
-    height: "auto",
-    display: "block",
-    overflow: "hidden",
-    opacity: 1,
-    transition: {
-      duration: 0.3,
-    },
-  },
-  closed: {
-    height: 0,
-    overflow: "hidden",
-    opacity: 0,
-    transition: {
-      duration: 0.3,
-    },
-    transitionEnd: {
-      display: "none",
-    },
-  },
-};
-
 const NavbarDropdown = ({
   active,
   dropdowns,
   depthLevel,
 }: NavbarDropdownProps) => {
   return (
-    <motion.ul
-      initial="closed"
-      variants={variants}
-      animate={active ? "open" : "closed"}
-      className="pl-2.5"
-    >
+    <ul className={cn("pl-2.5 hidden", active && "block")}>
       {dropdowns.map((dropdown) => (
         <NavbarDropdownItem
           key={dropdown._id}
@@ -50,7 +22,7 @@ const NavbarDropdown = ({
           depthLevel={depthLevel}
         />
       ))}
-    </motion.ul>
+    </ul>
   );
 };
 

@@ -1,4 +1,4 @@
-import { ChangeEvent } from "react";
+import { ChangeEvent, useState } from "react";
 import { useAppDispatch } from "../../store/hooks";
 import {
   changeQuantity,
@@ -16,13 +16,17 @@ const QuantityCounterCart = ({
   disabledLabel = false,
   cart,
 }: QuantityCounterCartProps) => {
+  const [quantity, setQuantity] = useState<string>(cart.quantity.toString());
   const dispatch = useAppDispatch();
 
   const handleIncreaseQuantity = (cart: Cart) => {
+    if (cart.quantity >= cart.stock) return;
+    setQuantity((prev) => +prev + 1 + "");
     dispatch(increaseQuantity({ ...cart, quantity: 1 }));
   };
 
   const handleDecreaseQuantity = (cart: Cart) => {
+    setQuantity((prev) => +prev - 1 + "");
     dispatch(decreaseQuantity({ ...cart, quantity: 1 }));
   };
 
@@ -30,8 +34,16 @@ const QuantityCounterCart = ({
     e: ChangeEvent<HTMLInputElement>,
     cart: Cart
   ) => {
-    const newQuantity = e.target.value.split(/\D/).join(""); // allow number only
-    dispatch(changeQuantity({ ...cart, quantity: +newQuantity }));
+    const newQuantity = e.target.value.replace(/\D/, ""); // allow number only
+    if (+newQuantity > cart.stock) {
+      return;
+    }
+
+    setQuantity(newQuantity);
+
+    if (newQuantity) {
+      dispatch(changeQuantity({ ...cart, quantity: +newQuantity }));
+    }
   };
 
   return (
@@ -41,7 +53,7 @@ const QuantityCounterCart = ({
           Số lượng
         </label>
       )}
-      <div className="inline-flex space-x-1.5">
+      <div className="inline-flex justify-center items-center space-x-1.5 text-black">
         <button
           type="button"
           title="Tăng"
@@ -52,12 +64,12 @@ const QuantityCounterCart = ({
         </button>
         <input
           type="text"
-          value={cart.quantity}
           name="quantity"
           id="quantityCart"
-          maxLength={3}
-          className="text-black w-10 h-6 px-2 py-0 border border-yellow-primary text-center rounded-md text-sm focus:outline-none"
+          value={quantity}
+          className="w-10 h-6 p-0 text-center border border-yellow-primary rounded-md text-sm"
           onChange={(e) => handleChangeQuantity(e, cart)}
+          autoComplete="off"
         />
         <button
           type="button"

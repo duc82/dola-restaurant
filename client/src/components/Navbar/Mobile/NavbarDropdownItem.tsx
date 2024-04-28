@@ -9,6 +9,7 @@ import { useAppSelector } from "@/store/hooks";
 interface NavbarDropdownItemProps {
   category: FullCategory;
   depthLevel: number;
+  className?: string;
   linkClassName?: string;
   onClose?: () => void;
 }
@@ -16,6 +17,7 @@ interface NavbarDropdownItemProps {
 const NavbarDropdownItem = ({
   category,
   depthLevel,
+  className,
   linkClassName,
   onClose,
 }: NavbarDropdownItemProps) => {
@@ -31,7 +33,7 @@ const NavbarDropdownItem = ({
   );
 
   return (
-    <li>
+    <li className={className}>
       <div className="flex items-center justify-between w-full hover:text-yellow-primary">
         <Link
           to={`/danh-muc-san-pham/${category.slug}`}

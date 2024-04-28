@@ -2,44 +2,25 @@ import { useEffect } from "react";
 import Title from "../Home/Title";
 import ProductListSlider from "../Product/ProductListSlider";
 import { FullProduct } from "@/types/product";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { addViewedProducts } from "@/store/reducers/productSlice";
 
-const ProductViewed = ({ product }: { product: FullProduct | null }) => {
-  const lastViewedProductsJsonString =
-    localStorage.getItem("lastViewedProducts");
-
-  const lastViewedProducts: FullProduct[] = JSON.parse(
-    lastViewedProductsJsonString ?? "[]"
-  );
+const ProductViewed = ({ product }: { product: FullProduct }) => {
+  const { viewedProducts } = useAppSelector((state) => state.product);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (product) {
-      if (!lastViewedProductsJsonString) {
-        localStorage.setItem("lastViewedProducts", JSON.stringify([product]));
-        return;
-      }
+    const isExists = viewedProducts.some((vp) => vp._id === product._id);
 
-      const listProductsViewed: FullProduct[] = JSON.parse(
-        lastViewedProductsJsonString
-      );
-
-      const isProductViewed = listProductsViewed.some(
-        (p) => p._id === product._id
-      );
-
-      if (!isProductViewed) {
-        listProductsViewed.unshift(product);
-        localStorage.setItem(
-          "lastViewedProducts",
-          JSON.stringify(listProductsViewed)
-        );
-      }
+    if (!isExists) {
+      dispatch(addViewedProducts(product));
     }
-  }, [product, lastViewedProductsJsonString]);
+  }, [product, viewedProducts, dispatch]);
 
   return (
     <div className="mb-10">
       <Title>Món ăn đã xem</Title>
-      <ProductListSlider products={lastViewedProducts} />
+      <ProductListSlider products={viewedProducts} />
     </div>
   );
 };

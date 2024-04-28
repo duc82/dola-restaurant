@@ -46,8 +46,8 @@ const Header = () => {
   return (
     <header
       className={cn(
-        "bg-emerald-primary lg:bg-emerald-blur",
-        "lg:absolute lg:top-0" && isHomePage
+        "w-full bg-emerald-primary lg:bg-emerald-blur",
+        isHomePage && "lg:absolute lg:top-0 lg:z-50"
       )}
     >
       <Container className="px-0 lg:px-4">
@@ -74,12 +74,7 @@ const Header = () => {
 
           {/* Control */}
           <div className="w-full flex items-center justify-between lg:w-auto lg:inline-flex lg:justify-end bg-emerald-secondary lg:bg-inherit px-2.5 md:px-4 lg:px-0">
-            <button
-              onClick={openNavbar}
-              type="button"
-              title="Thực đơn"
-              className="lg:hidden"
-            >
+            <button onClick={openNavbar} type="button" className="lg:hidden">
               <MenuBar className="w-6 h-6 text-white" />
             </button>
             <div className="inline-flex items-center space-x-4 h-11 lg:h-auto">
@@ -90,10 +85,10 @@ const Header = () => {
                 <Search className="w-5 h-5 cursor-pointer" />
                 <HeaderSearchDesktop />
               </div>
-              <div className="relative lg:py-6 group">
-                <Link to="/gio-hang" title="Giỏ hàng" className="relative">
+              <div className="lg:py-6 group">
+                <Link to="/gio-hang" className="relative block">
                   <Cart />
-                  <span className="w-5 h-5 text-center absolute -top-2.5 -right-2.5 bg-yellow-primary text-xs leading-5 rounded-full">
+                  <span className="absolute w-5 h-5 text-center -top-2.5 -right-2.5 bg-yellow-primary text-xs leading-5 rounded-full">
                     {count}
                   </span>
                 </Link>
@@ -107,7 +102,6 @@ const Header = () => {
 
               <Link
                 to="/he-thong-nha-hang"
-                title="Hệ thống nhà hàng"
                 className="hover:text-yellow-primary lg:py-6"
               >
                 <Geo className="w-5 h-5" />

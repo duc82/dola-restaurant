@@ -29,13 +29,15 @@ const AdminLayout = () => {
   }, [user, dispatch, navigate]);
 
   return (
-    <LimitProvider>
+    <>
       <Header toggleSidebar={() => setSidebarOpen(!isSidebarOpen)} />
       <Sidebar isOpen={isSidebarOpen} />
-      <div className="pt-[66px] md:pt-20 lg:pt-[88px] flex h-full overflow-y-auto lg:ml-64">
-        <Outlet />
+      <div className="pt-[66px] md:pt-20 lg:pt-[88px] flex h-full overflow-y-auto lg:ml-72">
+        <LimitProvider>
+          <Outlet />
+        </LimitProvider>
       </div>
-    </LimitProvider>
+    </>
   );
 };
 

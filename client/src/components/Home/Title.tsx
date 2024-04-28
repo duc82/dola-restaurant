@@ -1,9 +1,8 @@
+import cn from "@/utils/cn";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Link } from "react-router-dom";
-import { twMerge } from "tailwind-merge";
-import { ChildrenProps } from "../../types";
 
-interface TitleProps extends ChildrenProps {
+interface TitleProps extends React.PropsWithChildren {
   url?: string;
   className?: string;
 }
@@ -11,16 +10,16 @@ interface TitleProps extends ChildrenProps {
 const Title = ({ url, className, children }: TitleProps) => {
   return (
     <div
-      className={twMerge(
+      className={cn(
         "flex space-x-2.5 justify-center items-center mb-7 sm:space-x-5",
         className
       )}
     >
       <LazyLoadImage
-        src={"/dish.webp"}
+        src="/dish.webp"
         width={45}
         height={43}
-        alt=""
+        alt="Title"
         effect="opacity"
         className="object-cover select-none"
       />
@@ -34,10 +33,10 @@ const Title = ({ url, className, children }: TitleProps) => {
         )}
       </h1>
       <LazyLoadImage
-        src={"/dish.webp"}
+        src="/dish.webp"
         width={45}
         height={43}
-        alt=""
+        alt="Title"
         effect="opacity"
         className="object-cover select-none rotate-90"
       />

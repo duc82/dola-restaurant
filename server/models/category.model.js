@@ -6,35 +6,34 @@ const categorySchema = new Schema(
     name: {
       type: String,
       required: true,
-      index: true
+      index: true,
     },
     slug: {
       type: String,
-      required: true
     },
     image: {
       type: String,
-      required: false
+      required: false,
     },
     description: {
       type: String,
-      required: false
+      required: false,
     },
     // subdocument nested
     parentCategory: {
       type: Schema.Types.ObjectId,
-      ref: "Category"
-    }
+      ref: "Category",
+    },
   },
   {
     timestamps: true,
-    versionKey: false
+    versionKey: false,
   }
 );
 
 categorySchema.pre("save", function (next) {
   if (this.name && !this.slug) {
-    this.slug = slug(this.title);
+    this.slug = slug(this.name);
   }
   next();
 });

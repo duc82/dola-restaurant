@@ -1,5 +1,5 @@
-import { FullType } from ".";
-import { Category, FullCategory } from "./category";
+import { FullType, Pagination } from ".";
+import { FullCategory } from "./category";
 
 interface Image {
   url: string;
@@ -17,24 +17,20 @@ interface FullReview extends FullType, Review {}
 
 interface Product {
   title: string;
-  slug: string;
-  images: Image[];
+  images: string[];
   taste: string;
   size: string;
-  description: string;
   price: number;
-  discountedPrice: number;
-  stock: number;
-  reviews: Review[];
-  childCategory: Category;
-  parentCategory: Category;
   discountPercent: number;
-  avgRating: number;
+  stock: number;
+  description: string;
+  category: string;
 }
 
-interface FullProduct
-  extends FullType,
-    Omit<Product, "images" | "reviews" | "childCategory" | "parentCategory"> {
+interface FullProduct extends FullType, Omit<Product, "images" | "category"> {
+  slug: string;
+  avgRating: number;
+  discountedPrice: number;
   images: FullImage[];
   reviews: FullReview[];
   childCategory: FullCategory;
@@ -46,11 +42,8 @@ interface ProductResponse {
   message: string;
 }
 
-interface ProductsResponse {
+interface ProductsResponse extends Pagination {
   products: FullProduct[];
-  skip: number;
-  limit: number;
-  total: number;
 }
 
 export type {

@@ -13,7 +13,7 @@ import { getAllProduct } from "@/store/reducers/productSlice";
 import { Helmet } from "react-helmet-async";
 import SelectedFilter from "../components/ProductCategory/SelectedFilter";
 import cn from "../utils/cn";
-import classNames from "classnames";
+import clsx from "clsx";
 import Products from "../components/Product/ProductList";
 
 // ???
@@ -40,7 +40,7 @@ const ProductList = () => {
     taste: queryArray(urlSearchParams, "taste"),
     size: queryArray(urlSearchParams, "size"),
   });
-  const [isActiveFilterMobile, setIsActiveFilterMobile] = useState(false);
+  const [isOpenFilterMobile, setIsOpenFilterMobile] = useState(false);
   const { products, total, limit } = useAppSelector((state) => state.product);
   const page = parseInt(urlSearchParams.get("page") ?? "1");
 
@@ -78,8 +78,7 @@ const ProductList = () => {
     setUrlSearchParams();
   };
 
-  const toggelFilterMobile = () =>
-    setIsActiveFilterMobile(!isActiveFilterMobile);
+  const toggelFilterMobile = () => setIsOpenFilterMobile(!isOpenFilterMobile);
 
   const handlePageChange = (page: number) => {
     urlSearchParams.set("page", page.toString());
@@ -89,16 +88,14 @@ const ProductList = () => {
 
   useEffect(() => {
     if (!category) return;
-    const query = urlSearchParams.toString();
 
     dispatch(
       getAllProduct({
         category: category === "tat-ca-san-pham" ? undefined : category,
-        query,
         limit: 12,
       })
     );
-  }, [urlSearchParams, category, dispatch]);
+  }, [category, dispatch]);
 
   const pageCount = limit > 0 ? Math.ceil(total / limit) : 0;
 
@@ -123,7 +120,7 @@ const ProductList = () => {
         <aside
           className={cn(
             "sidebar translate-x-full lg:translate-x-0",
-            isActiveFilterMobile && "translate-x-0"
+            isOpenFilterMobile && "translate-x-0"
           )}
         >
           <Category title="Danh mục sản phẩm" />
@@ -164,29 +161,25 @@ const ProductList = () => {
           </h1>
           <Sort />
           <Products products={products} />
-          {total > 0 && (
-            <Pagination
-              pageCount={pageCount}
-              onPageChange={handlePageChange}
-              currentPage={page}
-            />
-          )}
+          <Pagination
+            pageCount={pageCount}
+            onPageChange={handlePageChange}
+            currentPage={page}
+          />
         </div>
 
         <button
           type="button"
           id="openFilterMobile"
-          className={classNames(
+          className={clsx(
             "fixed top-[35%] right-0 z-[999] cursor-pointer bg-center bg-[length:16px] bg-no-repeat text-white bg-yellow-primary rounded-l-lg w-11 h-10 shadow-card2 transition-[visibility,right] ease-ease duration-300 lg:hidden",
-            isActiveFilterMobile
-              ? "bg-filterClose right-64"
-              : "right-0 bg-filter"
+            isOpenFilterMobile ? "bg-filterClose right-64" : "right-0 bg-filter"
           )}
           onClick={toggelFilterMobile}
         ></button>
       </Container>
       <Overlay
-        active={isActiveFilterMobile}
+        show={isOpenFilterMobile}
         onClick={toggelFilterMobile}
         className="ease-ease duration-300 z-[99]"
       />

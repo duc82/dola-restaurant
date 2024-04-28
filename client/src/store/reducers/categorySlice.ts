@@ -4,11 +4,12 @@ import {
   CategoriesResponse,
   CategoryDto,
   CategoryResponse,
-  FullCategory
+  FullCategory,
 } from "@/types/category";
 import handlingAxiosError from "@/utils/handlingAxiosError";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { PayloadAction } from "@reduxjs/toolkit";
+import limits from "@/data/limits.json";
 
 interface CategoryState extends CategoriesResponse {
   skip: number;
@@ -18,8 +19,8 @@ const initialState: CategoryState = {
   categories: [],
   total: 0,
   page: 1,
-  limit: 10,
-  skip: 0
+  limit: limits[0],
+  skip: 0,
 };
 
 export const createCategory = createAsyncThunk<
@@ -46,7 +47,7 @@ const categorySlice = createSlice({
     setCategoriesPagination(
       state,
       {
-        payload
+        payload,
       }: PayloadAction<Pick<CategoryState, "total" | "page" | "limit" | "skip">>
     ) {
       state.total = payload.total;
@@ -55,25 +56,7 @@ const categorySlice = createSlice({
       state.skip = payload.skip;
     },
 
-    sortCategories(
-      state,
-      {
-        payload
-      }: PayloadAction<{
-        key: "name" | "createdAt";
-        order: "asc" | "desc";
-      }>
-    ) {
-      state.categories.sort((a, b) => {
-        if (payload.order === "asc") {
-          return a[payload.key] > b[payload.key] ? 1 : -1;
-        }
-
-        return a[payload.key] < b[payload.key] ? 1 : -1;
-      });
-    },
-
-    updateCategories(state, { payload }: PayloadAction<FullCategory>) {
+    updateCategory(state, { payload }: PayloadAction<FullCategory>) {
       const indexCategory = state.categories.findIndex(
         (category) => category._id === payload._id
       );
@@ -88,7 +71,7 @@ const categorySlice = createSlice({
         (category) => category._id !== payload
       );
       state.total -= 1;
-    }
+    },
   },
 
   extraReducers: (builder) => {
@@ -96,15 +79,14 @@ const categorySlice = createSlice({
       state.categories.push(payload.category);
       state.total += 1;
     });
-  }
+  },
 });
 
 export const {
   setCategories,
-  updateCategories,
+  updateCategory,
   deleteCategory,
-  sortCategories,
-  setCategoriesPagination
+  setCategoriesPagination,
 } = categorySlice.actions;
 
 export default categorySlice.reducer;

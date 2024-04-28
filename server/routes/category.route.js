@@ -87,6 +87,10 @@ const categoryDto = new CategoryDto();
 
 router.get("/", Query(categoryDto.getAll), categoryController.getAll);
 
+router.get("/childs", categoryController.getAllChilds);
+
+router.get("/parents", categoryController.getAllParents);
+
 router.post("/create", authorizationMiddleware, categoryController.create);
 
 router.put("/update/:id", authorizationMiddleware, categoryController.update);
