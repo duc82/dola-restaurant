@@ -1,12 +1,18 @@
+import Button from "@/components/Form/Button";
+import { Down, Up } from "@/icons";
 import orderService from "@/services/orderService";
 import { FullOrder } from "@/types/order";
+import cn from "@/utils/cn";
 import formatAddress from "@/utils/formatAddress";
+import formatVnd from "@/utils/formatVnd";
 import { useEffect, useState } from "react";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Link, useParams } from "react-router-dom";
 
 const CheckoutSuccess = () => {
   const { id } = useParams();
   const [order, setOrder] = useState<FullOrder | null>(null);
+  const [isShowProducts, setIsShowProducts] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -16,7 +22,7 @@ const CheckoutSuccess = () => {
   }, [id]);
 
   return (
-    <div className="bg-[rgb(230,232,234)]">
+    <div className="bg-[rgb(230,232,234)] h-screen">
       <div className="md:max-w-3xl lg:max-w-7xl lg:px-8 mx-auto">
         <main className="py-6 lg:p-8">
           <header className="hidden lg:block mb-6">
@@ -24,9 +30,9 @@ const CheckoutSuccess = () => {
               <Link to="/">Dola Restaurant</Link>
             </h1>
           </header>
-          <div className="flex flex-col md:flex-row">
-            <div className="flex-[1_1_60%]">
-              <div className="flex flex-wrap items-center justify-center lg:justify-start text-center lg:text-left">
+          <article className="after:content-[''] after:clear-both after:table">
+            <div className="w-full float-left lg:w-3/5 px-4 lg:pl-0">
+              <div className="flex items-center justify-center flex-col lg:flex-row lg:justify-start text-center lg:text-left">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width={72}
@@ -38,17 +44,93 @@ const CheckoutSuccess = () => {
                     <path d="M17.417,37.778l9.93,9.909l25.444-25.393"></path>
                   </g>
                 </svg>
-                <div className="lg:max-w-[75%]">
+                <div>
                   <h2 className="font-semibold text-lg">
                     Cảm ơn bạn đã đặt hàng
                   </h2>
                   <p className="my-3">
                     Một email xác nhận đã được gửi tới {order?.user.email}.
-                    <br></br> Xin vui lòng kiểm tra email của bạn
+                    <br /> Xin vui lòng kiểm tra email của bạn
                   </p>
                 </div>
               </div>
-              <div className="flex flex-wrap p-3 m-4 border border-gray-300 space-y-6 lg:space-y-0">
+            </div>
+            <div className="w-full float-right pt-6 lg:pt-0 lg:w-2/5 lg:pl-4">
+              <aside className="bg-zinc-50 border border-zinc-200">
+                <div className="py-2 px-4 flex justify-between">
+                  <h2 className="font-semibold">
+                    Đơn hàng ({order?.products.length})
+                  </h2>
+                  <button
+                    type="button"
+                    onClick={() => setIsShowProducts(!isShowProducts)}
+                    className="text-blue-500 focus:text-blue-700 flex items-center space-x-1 lg:hidden"
+                  >
+                    <span>Xem chi tiết</span>
+                    {isShowProducts ? (
+                      <Up className="w-2.5 h-2.5" />
+                    ) : (
+                      <Down className="w-2.5 h-2.5" />
+                    )}
+                  </button>
+                </div>
+                <div
+                  className={cn(
+                    "border-t border-t-zinc-200 px-4 hidden lg:block",
+                    isShowProducts && "block"
+                  )}
+                >
+                  <ul className="max-h-60 overflow-y-auto">
+                    {order?.products.map(({ product, quantity }) => (
+                      <li
+                        key={product._id}
+                        className="flex items-center justify-between py-4"
+                      >
+                        <div className="flex items-center space-x-4">
+                          <div className="relative">
+                            <LazyLoadImage
+                              src={product.images[0].url}
+                              alt={product.title}
+                              effect="opacity"
+                              className="w-14 h-14 rounded-lg"
+                              wrapperClassName="!block"
+                            />
+                            <span className="text-sm rounded-full w-5 h-5 leading-5 text-center absolute -top-2 -right-2 text-white bg-blue-500">
+                              {quantity}
+                            </span>
+                          </div>
+
+                          <p className="text-[rgb(51,51,51)] font-medium">
+                            {product.title}
+                          </p>
+                        </div>
+                        <span className="pl-4">
+                          {formatVnd(product.discountedPrice * quantity)}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="border-t border-t-zinc-200 py-2 px-4">
+                  <div className="flex justify-between mb-2">
+                    <span>Tạm tính</span>
+                    <span>{formatVnd((order?.total || 0) - 40000)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Phí vận chuyển</span>
+                    <span>{formatVnd(40000)}</span>
+                  </div>
+                </div>
+                <div className="border-t border-t-zinc-200 py-2 px-4 flex justify-between text-base">
+                  <span>Tổng cộng</span>
+                  <span className="font-medium text-xl text-blue-500">
+                    {formatVnd(order?.total)}
+                  </span>
+                </div>
+              </aside>
+            </div>
+            <div className="w-full float-left pt-6 lg:pt-0 lg:w-3/5 lg:pr-4">
+              <div className="flex flex-wrap p-3 m-4 border border-gray-300 space-y-6 md:space-y-0">
                 <div className="basis-full md:basis-1/2">
                   <h2 className="text-xl font-semibold">Thông tin mua hàng</h2>
                   <p className="my-3">{order?.shippingAddress.fullName}</p>
@@ -80,9 +162,24 @@ const CheckoutSuccess = () => {
                   <p className="my-3">Giao hàng tận nơi</p>
                 </div>
               </div>
+              <div className="pt-6 flex items-center justify-center lg:justify-end">
+                <Button
+                  size={"medium"}
+                  intent={"secondary"}
+                  inactive={"noOpacity"}
+                >
+                  Tiếp tục mua hàng
+                </Button>
+                <button
+                  type="button"
+                  className="flex items-center text-2xl cursor-pointer mx-8 text-blue-500"
+                  onClick={() => window.print()}
+                >
+                  In
+                </button>
+              </div>
             </div>
-            <div className="flex-[1_1_40%]"></div>
-          </div>
+          </article>
         </main>
       </div>
     </div>

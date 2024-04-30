@@ -8,7 +8,7 @@ import useAdminModal from "@/hooks/useAdminModal";
 import {
   deleteManyUser,
   deleteUser,
-  getAllUser,
+  getAllUser
 } from "@/store/reducers/userSlice";
 import formatDate from "@/utils/formatDate";
 import CreateModal from "@/components/Admin/User/CreateModal";
@@ -27,7 +27,7 @@ const User = () => {
     total,
     limit,
     skip,
-    page: currentPage,
+    page: currentPage
   } = useAppSelector((state) => state.user);
   const {
     activeModal,
@@ -38,7 +38,7 @@ const User = () => {
     selectedRows,
     handleSelect,
     handleSelectAll,
-    selectedRowsRef,
+    selectedRowsRef
   } = useAdminModal();
   const [urlSearchParams, setUrlSearchParams] = useSearchParams();
   const { currentLimit, handleChangeLimit } = useLimit();
@@ -163,12 +163,10 @@ const User = () => {
                 </label>
               </div>
             </th>
-            <th>Id</th>
             <th>Họ tên</th>
             <th>Email</th>
             <th>Số điện thoại</th>
             <th>Vai trò</th>
-            <th>Địa chỉ IP</th>
             <th>Ngày tạo</th>
             <th>Chức năng</th>
           </tr>
@@ -197,14 +195,12 @@ const User = () => {
                   </label>
                 </div>
               </td>
-              <td>{user._id}</td>
               <td>{user.fullName}</td>
               <td>{user.email}</td>
               <td>{user.phone ? user.phone : "Không có"}</td>
               <td className="capitalize">
                 {user.role === "user" ? "Người dùng" : user.role}
               </td>
-              <td>{user.ip}</td>
               <td>{formatDate(user.createdAt)}</td>
               <td className="whitespace-nowrap space-x-2.5">
                 <button

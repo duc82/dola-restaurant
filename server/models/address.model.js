@@ -10,16 +10,16 @@ const addressSchema = new Schema(
     phone: String,
     isDefault: {
       type: Boolean,
-      default: false,
+      default: false
     },
     user: {
       type: Schema.Types.ObjectId,
-      ref: "User",
-    },
+      ref: "User"
+    }
   },
   {
     timestamps: true,
-    versionKey: false,
+    versionKey: false
   }
 );
 

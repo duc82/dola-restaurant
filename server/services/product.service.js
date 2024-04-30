@@ -12,7 +12,7 @@ class ProductService {
     if (!childCate) {
       throw new CustomError({
         message: "Danh mục sản phẩm không tồn tại",
-        status: 404,
+        status: 404
       });
     }
 
@@ -24,14 +24,14 @@ class ProductService {
       ...data,
       childCategory: childCate._id,
       parentCategory: childCate.parentCategory,
-      images,
+      images
     });
 
     await product.populate(["childCategory", "parentCategory", "images"]);
 
     return {
       message: "Thêm sản phẩm mới thành công",
-      product,
+      product
     };
   }
 
@@ -50,8 +50,8 @@ class ProductService {
         filter.$and.push({
           $or: [
             { parentCategory: category?._id },
-            { childCategory: category?._id },
-          ],
+            { childCategory: category?._id }
+          ]
         });
       }
 
@@ -59,7 +59,7 @@ class ProductService {
         const regex = new RegExp(search, "i");
 
         filter.$and.push({
-          title: regex,
+          title: regex
         });
       }
 
@@ -92,52 +92,66 @@ class ProductService {
 
   async getBySlug(slug) {
     const product = await Product.findOne({
-      slug,
+      slug
     }).populate(["parentCategory", "childCategory", "images"]);
 
     if (!product) {
       throw new CustomError({
         message: "Không tìm thấy sản phẩm",
-        status: 404,
+        status: 404
       });
     }
 
     return product;
   }
 
-  async update(id, body, files) {
-    const { imagesToDelete, ...update } = body;
-
-    const product = await Product.findByIdAndUpdate(id, update, {
-      new: true,
-    }).populate(["parentCategory", "childCategory"]);
+  async update(id, body) {
+    const product = await Product.findById(id).populate([
+      "images",
+      "childCategory",
+      "parentCategory"
+    ]);
 
     if (!product) {
       throw new CustomError({
         message: "Không tìm thấy sản phẩm",
-        status: 404,
+        status: 404
       });
     }
 
-    if (imagesToDelete?.length) {
-      await Image.deleteMany({ _id: { $in: imagesToDelete } });
-      product.images = product.images.filter(
-        (image) => !imagesToDelete.includes(image)
+    const { category, images, ...data } = body;
+
+    if (category !== product.childCategory._id.toString()) {
+      const childCate = await Category.findById(body.category).populate(
+        "parentCategory"
       );
+      if (!childCate) {
+        throw new CustomError({
+          message: "Danh mục sản phẩm không tồn tại",
+          status: 404
+        });
+      }
+      data.childCategory = childCate;
+      data.parentCategory = childCate.parentCategory;
     }
 
-    if (files?.length) {
-      const images = await Image.insertMany(
-        files.map((file) => ({ url: file.path }))
+    if (images.length > 0) {
+      const newImages = await Image.insertMany(
+        images.map((image) => ({ url: image }))
       );
-      product.images = [...product.images, ...images];
+      await Image.deleteMany({
+        _id: { $in: product.images.map((image) => image._id) }
+      });
+      data.images = newImages;
     }
 
-    await Promise.all([product.populate("images"), product.save()]);
+    product.set(data);
+
+    await product.save();
 
     return {
       message: "Cập nhật sản phẩm thành công",
-      product,
+      product
     };
   }
 
@@ -147,18 +161,18 @@ class ProductService {
     if (!product) {
       throw new CustomError({
         message: "Không tìm thấy sản phẩm",
-        status: 404,
+        status: 404
       });
     }
 
     await Promise.all([
       Product.deleteOne({ _id: id }),
       Image.deleteMany({ _id: { $in: product.images } }),
-      Review.deleteMany({ _id: { $in: product.reviews } }),
+      Review.deleteMany({ _id: { $in: product.reviews } })
     ]);
 
     return {
-      message: "Xóa sản phẩm thành công",
+      message: "Xóa sản phẩm thành công"
     };
   }
 
@@ -170,18 +184,18 @@ class ProductService {
     if (products.length === 0) {
       throw new CustomError({
         message: "Không tìm thấy sản phẩm",
-        status: 404,
+        status: 404
       });
     }
 
     await Promise.all([
       Product.deleteMany({ _id: { $in: ids } }),
       Image.deleteMany({ _id: { $in: products.flatMap((p) => p.images) } }),
-      Review.deleteMany({ _id: { $in: products.flatMap((p) => p.reviews) } }),
+      Review.deleteMany({ _id: { $in: products.flatMap((p) => p.reviews) } })
     ]);
 
     return {
-      message: "Xóa sản phẩm thành công",
+      message: "Xóa sản phẩm thành công"
     };
   }
 }

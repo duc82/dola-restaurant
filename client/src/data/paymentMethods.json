@@ -9,6 +9,7 @@
   },
   {
     "name": "Thanh toán khi giao hàng (COD)",
-    "image": "/money_bill.svg"
+    "image": "/money_bill.svg",
+    "default": true
   }
 ]

@@ -13,7 +13,6 @@ const userSchema = new Schema(
     },
     phone: String,
     password: String,
-    ip: String,
     role: {
       type: String,
       enum: ["user", "admin"],

@@ -48,5 +48,5 @@ table#cart {
 
 .table-admin th,
 .table-admin td {
-  @apply p-4 lg:px-6;
+  @apply p-4 first:lg:pl-6 last:lg:pr-6;
 }

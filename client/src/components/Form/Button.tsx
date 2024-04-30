@@ -13,25 +13,25 @@ const button = cva(
       intent: {
         primary: ["bg-yellow-primary", "text-white"],
         secondary: ["bg-blue-600", "text-white", "opacity-60"],
-        outline: ["bg-none"],
+        outline: ["bg-none"]
       },
       size: {
         none: ["text-sm"],
         small: ["p-2.5 text-base w-full"],
-        medium: ["px-6 py-3 font-medium text-sm flex-none"],
+        medium: ["px-6 py-3 font-medium text-sm flex-none"]
       },
       inactive: {
         cursorNotAllowed: "cursor-not-allowed",
         primaryHover: "hover:bg-yellow-secondary",
         opacity: "opacity-60",
-        noOpacity: "opacity-100",
-      },
+        noOpacity: "opacity-100"
+      }
     },
     defaultVariants: {
       intent: "primary",
       size: "small",
-      inactive: null,
-    },
+      inactive: null
+    }
   }
 );
 
@@ -43,8 +43,9 @@ const Button = ({
   ...props
 }: ButtonProps) => (
   <button
-    className={twMerge(button({ intent, size, inactive, className }))}
+    type="button"
     {...props}
+    className={twMerge(button({ intent, size, inactive, className }))}
   />
 );
 

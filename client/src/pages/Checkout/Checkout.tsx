@@ -40,18 +40,21 @@ const Checkout = () => {
       shippingFee,
       products: carts.map((cart) => ({
         product: cart._id,
-        quantity: cart.quantity,
+        quantity: cart.quantity
       })),
       note: "",
-      paymentMethod: paymentMethods[0].name,
-      isPaid: false,
+      paymentMethod:
+        paymentMethods.find((method) => method.default)?.name ?? "",
+      isPaid: false
     },
     enableReinitialize: true,
     onSubmit: async (values) => {
       if (values.paymentMethod === "VnPay") {
         const url = await VnPay.createPaymentUrl(values);
         window.location.href = url;
-      } else if (values.paymentMethod === "Thanh toán khi giao hàng (COD)") {
+      } else if (values.paymentMethod === "PayPal") {
+        console.log("PayPal");
+      } else {
         delete values.fullName;
         delete values.phone;
 
@@ -66,7 +69,7 @@ const Checkout = () => {
             toast.error(handlingAxiosError(error).message);
           });
       }
-    },
+    }
   });
 
   useEffect(() => {
@@ -77,7 +80,7 @@ const Checkout = () => {
     const values = {
       ...formik.values,
       isPaid: true,
-      paidAt: new Date().toISOString(),
+      paidAt: new Date().toISOString()
     };
 
     orderService

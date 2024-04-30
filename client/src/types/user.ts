@@ -8,7 +8,6 @@ interface User {
 }
 
 interface FullUser extends FullType, User {
-  ip: string;
   isHavePassword: boolean;
 }
 

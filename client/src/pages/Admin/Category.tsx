@@ -8,7 +8,7 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
   deleteCategory,
   setCategories,
-  setCategoriesPagination,
+  setCategoriesPagination
 } from "@/store/reducers/categorySlice";
 import formatDate from "@/utils/formatDate";
 import handlingAxiosError from "@/utils/handlingAxiosError";
@@ -35,7 +35,7 @@ const Category = () => {
     selectedRowsRef,
     handleSelect,
     handleSelectAll,
-    clearSelectedRows,
+    clearSelectedRows
   } = useAdminModal();
 
   const dispatch = useAppDispatch();
@@ -50,7 +50,7 @@ const Category = () => {
     categories,
     total,
     skip,
-    page: currentPage,
+    page: currentPage
   } = useAppSelector((state) => state.category);
 
   const handleDelete = async (id: string) => {
@@ -95,7 +95,7 @@ const Category = () => {
       .getAllPaginate({
         search,
         page,
-        limit: currentLimit,
+        limit: currentLimit
       })
       .then((data) => {
         dispatch(setCategories(data.categories));
@@ -104,7 +104,7 @@ const Category = () => {
             total: data.total,
             skip: data.skip,
             limit: data.limit,
-            page: data.page,
+            page: data.page
           })
         );
       });
@@ -117,7 +117,7 @@ const Category = () => {
   return (
     <div className="overflow-y-auto w-full">
       <Helmet>
-        <title>Quản lý danh mục sản phẩm</title>
+        <title>Danh mục sản phẩm</title>
       </Helmet>
 
       <div className="p-4 lg:px-6 lg:pt-6">
@@ -194,7 +194,6 @@ const Category = () => {
               </div>
             </th>
 
-            <th>Id</th>
             <th>Tên danh mục</th>
             <th>Danh mục cha</th>
             <th>Hình ảnh</th>
@@ -230,9 +229,6 @@ const Category = () => {
                   </label>
                 </div>
               </td>
-              <td>
-                <p className="truncate w-48">{category._id}</p>
-              </td>
               <td>{category.name}</td>
               <td>{category.parentCategory?.name || "Không có"}</td>
               <td>
@@ -254,7 +250,7 @@ const Category = () => {
                 )}
               </td>
               <td>
-                <p className="truncate w-64" title={category.description}>
+                <p className="truncate w-56" title={category.description}>
                   {category.description || "Không có"}
                 </p>
               </td>

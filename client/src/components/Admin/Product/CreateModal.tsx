@@ -34,7 +34,7 @@ const CreateModal = ({ show, onClose }: CreateModalProps) => {
       price: "0",
       discountPercent: 0,
       stock: 0,
-      images: [] as string[],
+      images: [] as string[]
     },
     validationSchema: productSchema,
     validateOnChange: true,
@@ -67,12 +67,12 @@ const CreateModal = ({ show, onClose }: CreateModalProps) => {
       } catch (error) {
         toast.error(handlingAxiosError(error).message);
       }
-    },
+    }
   });
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
-      "image/*": [],
+      "image/*": []
     },
     maxSize: 20 * 1024 * 1024, // 20MB
     multiple: true,
@@ -82,7 +82,7 @@ const CreateModal = ({ show, onClose }: CreateModalProps) => {
         return Object.assign(file, { preview });
       });
       setFiles(files);
-    },
+    }
   });
 
   useEffect(() => {
@@ -239,7 +239,7 @@ const CreateModal = ({ show, onClose }: CreateModalProps) => {
         <Modal.Footer className="flex justify-end">
           <button
             type="submit"
-            className="bg-blue-600 text-white font-medium py-2.5 px-5 text-sm rounded-lg hover:bg-blue-700 text-center focus:ring-4 focus:ring-blue-800 transition"
+            className="bg-blue-600 text-white font-medium py-2.5 px-5 text-sm rounded-lg hover:bg-blue-700 text-center focus:ring-4 focus:ring-blue-900 transition"
           >
             Thêm mới
           </button>

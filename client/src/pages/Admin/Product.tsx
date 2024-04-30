@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
   deleteManyProduct,
   deleteProduct,
-  getAllProduct,
+  getAllProduct
 } from "@/store/reducers/productSlice";
 import formatVnd from "@/utils/formatVnd";
 import { LazyLoadImage } from "react-lazy-load-image-component";
@@ -36,7 +36,7 @@ const Product = () => {
     selectedRowsRef,
     handleSelect,
     handleSelectAll,
-    clearSelectedRows,
+    clearSelectedRows
   } = useAdminModal();
   const [urlSearchParams, setUrlSearchParams] = useSearchParams();
   const {
@@ -44,7 +44,7 @@ const Product = () => {
     total,
     limit,
     skip,
-    page: currentPage,
+    page: currentPage
   } = useAppSelector((state) => state.product);
 
   const dispatch = useAppDispatch();
@@ -170,9 +170,8 @@ const Product = () => {
                 </label>
               </div>
             </th>
-            <th>Id</th>
-            <th>Hình ảnh</th>
             <th>Tiêu đề</th>
+            <th>Hình ảnh</th>
             <th>Danh mục</th>
             <th>Giảm giá</th>
             <th>Giá</th>
@@ -207,7 +206,7 @@ const Product = () => {
                   </label>
                 </div>
               </td>
-              <td>{product._id}</td>
+              <td>{product.title}</td>
               <td>
                 <Fancybox>
                   {product.images.map((image, i) => (
@@ -229,7 +228,6 @@ const Product = () => {
                   ))}
                 </Fancybox>
               </td>
-              <td>{product.title}</td>
               <td>
                 {product.childCategory.name} ({product.parentCategory.name})
               </td>

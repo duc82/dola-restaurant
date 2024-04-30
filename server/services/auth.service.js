@@ -49,7 +49,7 @@ class AuthService {
     return payload;
   }
 
-  async loginGoogle(code, ip, res) {
+  async loginGoogle(code, res) {
     const payload = await verifyGoogleToken(code);
 
     const filter = {
@@ -58,8 +58,7 @@ class AuthService {
 
     const doc = {
       fullName: `${payload.given_name} ${payload.family_name}`,
-      email: payload.email,
-      ip
+      email: payload.email
     };
 
     const user = await this.userService.findOneOrCreate(filter, doc, {
@@ -89,7 +88,7 @@ class AuthService {
     return { message: "Đăng nhập thành công", user, accessToken };
   }
 
-  async loginFacebook(accessToken, ip, res) {
+  async loginFacebook(accessToken, res) {
     const payload = await this.verifyFacebookToken(accessToken);
     console.log(accessToken);
 
@@ -97,8 +96,7 @@ class AuthService {
       { email: payload.email },
       {
         fullName: payload.name,
-        email: payload.email,
-        ip
+        email: payload.email
       },
       { exclude: "password" }
     );
@@ -130,7 +128,7 @@ class AuthService {
     };
   }
 
-  async signUp(body, ip) {
+  async signUp(body) {
     const isUserExists = await this.userService.checkUserExists(
       body.email,
       body.phone
@@ -143,7 +141,7 @@ class AuthService {
       });
     }
 
-    const user = await User.create({ ...body, ip });
+    const user = await User.create(body);
 
     const { password, ...data } = user.toObject();
 
@@ -153,7 +151,7 @@ class AuthService {
     };
   }
 
-  async login(email, password, ip, res) {
+  async login(email, password, res) {
     const user = await User.findOne({
       email
     });
@@ -167,7 +165,6 @@ class AuthService {
       });
     }
 
-    user.ip = ip;
     await user.save();
 
     const userPayload = {

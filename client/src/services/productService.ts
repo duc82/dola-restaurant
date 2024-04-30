@@ -2,7 +2,7 @@ import {
   FullProduct,
   Product,
   ProductResponse,
-  ProductsResponse,
+  ProductsResponse
 } from "@/types/product";
 import apiRequest from "./api";
 import { QueryOptions } from "@/types";
@@ -46,16 +46,16 @@ const productService = {
       method: "POST",
       accessToken: true,
       refreshToken: true,
-      data,
+      data
     });
   },
 
-  update: (id: string, formData: FormData) => {
+  update: (id: string, data: Partial<Product>) => {
     return apiRequest<ProductResponse>(`/products/update/${id}`, {
       method: "PUT",
       accessToken: true,
       refreshToken: true,
-      data: formData,
+      data
     });
   },
 
@@ -63,7 +63,7 @@ const productService = {
     return apiRequest<{ message: string }>(`/products/delete/${id}`, {
       method: "DELETE",
       accessToken: true,
-      refreshToken: true,
+      refreshToken: true
     });
   },
 
@@ -72,9 +72,9 @@ const productService = {
       method: "DELETE",
       accessToken: true,
       refreshToken: true,
-      data: { selectedRows },
+      data: { selectedRows }
     });
-  },
+  }
 };
 
 export default productService;

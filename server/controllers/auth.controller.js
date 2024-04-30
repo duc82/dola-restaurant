@@ -18,24 +18,19 @@ class AuthController {
   }
 
   async loginGoogle(req, res) {
-    const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
     res
       .status(200)
-      .json(await this.authService.loginGoogle(req.body.code, ip, res));
+      .json(await this.authService.loginGoogle(req.body.code, res));
   }
 
   async loginFacebook(req, res) {
-    const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
     res
       .status(200)
-      .json(
-        await this.authService.loginFacebook(req.body.accessToken, ip, res)
-      );
+      .json(await this.authService.loginFacebook(req.body.accessToken, res));
   }
 
   async signUp(req, res) {
-    const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
-    res.status(201).json(await this.authService.signUp(req.body, ip));
+    res.status(201).json(await this.authService.signUp(req.body));
   }
 
   async login(req, res) {

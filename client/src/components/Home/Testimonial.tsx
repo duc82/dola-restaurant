@@ -9,12 +9,12 @@ const Testimonial = () => {
       <Container>
         <Swiper
           pagination={{
-            clickable: true,
+            clickable: true
           }}
           modules={[Pagination]}
           spaceBetween={10}
           slidesPerView={1}
-          className="lg:max-w-[58%] xl:max-w-[50%] mx-0"
+          className="lg:max-w-[58%] xl:max-w-[50%] !mx-0"
         >
           {[...Array(3)].map((_, i) => (
             <SwiperSlide

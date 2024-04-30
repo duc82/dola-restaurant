@@ -87,7 +87,7 @@ const App = () => {
 
       <Route path="/thanh-toan" element={<CheckoutLayout />}>
         <Route index element={<Checkout />} />
-        <Route path="cam-on/:id" element={<CheckoutSuccess />} />
+        <Route path="thanh-cong/:id" element={<CheckoutSuccess />} />
       </Route>
 
       <Route path="/admin" element={<AdminLayout />}>

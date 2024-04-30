@@ -6,7 +6,7 @@ import { FilePreview } from "@/types";
 import { UpdateModalProps } from "@/types/admin";
 import handlingAxiosError from "@/utils/handlingAxiosError";
 import { useFormik } from "formik";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import toast from "react-hot-toast";
 import Input from "../Input";
@@ -14,18 +14,19 @@ import Select from "../Select";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Upload } from "@/icons";
 import EditorText from "@/components/EditorText";
+import { FullCategory } from "@/types/category";
+import categoryService from "@/services/categoryService";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { storage } from "@/configs/firebase";
 
 const UpdateModal = ({ show, onClose, id }: UpdateModalProps) => {
   const [files, setFiles] = useState<FilePreview[]>([]);
   const { products } = useAppSelector((state) => state.product);
-  const { categories } = useAppSelector((state) => state.category);
-  const childCategories = categories.filter(
-    (category) => category.parentCategory
-  );
+  const [childCategories, setChildCategories] = useState<FullCategory[]>([]);
 
   const dispatch = useAppDispatch();
 
-  const product = products.find((product) => product._id === id);
+  const product = products.find((p) => p._id === id);
 
   const formik = useFormik({
     initialValues: {
@@ -34,47 +35,47 @@ const UpdateModal = ({ show, onClose, id }: UpdateModalProps) => {
       description: product?.description || "",
       taste: product?.taste || "",
       size: product?.size || "",
-      price: product?.price.toString() || "0",
+      price: product?.price.toLocaleString() || "0",
       discountPercent: product?.discountPercent || 0,
       stock: product?.stock || 0,
-      images: product?.images || [],
-      imagesToDelete: [],
+      images: product?.images || []
     },
     validationSchema: productSchema,
+    validateOnChange: true,
     enableReinitialize: true,
     onSubmit: async (values) => {
       try {
-        const formData = new FormData();
-        formData.append("title", values.title);
-        formData.append("category", values.category);
-        formData.append("taste", values.taste);
-        formData.append("size", values.size);
-        formData.append("price", values.price.replace(/\D/g, ""));
-        formData.append("discountPercent", values.discountPercent.toString());
-        formData.append("stock", values.stock.toString());
-        formData.append("description", values.description);
-        files.forEach((file) => {
-          formData.append("image[]", file);
-        });
-        values.imagesToDelete.forEach((image) => {
-          formData.append("imagesToDelete[]", image);
-        });
+        const price = +values.price.replace(/\D/g, "");
+        const images: string[] = [];
 
-        dispatch(updateProduct({ id, formData }));
+        for (const file of files) {
+          const storageRef = ref(storage, `products/${file?.name}`);
+          const snapshot = await uploadBytes(storageRef, file as File);
+          const url = await getDownloadURL(snapshot.ref);
+          images.push(url);
+        }
+
+        const data = {
+          ...values,
+          price,
+          images
+        };
+
+        dispatch(updateProduct({ id, data }));
         setFiles([]);
         onClose();
         toast.success("Cập nhật sản phẩm thành công");
       } catch (error) {
         toast.error(handlingAxiosError(error).message);
       }
-    },
+    }
   });
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
-      "image/*": [],
+      "image/*": []
     },
-    maxSize: 10485760, // 10MB
+    maxSize: 20 * 1024 * 1024, // 20 MB
     multiple: true,
     onDrop: (acceptedFiles) => {
       const files = acceptedFiles.map((file) => {
@@ -82,8 +83,21 @@ const UpdateModal = ({ show, onClose, id }: UpdateModalProps) => {
         return Object.assign(file, { preview });
       });
       setFiles(files);
-    },
+    }
   });
+
+  useEffect(() => {
+    if (show) {
+      categoryService
+        .getAllChilds()
+        .then((data) => setChildCategories(data))
+        .catch((error) => console.error(error));
+    }
+  }, [show]);
+
+  useEffect(() => {
+    console.log(formik.errors);
+  }, [formik]);
 
   return (
     <Modal
@@ -104,6 +118,7 @@ const UpdateModal = ({ show, onClose, id }: UpdateModalProps) => {
             autoComplete="off"
             placeholder="Món ăn"
             value={formik.values.title}
+            defaultValue={product?.title}
             onChange={formik.handleChange}
             error={formik.errors.title}
           />
@@ -167,8 +182,8 @@ const UpdateModal = ({ show, onClose, id }: UpdateModalProps) => {
             name="category"
             label="Danh mục sản phẩm"
             onChange={formik.handleChange}
-            defaultValue={formik.values.category}
             wrapperClassName="col-span-2"
+            value={formik.values.category}
           >
             {childCategories.map((childCate) => (
               <option key={childCate._id} value={childCate._id}>
@@ -191,17 +206,18 @@ const UpdateModal = ({ show, onClose, id }: UpdateModalProps) => {
             </label>
 
             <div className="flex flex-wrap items-center mb-2 space-x-2">
-              {formik.values.images.map((image) => (
-                <LazyLoadImage
-                  key={image._id}
-                  src={image.url}
-                  alt={formik.values.title}
-                  width={100}
-                  id="image"
-                  effect="opacity"
-                  className="rounded-md"
-                />
-              ))}
+              {files.length === 0 &&
+                formik.values.images.map((image) => (
+                  <LazyLoadImage
+                    key={image._id}
+                    src={image.url}
+                    alt={formik.values.title}
+                    width={100}
+                    id="image"
+                    effect="opacity"
+                    className="rounded-md"
+                  />
+                ))}
               {files.map((file) => (
                 <LazyLoadImage
                   key={file.name}
@@ -231,10 +247,10 @@ const UpdateModal = ({ show, onClose, id }: UpdateModalProps) => {
             </div>
           </div>
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer className="flex justify-end">
           <button
             type="submit"
-            className="bg-blue-600 text-white font-medium py-2.5 px-5 text-sm rounded-lg hover:bg-blue-700 text-center focus:ring-4 focus:ring-blue-800 transition"
+            className="bg-amber-600 text-white font-medium py-2.5 px-5 text-sm rounded-lg hover:bg-amber-700 text-center focus:ring-4 focus:ring-amber-900 transition"
           >
             Cập nhật
           </button>
