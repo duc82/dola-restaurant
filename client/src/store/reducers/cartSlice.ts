@@ -90,7 +90,7 @@ const cartSlice = createSlice({
       }
     },
 
-    resetCart: (state) => ({ ...state }),
+    resetCart: () => initialState,
   },
 });
 

@@ -46,7 +46,7 @@ const Voucher = () => {
     voucherService
       .getAll()
       .then((data) => {
-        dispatch(setVouchers(data.vouchers));
+        dispatch(setVouchers(data));
       })
       .catch((error) => {
         toast.error(handlingAxiosError(error).message);

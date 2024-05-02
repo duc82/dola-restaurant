@@ -3,7 +3,7 @@ import type {
   CreatePaymentUrlResponse,
   Order,
   OrderResponse,
-  OrdersResponse
+  OrdersResponse,
 } from "../types/order";
 
 const orderService = {
@@ -11,35 +11,47 @@ const orderService = {
     return apiRequest<OrderResponse>("/orders/create", {
       method: "POST",
       refreshToken: true,
-      data
+      data,
     });
   },
 
   getAll(): Promise<OrdersResponse> {
     return apiRequest<OrdersResponse>("/orders", {
       method: "GET",
-      refreshToken: true
+      refreshToken: true,
     });
   },
 
   getById(id: string): Promise<OrderResponse> {
     return apiRequest<OrderResponse>(`/orders/${id}`, {
       method: "GET",
-      refreshToken: true
+      refreshToken: true,
     });
   },
 
   createPaymentUrl(data: {
     amount: number;
     orderDescription: string;
+    orderId: string;
   }): Promise<CreatePaymentUrlResponse> {
     return apiRequest<CreatePaymentUrlResponse>("/orders/create_payment_url", {
       method: "POST",
       accessToken: true,
       refreshToken: true,
-      data
+      data,
     });
-  }
+  },
+
+  vnpayReturn(query: string): Promise<{ code: string; message: string }> {
+    return apiRequest<{ code: string; message: string }>(
+      `/orders/vnpay_return?${query}`,
+      {
+        method: "GET",
+        accessToken: true,
+        refreshToken: true,
+      }
+    );
+  },
 };
 
 export default orderService;

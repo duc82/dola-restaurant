@@ -8,6 +8,12 @@ const orderDto = new OrderDto();
 
 const router = Router();
 
+router.get(
+  "/vnpay_return",
+  authenticationMiddleware,
+  orderController.vnpayReturn
+);
+
 router.post(
   "/create",
   Body(orderDto.create),

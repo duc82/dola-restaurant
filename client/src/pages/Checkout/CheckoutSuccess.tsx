@@ -7,12 +7,13 @@ import formatAddress from "@/utils/formatAddress";
 import formatVnd from "@/utils/formatVnd";
 import { useEffect, useState } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 const CheckoutSuccess = () => {
   const { id } = useParams();
   const [order, setOrder] = useState<FullOrder | null>(null);
   const [isShowProducts, setIsShowProducts] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!id) return;
@@ -167,16 +168,10 @@ const CheckoutSuccess = () => {
                   size={"medium"}
                   intent={"secondary"}
                   inactive={"noOpacity"}
+                  onClick={() => navigate("/")}
                 >
                   Tiếp tục mua hàng
                 </Button>
-                <button
-                  type="button"
-                  className="flex items-center text-2xl cursor-pointer mx-8 text-blue-500"
-                  onClick={() => window.print()}
-                >
-                  In
-                </button>
               </div>
             </div>
           </article>

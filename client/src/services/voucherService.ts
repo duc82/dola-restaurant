@@ -1,21 +1,16 @@
-import {
-  FullVoucher,
-  Voucher,
-  VoucherResponse,
-  VouchersResponse
-} from "@/types/voucher";
+import { FullVoucher, Voucher, VoucherResponse } from "@/types/voucher";
 import apiRequest from "./api";
 
 const voucherService = {
   getAll: () => {
-    return apiRequest<VouchersResponse>("/vouchers");
+    return apiRequest<FullVoucher[]>("/vouchers");
   },
 
   create: (data: Voucher) => {
     return apiRequest<VoucherResponse>("/vouchers/create", {
       method: "POST",
       refreshToken: true,
-      data
+      data,
     });
   },
 
@@ -27,14 +22,14 @@ const voucherService = {
     return apiRequest<VoucherResponse>(`/vouchers/update/${id}`, {
       method: "PUT",
       refreshToken: true,
-      data
+      data,
     });
   },
 
   delete: (id: string) => {
     return apiRequest<{ message: string }>(`/vouchers/delete/${id}`, {
       method: "DELETE",
-      refreshToken: true
+      refreshToken: true,
     });
   },
 
@@ -42,9 +37,9 @@ const voucherService = {
     return apiRequest<{ message: string }>("/vouchers/delete-many", {
       method: "DELETE",
       refreshToken: true,
-      data: { ids }
+      data: { ids },
     });
-  }
+  },
 };
 
 export default voucherService;

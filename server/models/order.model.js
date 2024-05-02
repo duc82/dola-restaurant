@@ -61,7 +61,7 @@ const orderSchema = new Schema(
     paymentMethod: {
       type: String,
       required: true,
-      enum: ["PayPal", "VnPay", "Thanh toán khi giao hàng (COD)"],
+      enum: ["VnPay", "Thanh toán khi giao hàng (COD)"],
     },
     note: {
       type: String,

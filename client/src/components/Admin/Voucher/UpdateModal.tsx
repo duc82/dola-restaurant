@@ -3,27 +3,34 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { useFormik } from "formik";
 import Input from "../Input";
 import Select from "../Select";
-import { useEffect } from "react";
-import voucherService from "@/services/voucherService";
-import { setVoucher, updateVoucher } from "@/store/reducers/voucherSlice";
+import { updateVoucher } from "@/store/reducers/voucherSlice";
 import toast from "react-hot-toast";
 import handlingAxiosError from "@/utils/handlingAxiosError";
 import type { UpdateModalProps } from "@/types/admin";
 
 const UpdateModal = ({ show, onClose, id }: UpdateModalProps) => {
   const dispatch = useAppDispatch();
-  const { voucher } = useAppSelector((state) => state.voucher);
+  const { vouchers } = useAppSelector((state) => state.voucher);
+
+  const voucher = vouchers.find((v) => v._id === id);
 
   const formik = useFormik({
     initialValues: {
       code: voucher?.code || "",
-      discount: voucher?.discount || 0,
-      minimumCost: voucher?.minimumCost || 0,
-      isActive: voucher?.isActive || true,
+      discount: voucher?.discount.toString() || "0",
+      minimumCost: voucher?.minimumCost.toString() || "0",
+      isActive: voucher?.isActive ?? true,
     },
     enableReinitialize: true,
     onSubmit: (values) => {
-      dispatch(updateVoucher({ id, data: values }))
+      const data = {
+        code: values.code,
+        discount: +values.discount.replace(/\D/g, ""),
+        minimumCost: +values.minimumCost.replace(/\D/g, ""),
+        isActive: values.isActive,
+      };
+
+      dispatch(updateVoucher({ id, data }))
         .unwrap()
         .then((data) => {
           onClose();
@@ -34,18 +41,6 @@ const UpdateModal = ({ show, onClose, id }: UpdateModalProps) => {
         });
     },
   });
-
-  useEffect(() => {
-    if (!id) return;
-    voucherService
-      .getById(id)
-      .then((voucher) => {
-        dispatch(setVoucher(voucher));
-      })
-      .catch((error) => {
-        toast.error(handlingAxiosError(error).message);
-      });
-  }, [id, dispatch]);
 
   return (
     <Modal
@@ -71,7 +66,7 @@ const UpdateModal = ({ show, onClose, id }: UpdateModalProps) => {
               error={formik.errors.code}
             />
             <Input
-              type="number"
+              type="currency"
               label="Giảm giá"
               name="discount"
               id="discount"
@@ -82,7 +77,7 @@ const UpdateModal = ({ show, onClose, id }: UpdateModalProps) => {
               error={formik.errors.discount}
             />
             <Input
-              type="number"
+              type="currency"
               label="Chi phí tối thiểu"
               name="minimumCost"
               id="minimumCost"
@@ -96,7 +91,7 @@ const UpdateModal = ({ show, onClose, id }: UpdateModalProps) => {
               label="Trạng thái"
               name="isActive"
               onChange={formik.handleChange}
-              defaultValue={formik.values.isActive.toString()}
+              value={formik.values.isActive.toString()}
             >
               <option value="true">Kích hoạt</option>
               <option value="false">Không kích hoạt</option>

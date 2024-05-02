@@ -11,6 +11,7 @@ class OrderController {
     this.getAll = asyncHandler(this.getAll.bind(this));
     this.getById = asyncHandler(this.getById.bind(this));
     this.createPaymentUrl = asyncHandler(this.createPaymentUrl.bind(this));
+    this.vnpayReturn = asyncHandler(this.vnpayReturn.bind(this));
   }
 
   async create(req, res) {
@@ -42,7 +43,7 @@ class OrderController {
     const date = new Date();
 
     const createDate = moment(date).format("YYYYMMDDHHmmss");
-    const orderId = moment(date).format("HHmmss");
+    const orderId = req.body.orderId;
     const amount = req.body.amount;
 
     const orderInfo = req.body.orderDescription;
@@ -50,6 +51,7 @@ class OrderController {
     const locale = "vn";
 
     const currCode = "VND";
+
     let vnp_params = {
       vnp_Version: "2.1.0",
       vnp_Command: "pay",
@@ -62,7 +64,7 @@ class OrderController {
       vnp_Amount: amount * 100,
       vnp_ReturnUrl: returnUrl,
       vnp_IpAddr: ipAddress,
-      vnp_CreatedDate: createDate
+      vnp_CreateDate: createDate,
     };
 
     vnp_params = this.sortObject(vnp_params);
@@ -70,32 +72,60 @@ class OrderController {
     console.log(vnp_params);
 
     const signData = querystring.stringify(vnp_params, {
-      encode: false
+      encode: false,
     });
     const hmac = crypto.createHmac("sha512", secretKey);
-    const signed = hmac.update(new Buffer(signData, "utf-8")).digest("hex");
+    const signed = hmac.update(Buffer.from(signData, "utf-8")).digest("hex");
     vnp_params.vnp_SecureHash = signed;
     vnpUrl += "?" + querystring.stringify(vnp_params, { encode: false });
-
-    console.log(vnpUrl);
 
     res.status(200).json({ code: "00", url: vnpUrl });
   }
 
+  async vnpayReturn(req, res) {
+    let vnp_params = req.query;
+    const secureHash = vnp_params["vnp_SecureHash"];
+
+    delete vnp_params["vnp_SecureHash"];
+    delete vnp_params["vnp_SecureHashType"];
+
+    vnp_params = this.sortObject(vnp_params);
+
+    const secretKey = process.env.VNP_HASH_SECRET;
+
+    const signData = querystring.stringify(vnp_params, {
+      encode: false,
+    });
+    const hmac = crypto.createHmac("sha512", secretKey);
+    const signed = hmac.update(Buffer.from(signData, "utf-8")).digest("hex");
+
+    if (secureHash !== signed) {
+      return res.status(400).json({
+        code: vnp_params["vnp_ResponseCode"],
+        message: "Thanh toán thất bại",
+      });
+    }
+
+    const orderId = vnp_params["vnp_TxnRef"];
+
+    await this.orderService.update(orderId, {
+      isPaid: true,
+      paidAt: new Date(),
+    });
+
+    res.status(200).json({
+      code: vnp_params["vnp_ResponseCode"],
+      message: "Thanh toán thành công",
+    });
+  }
+
   sortObject(obj) {
-    let sorted = {};
-    let str = [];
-    let key;
-    for (key in obj) {
-      if (obj.hasOwnProperty(key)) {
-        str.push(encodeURIComponent(key));
-      }
-    }
-    str.sort();
-    for (key = 0; key < str.length; key++) {
-      sorted[str[key]] = encodeURIComponent(obj[str[key]]).replace(/%20/g, "+");
-    }
-    return sorted;
+    return Object.keys(obj)
+      .sort()
+      .reduce((acc, curr) => {
+        acc[curr] = encodeURIComponent(obj[curr]).replace(/%20/g, "+");
+        return acc;
+      }, {});
   }
 }
 

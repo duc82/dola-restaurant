@@ -27,13 +27,16 @@ const Orders = () => {
               Đơn hàng
             </th>
             <th className="bg-yellow-primary text-white border border-gray-200 p-1">
-              Ngày
+              Thời gian
             </th>
             <th className="bg-yellow-primary text-white border border-gray-200 p-1">
               Địa chỉ
             </th>
             <th className="bg-yellow-primary text-white border border-gray-200 p-1">
               Giá trị đơn hàng
+            </th>
+            <th className="bg-yellow-primary text-white border border-gray-200 p-1">
+              PT thanh toán
             </th>
             <th className="bg-yellow-primary text-white border border-gray-200 p-1">
               TT thanh toán
@@ -63,6 +66,9 @@ const Orders = () => {
               </td>
               <td className="text-center py-5 px-1 border border-gray-200">
                 {formatVnd(order.total)}
+              </td>
+              <td className="text-center py-5 px-1 border border-gray-200">
+                {order.paymentMethod}
               </td>
               <td className="text-center py-5 px-1 border border-gray-200">
                 {order.isPaid ? "Đã thanh toán" : "Chưa thu tiền"}

@@ -31,7 +31,7 @@ const voucherSlice = createSlice({
   initialState,
   name: "voucher",
   reducers: {
-    setVouchers(state, action) {
+    setVouchers(state, action: PayloadAction<FullVoucher[]>) {
       state.vouchers = action.payload;
     },
     addVoucher(state, action) {

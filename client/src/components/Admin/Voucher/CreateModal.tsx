@@ -15,13 +15,20 @@ const CreateModal = ({ show, onClose }: CreateModalProps) => {
   const formik = useFormik({
     initialValues: {
       code: "",
-      discount: 0,
-      minimumCost: 0,
+      discount: "0",
+      minimumCost: "0",
       isActive: true,
     },
     onSubmit: async (values, { resetForm }) => {
       try {
-        const data = await voucherService.create(values);
+        const newValues = {
+          code: values.code,
+          discount: +values.discount.replace(/\D/g, ""),
+          minimumCost: +values.minimumCost.replace(/\D/g, ""),
+          isActive: values.isActive,
+        };
+
+        const data = await voucherService.create(newValues);
         dispatch(addVoucher(data.voucher));
         onClose();
         toast.success(data.message);
@@ -56,7 +63,7 @@ const CreateModal = ({ show, onClose }: CreateModalProps) => {
               error={formik.errors.code}
             />
             <Input
-              type="number"
+              type="currency"
               label="Giảm giá"
               name="discount"
               id="discount"
@@ -67,7 +74,7 @@ const CreateModal = ({ show, onClose }: CreateModalProps) => {
               error={formik.errors.discount}
             />
             <Input
-              type="number"
+              type="currency"
               label="Chi phí tối thiểu"
               name="minimumCost"
               id="minimumCost"

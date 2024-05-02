@@ -43,12 +43,12 @@ const Order = () => {
         <div className="flex-[0_0_75%]">
           <div className="flex items-center justify-between mb-7">
             <h1 className="text-lg">Chi tiết đơn hàng #{id}</h1>
-            <p>Ngày tạo: {formatDate(order?.createdAt)}</p>
+            <p>Thời gian tạo: {formatDate(order?.createdAt)}</p>
           </div>
           <div className="mr-8 inline-block">
             <span>Trạng thái thanh toán: </span>
             <i>
-              <strong style={{ color: "red" }}>
+              <strong style={{ color: order?.isPaid ? "green" : "red" }}>
                 {order?.isPaid ? "Đã thanh toán" : "Chưa thanh toán"}
               </strong>
             </i>
@@ -56,7 +56,7 @@ const Order = () => {
           <div className="inline-block">
             <span>Trạng thái vận chuyển: </span>
             <i>
-              <strong style={{ color: "red" }}>
+              <strong style={{ color: order?.isDelivered ? "green" : "red" }}>
                 {order?.isDelivered ? "Đã giao hàng" : "Chưa giao hàng"}
               </strong>
             </i>

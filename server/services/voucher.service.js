@@ -17,7 +17,7 @@ class VoucherService {
   async getAll() {
     const vouchers = await Voucher.find();
 
-    return { message: "Danh sách mã giảm giá", vouchers };
+    return vouchers;
   }
 
   async getById(id) {

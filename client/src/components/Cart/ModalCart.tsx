@@ -86,12 +86,12 @@ const ModalCart = () => {
               >
                 Tiếp tục mua hàng
               </button>
-              <button
-                type="button"
-                className="w-full h-10 rounded-md text-center border border-yellow-primary bg-yellow-primary hover:bg-yellow-secondary"
+              <Link
+                to="/thanh-toan"
+                className="w-full flex items-center justify-center h-10 rounded-md text-center border border-yellow-primary bg-yellow-primary hover:bg-yellow-secondary"
               >
                 Thanh toán ngay
-              </button>
+              </Link>
             </div>
           </div>
         </div>

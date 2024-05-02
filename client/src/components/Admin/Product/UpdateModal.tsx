@@ -38,7 +38,7 @@ const UpdateModal = ({ show, onClose, id }: UpdateModalProps) => {
       price: product?.price.toLocaleString() || "0",
       discountPercent: product?.discountPercent || 0,
       stock: product?.stock || 0,
-      images: product?.images || []
+      images: product?.images || [],
     },
     validationSchema: productSchema,
     validateOnChange: true,
@@ -58,7 +58,7 @@ const UpdateModal = ({ show, onClose, id }: UpdateModalProps) => {
         const data = {
           ...values,
           price,
-          images
+          images,
         };
 
         dispatch(updateProduct({ id, data }));
@@ -68,12 +68,12 @@ const UpdateModal = ({ show, onClose, id }: UpdateModalProps) => {
       } catch (error) {
         toast.error(handlingAxiosError(error).message);
       }
-    }
+    },
   });
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
-      "image/*": []
+      "image/*": [],
     },
     maxSize: 20 * 1024 * 1024, // 20 MB
     multiple: true,
@@ -83,7 +83,7 @@ const UpdateModal = ({ show, onClose, id }: UpdateModalProps) => {
         return Object.assign(file, { preview });
       });
       setFiles(files);
-    }
+    },
   });
 
   useEffect(() => {
@@ -118,7 +118,6 @@ const UpdateModal = ({ show, onClose, id }: UpdateModalProps) => {
             autoComplete="off"
             placeholder="Món ăn"
             value={formik.values.title}
-            defaultValue={product?.title}
             onChange={formik.handleChange}
             error={formik.errors.title}
           />
@@ -158,7 +157,7 @@ const UpdateModal = ({ show, onClose, id }: UpdateModalProps) => {
             label="Hương vị"
             name="taste"
             onChange={formik.handleChange}
-            defaultValue={formik.values.taste}
+            value={formik.values.taste}
           >
             {tastes.map((taste) => (
               <option key={taste} value={taste}>
@@ -170,7 +169,7 @@ const UpdateModal = ({ show, onClose, id }: UpdateModalProps) => {
             label="Kích cỡ"
             name="size"
             onChange={formik.handleChange}
-            defaultValue={formik.values.size}
+            value={formik.values.size}
           >
             {sizes.map((size) => (
               <option key={size} value={size}>

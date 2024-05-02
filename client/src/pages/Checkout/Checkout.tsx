@@ -9,7 +9,7 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 import paymentMethods from "@/data/paymentMethods.json";
 import Button from "@/components/Form/Button";
 import Sidebar from "@/components/Checkout/Sidebar";
-import { useState } from "react";
+import { useEffect } from "react";
 import orderService from "@/services/orderService";
 import toast from "react-hot-toast";
 import handlingAxiosError from "@/utils/handlingAxiosError";
@@ -19,7 +19,6 @@ import formatAddress from "@/utils/formatAddress";
 const shippingFee = 40000;
 
 const Checkout = () => {
-  const [isSuccess, setSuccess] = useState(false);
   const { subTotal, carts, count } = useAppSelector((state) => state.cart);
   const { user } = useAppSelector((state) => state.user);
   const { addresses } = useAppSelector((state) => state.address);
@@ -38,12 +37,12 @@ const Checkout = () => {
       shippingFee,
       products: carts.map((cart) => ({
         product: cart._id,
-        quantity: cart.quantity
+        quantity: cart.quantity,
       })),
       note: "",
       paymentMethod:
         paymentMethods.find((method) => method.default)?.name ?? "",
-      isPaid: false
+      isPaid: false,
     },
     enableReinitialize: true,
     onSubmit: async (values) => {
@@ -57,24 +56,46 @@ const Checkout = () => {
             amount: values.total,
             orderDescription: `Thanh toán đơn hàng ${
               order._id
-            } tại Dola Restaurant. Số tiền: ${formatVnd(order.total)}`
+            } tại Dola Restaurant. Số tiền: ${formatVnd(order.total)}`,
+            orderId: order._id,
           });
 
           window.location.href = url;
-        } else if (values.paymentMethod === "PayPal") {
-          console.log("PayPal");
         } else {
           navigate(`/thanh-toan/thanh-cong/${order._id}`);
-          setSuccess(true);
           dispatch(resetCart());
         }
       } catch (error) {
         toast.error(handlingAxiosError(error).message);
       }
-    }
+    },
   });
 
-  if (count < 1 && !isSuccess) return <Navigate to="/gio-hang" />;
+  useEffect(() => {
+    const urlSearchParams = new URLSearchParams(window.location.search);
+
+    const pathname = window.location.pathname;
+
+    if (pathname.includes("vnpay-return")) {
+      orderService
+        .vnpayReturn(urlSearchParams.toString())
+        .then((res) => {
+          if (res.code === "00") {
+            dispatch(resetCart());
+            navigate(
+              `/thanh-toan/thanh-cong/${urlSearchParams.get("vnp_TxnRef")}`
+            );
+          } else {
+            toast.error(res.message);
+          }
+        })
+        .catch((error) => {
+          toast.error(handlingAxiosError(error).message);
+        });
+    }
+  }, [dispatch, navigate]);
+
+  if (count < 1) return <Navigate to="/gio-hang" />;
 
   return (
     <form
