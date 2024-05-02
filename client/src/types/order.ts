@@ -43,4 +43,15 @@ interface OrdersResponse {
   orders: FullOrder[];
 }
 
-export type { Order, FullOrder, OrderResponse, OrdersResponse };
+interface CreatePaymentUrlResponse {
+  code: string;
+  url: string;
+}
+
+export type {
+  Order,
+  FullOrder,
+  OrderResponse,
+  OrdersResponse,
+  CreatePaymentUrlResponse
+};

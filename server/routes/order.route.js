@@ -17,4 +17,10 @@ router.post(
 router.get("/", authenticationMiddleware, orderController.getAll);
 router.get("/:id", authenticationMiddleware, orderController.getById);
 
+router.post(
+  "/create_payment_url",
+  authenticationMiddleware,
+  orderController.createPaymentUrl
+);
+
 module.exports = router;

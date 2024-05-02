@@ -3,14 +3,13 @@ import Radio from "@/components/Form/Radio";
 import Select from "@/components/Form/Select";
 import { CreditCart, IdCard, Truck } from "@/icons";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import VnPay from "@/utils/VnPay";
 import formatVnd from "@/utils/formatVnd";
 import { useFormik } from "formik";
-import { Link, Navigate, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import paymentMethods from "@/data/paymentMethods.json";
 import Button from "@/components/Form/Button";
 import Sidebar from "@/components/Checkout/Sidebar";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import orderService from "@/services/orderService";
 import toast from "react-hot-toast";
 import handlingAxiosError from "@/utils/handlingAxiosError";
@@ -26,7 +25,6 @@ const Checkout = () => {
   const { addresses } = useAppSelector((state) => state.address);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const [urlSearchParams] = useSearchParams();
 
   const defaultAddress = addresses.find((address) => address.isDefault);
 
@@ -49,50 +47,32 @@ const Checkout = () => {
     },
     enableReinitialize: true,
     onSubmit: async (values) => {
-      if (values.paymentMethod === "VnPay") {
-        const url = await VnPay.createPaymentUrl(values);
-        window.location.href = url;
-      } else if (values.paymentMethod === "PayPal") {
-        console.log("PayPal");
-      } else {
-        delete values.fullName;
-        delete values.phone;
+      delete values.fullName;
+      delete values.phone;
+      try {
+        const { order } = await orderService.create(values);
 
-        orderService
-          .create(values)
-          .then((data) => {
-            navigate(`/thanh-toan/cam-on/${data.order._id}`);
-            setSuccess(true);
-            dispatch(resetCart());
-          })
-          .catch((error) => {
-            toast.error(handlingAxiosError(error).message);
+        if (values.paymentMethod === "VnPay") {
+          const { url } = await orderService.createPaymentUrl({
+            amount: values.total,
+            orderDescription: `Thanh toán đơn hàng ${
+              order._id
+            } tại Dola Restaurant. Số tiền: ${formatVnd(order.total)}`
           });
+
+          window.location.href = url;
+        } else if (values.paymentMethod === "PayPal") {
+          console.log("PayPal");
+        } else {
+          navigate(`/thanh-toan/thanh-cong/${order._id}`);
+          setSuccess(true);
+          dispatch(resetCart());
+        }
+      } catch (error) {
+        toast.error(handlingAxiosError(error).message);
       }
     }
   });
-
-  useEffect(() => {
-    if (urlSearchParams.get("vnp_ResponseCode") !== "00" || !user) {
-      return;
-    }
-
-    const values = {
-      ...formik.values,
-      isPaid: true,
-      paidAt: new Date().toISOString()
-    };
-
-    orderService
-      .create(values)
-      .then((data) => {
-        navigate(`/thanh-toan/cam-on/${data.order._id}`);
-        setSuccess(true);
-      })
-      .catch((error) => {
-        toast.error(handlingAxiosError(error).message);
-      });
-  }, [navigate, dispatch, urlSearchParams, user]);
 
   if (count < 1 && !isSuccess) return <Navigate to="/gio-hang" />;
 

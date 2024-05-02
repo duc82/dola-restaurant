@@ -87,6 +87,7 @@ const App = () => {
 
       <Route path="/thanh-toan" element={<CheckoutLayout />}>
         <Route index element={<Checkout />} />
+        <Route path="vnpay-return" element={<Checkout />} />
         <Route path="thanh-cong/:id" element={<CheckoutSuccess />} />
       </Route>
 

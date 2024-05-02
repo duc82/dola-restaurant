@@ -1,5 +1,10 @@
 import apiRequest from "./api";
-import type { Order, OrderResponse, OrdersResponse } from "../types/order";
+import type {
+  CreatePaymentUrlResponse,
+  Order,
+  OrderResponse,
+  OrdersResponse
+} from "../types/order";
 
 const orderService = {
   create(data: Order): Promise<OrderResponse> {
@@ -21,6 +26,18 @@ const orderService = {
     return apiRequest<OrderResponse>(`/orders/${id}`, {
       method: "GET",
       refreshToken: true
+    });
+  },
+
+  createPaymentUrl(data: {
+    amount: number;
+    orderDescription: string;
+  }): Promise<CreatePaymentUrlResponse> {
+    return apiRequest<CreatePaymentUrlResponse>("/orders/create_payment_url", {
+      method: "POST",
+      accessToken: true,
+      refreshToken: true,
+      data
     });
   }
 };

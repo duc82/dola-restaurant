@@ -34,11 +34,10 @@ class AuthController {
   }
 
   async login(req, res) {
-    const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
     res
       .status(200)
       .json(
-        await this.authService.login(req.body.email, req.body.password, ip, res)
+        await this.authService.login(req.body.email, req.body.password, res)
       );
   }
 
