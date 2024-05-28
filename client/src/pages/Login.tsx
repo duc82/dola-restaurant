@@ -10,7 +10,7 @@ import { Helmet } from "react-helmet-async";
 import {
   authStart,
   authSuccess,
-  loginSuccess,
+  loginSuccess
 } from "@/store/reducers/authSlice";
 import handlingAxiosError from "../utils/handlingAxiosError";
 import ForgotPassword from "../components/Form/ForgotPassword";
@@ -18,7 +18,6 @@ import { useState } from "react";
 import Button from "../components/Form/Button";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import authService from "@/services/authService";
-import { Spinner } from "@/icons";
 import { LoginDTO } from "@/types/auth";
 import { setUser } from "@/store/reducers/userSlice";
 import { loginSchema } from "@/schemas/authSchema";
@@ -33,7 +32,7 @@ const Login = () => {
   const formik = useFormik<LoginDTO>({
     initialValues: {
       email: "",
-      password: "",
+      password: ""
     },
     validationSchema: loginSchema,
     onSubmit: async (values, { resetForm }) => {
@@ -48,7 +47,7 @@ const Login = () => {
         dispatch(authSuccess());
         resetForm();
       }
-    },
+    }
   });
 
   return (
@@ -105,15 +104,9 @@ const Login = () => {
             <Button
               type="submit"
               inactive={isLoading ? "cursorNotAllowed" : "primaryHover"}
+              disabled={isLoading}
             >
-              {isLoading ? (
-                <div className="flex items-center space-x-2">
-                  <Spinner className="w-5 h-5 animate-spin" />
-                  <span>Đang tải</span>
-                </div>
-              ) : (
-                "Đăng nhập"
-              )}
+              Đăng nhập
             </Button>
 
             <div className="flex justify-center">

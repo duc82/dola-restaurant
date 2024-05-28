@@ -1,4 +1,4 @@
-import ProductQuickviewContext from "@/context/ProductQuickviewContent";
+import ProductQuickviewContext from "@/contexts/ProductQuickviewContent";
 import { FullProduct } from "@/types/product";
 import { useState } from "react";
 
@@ -21,7 +21,7 @@ const ProductQuickviewProvider = ({ children }: React.PropsWithChildren) => {
         isOpen,
         onCloseClick,
         onOpenClick,
-        product,
+        product
       }}
     >
       {children}

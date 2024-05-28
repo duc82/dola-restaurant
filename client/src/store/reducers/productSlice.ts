@@ -98,7 +98,10 @@ const productSlice = createSlice({
   initialState,
   reducers: {
     addViewedProducts: (state, { payload }: PayloadAction<FullProduct>) => {
-      state.viewedProducts.push(payload);
+      const isExists = state.viewedProducts.some((p) => p._id === payload._id);
+      if (!isExists) {
+        state.viewedProducts.push(payload);
+      }
     },
     addFavoriteProducts: (state, { payload }: PayloadAction<FullProduct>) => {
       state.favoriteProducts.push(payload);
@@ -136,7 +139,6 @@ const productSlice = createSlice({
     });
 
     builder.addCase(updateProduct.fulfilled, (state, { payload }) => {
-      console.log(payload.product);
       const index = state.products.findIndex(
         (product) => product._id === payload.product._id
       );

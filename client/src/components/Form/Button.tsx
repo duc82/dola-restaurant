@@ -1,3 +1,4 @@
+import { Spinner } from "@/icons";
 import { cva } from "class-variance-authority";
 import type { VariantProps } from "class-variance-authority";
 import { twMerge } from "tailwind-merge";
@@ -46,7 +47,16 @@ const Button = ({
     type="button"
     {...props}
     className={twMerge(button({ intent, size, inactive, className }))}
-  />
+  >
+    {props.disabled ? (
+      <div className="flex items-center space-x-2">
+        <Spinner className="w-5 h-5 animate-spin" />
+        <span>Đang tải</span>
+      </div>
+    ) : (
+      props.children
+    )}
+  </button>
 );
 
 export default Button;

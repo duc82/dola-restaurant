@@ -14,13 +14,12 @@ import { Helmet } from "react-helmet-async";
 import Tab from "../components/ProductDetail/Tab";
 import { useAppDispatch } from "@/store/hooks";
 import Prominent from "../components/Blog/Prominent";
-import Voucher from "../components/Voucher";
 import { increaseQuantity } from "@/store/reducers/cartSlice";
 import ProductRelate from "@/components/ProductDetail/ProductRelate";
 import productService from "@/services/productService";
 import ProductViewed from "@/components/ProductDetail/ProductViewed";
 import { FullProduct } from "@/types/product";
-import Fancybox from "@/libs/Fancybox";
+import Fancybox from "@/components/Fancybox";
 
 const ProductDetail = () => {
   const dispatch = useAppDispatch();
@@ -32,7 +31,7 @@ const ProductDetail = () => {
     handleIncreaseQuantity,
     handleDecreaseQuantity,
     handleChangeQuantity,
-    resetQuantity,
+    resetQuantity
   } = useQuantity({ max: product?.stock });
 
   const [indexActiveImage, setIndexActiveImage] = useState(0);
@@ -53,7 +52,7 @@ const ProductDetail = () => {
       increaseQuantity({
         ...product,
         price: product.discountedPrice,
-        quantity: quantity ? +quantity : 1,
+        quantity: quantity ? +quantity : 1
       })
     );
   };
@@ -227,7 +226,7 @@ const ProductDetail = () => {
                 </div>
               </div>
               {/* Voucher */}
-              <Voucher />
+              {/* <Voucher /> */}
             </div>
           </div>
           <Tab product={product} />

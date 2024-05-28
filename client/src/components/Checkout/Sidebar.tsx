@@ -3,7 +3,6 @@ import { useAppSelector } from "@/store/hooks";
 import formatVnd from "@/utils/formatVnd";
 import { useState } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import FloatingLabel from "../Form/FloatingLabel";
 import Button from "../Form/Button";
 import cn from "@/utils/cn";
 import { Link } from "react-router-dom";
@@ -11,7 +10,6 @@ import { Link } from "react-router-dom";
 const Sidebar = () => {
   const { count, subTotal, carts } = useAppSelector((state) => state.cart);
   const [isShowProducts, setIsShowProducts] = useState(false);
-  const [coupon, setCoupon] = useState("");
 
   const toggleShowProducts = () => {
     setIsShowProducts(!isShowProducts);
@@ -82,7 +80,7 @@ const Sidebar = () => {
             </li>
           ))}
         </ul>
-        <div className="flex items-center py-4 border-y border-y-[rgb(225,225,225)]">
+        {/* <div className="flex items-center py-4 border-y border-y-[rgb(225,225,225)]">
           <FloatingLabel
             type="text"
             id="coupon"
@@ -100,7 +98,7 @@ const Sidebar = () => {
           >
             Áp dụng
           </Button>
-        </div>
+        </div> */}
 
         <div className={cn("py-4", !isShowProducts && "hidden lg:block")}>
           <div className="flex items-center justify-between pt-3">

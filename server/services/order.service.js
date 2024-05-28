@@ -1,31 +1,26 @@
 const Order = require("../models/order.model");
-const VoucherService = require("./voucher.service");
 const CustomError = require("../utils/error.util.js");
 
 class OrderService {
-  constructor() {
-    this.voucherService = new VoucherService();
-  }
-
   async create(body) {
     const order = await Order.create(body);
 
     return {
       message: "Đơn hàng đã được tạo thành công!",
-      order,
+      order
     };
   }
 
   async getAll(userId) {
     const orders = await Order.find({
-      user: userId,
+      user: userId
     })
       .sort({ createdAt: -1 })
       .populate([
         "shippingAddress",
         {
           path: "user",
-          select: "-password",
+          select: "-password"
         },
         {
           path: "products.product",
@@ -33,24 +28,24 @@ class OrderService {
           populate: [
             {
               path: "images",
-              model: "Image",
+              model: "Image"
             },
 
             {
               path: "parentCategory",
-              model: "Category",
+              model: "Category"
             },
             {
               path: "childCategory",
-              model: "Category",
-            },
-          ],
-        },
+              model: "Category"
+            }
+          ]
+        }
       ]);
 
     return {
       orders,
-      total: orders.length,
+      total: orders.length
     };
   }
 
@@ -59,7 +54,7 @@ class OrderService {
       "shippingAddress",
       {
         path: "user",
-        select: "-password",
+        select: "-password"
       },
       {
         path: "products.product",
@@ -67,23 +62,23 @@ class OrderService {
         populate: [
           {
             path: "images",
-            model: "Image",
+            model: "Image"
           },
           {
             path: "parentCategory",
-            model: "Category",
+            model: "Category"
           },
           {
             path: "childCategory",
-            model: "Category",
-          },
-        ],
-      },
+            model: "Category"
+          }
+        ]
+      }
     ]);
 
     return {
       message: "Đơn hàng đã được tải thành công!",
-      order,
+      order
     };
   }
 
@@ -93,13 +88,13 @@ class OrderService {
     if (!order) {
       throw new CustomError({
         message: "Không tìm thấy đơn hàng!",
-        status: 404,
+        status: 404
       });
     }
 
     return {
       message: "Đơn hàng đã được cập nhật thành công!",
-      order,
+      order
     };
   }
 }

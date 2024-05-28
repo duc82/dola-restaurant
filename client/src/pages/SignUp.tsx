@@ -12,7 +12,6 @@ import { authStart, authSuccess } from "@/store/reducers/authSlice";
 import handlingAxiosError from "../utils/handlingAxiosError";
 import authService from "@/services/authService";
 import Button from "../components/Form/Button";
-import { Spinner } from "@/icons";
 import { SignUpDTO } from "@/types/auth";
 import { signUpSchema } from "@/schemas/authSchema";
 
@@ -29,7 +28,7 @@ const SignUp = () => {
       email: "",
       fullName: "",
       phone: "",
-      password: "",
+      password: ""
     },
     validationSchema: signUpSchema,
     onSubmit: async (values, { resetForm }) => {
@@ -44,7 +43,7 @@ const SignUp = () => {
         dispatch(authSuccess());
         resetForm();
       }
-    },
+    }
   });
 
   return (
@@ -119,15 +118,9 @@ const SignUp = () => {
             <Button
               type="submit"
               inactive={isLoading ? "cursorNotAllowed" : "primaryHover"}
+              disabled={isLoading}
             >
-              {isLoading ? (
-                <div className="flex items-center space-x-2">
-                  <Spinner className="w-5 h-5 animate-spin" />
-                  <span>Đang tải</span>
-                </div>
-              ) : (
-                "Đăng ký"
-              )}
+              Đăng ký
             </Button>
           </form>
           <div className="flex flex-col items-center mt-4">

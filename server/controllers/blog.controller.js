@@ -11,7 +11,7 @@ class BlogController {
     this.delete = asyncHandler(this.delete.bind(this));
   }
 
-  async getAll() {
+  async getAll(req, res) {
     const page = req.query.page ? +req.query.page : 1;
     const limit = req.query.limit ? +req.query.limit : 0;
     const skip = (page - 1) * limit;
@@ -20,12 +20,12 @@ class BlogController {
       .populate("user")
       .skip(skip)
       .limit(limit === 0 ? null : limit);
-    const total = await Blog.count();
+    const total = await Blog.countDocuments();
 
     res.status(200).json({ blogs, limit, total, skip });
   }
 
-  async getByTitle() {
+  async getByTitle(req, res) {
     const { title } = req.params;
     const blog = await Blog.findOne({
       title
@@ -41,7 +41,7 @@ class BlogController {
     res.status(200).json(blog);
   }
 
-  async create() {
+  async create(req, res) {
     const { title, description, image, user } = req.body;
 
     const blog = await Blog.create({
@@ -54,7 +54,7 @@ class BlogController {
     res.status(201).json({ blog, message: "Thêm mới blog thành công" });
   }
 
-  async update() {
+  async update(req, res) {
     const { id } = req.params;
 
     const blog = await Blog.findByIdAndUpdate(
@@ -68,7 +68,7 @@ class BlogController {
     res.status(200).json({ message: "Cập nhật blog thành công", blog });
   }
 
-  async delete() {
+  async delete(req, res) {
     const { id } = req.params;
 
     const blog = await Blog.findByIdAndDelete(id);

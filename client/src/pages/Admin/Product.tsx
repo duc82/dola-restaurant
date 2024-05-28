@@ -20,7 +20,7 @@ import UpdateModal from "@/components/Admin/Product/UpdateModal";
 import useLimit from "@/hooks/useLimit";
 import cn from "@/utils/cn";
 import Limit from "@/components/Limit";
-import Fancybox from "@/libs/Fancybox";
+import Fancybox from "@/components/Fancybox";
 import { Link } from "react-router-dom";
 
 const title = "Danh sách sản phẩm";

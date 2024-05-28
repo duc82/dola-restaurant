@@ -9,7 +9,7 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 import paymentMethods from "@/data/paymentMethods.json";
 import Button from "@/components/Form/Button";
 import Sidebar from "@/components/Checkout/Sidebar";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import orderService from "@/services/orderService";
 import toast from "react-hot-toast";
 import handlingAxiosError from "@/utils/handlingAxiosError";
@@ -19,6 +19,7 @@ import formatAddress from "@/utils/formatAddress";
 const shippingFee = 40000;
 
 const Checkout = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const { subTotal, carts, count } = useAppSelector((state) => state.cart);
   const { user } = useAppSelector((state) => state.user);
   const { addresses } = useAppSelector((state) => state.address);
@@ -37,18 +38,19 @@ const Checkout = () => {
       shippingFee,
       products: carts.map((cart) => ({
         product: cart._id,
-        quantity: cart.quantity,
+        quantity: cart.quantity
       })),
       note: "",
       paymentMethod:
         paymentMethods.find((method) => method.default)?.name ?? "",
-      isPaid: false,
+      isPaid: false
     },
     enableReinitialize: true,
     onSubmit: async (values) => {
       delete values.fullName;
       delete values.phone;
       try {
+        setIsLoading(false);
         const { order } = await orderService.create(values);
 
         if (values.paymentMethod === "VnPay") {
@@ -57,7 +59,7 @@ const Checkout = () => {
             orderDescription: `Thanh toán đơn hàng ${
               order._id
             } tại Dola Restaurant. Số tiền: ${formatVnd(order.total)}`,
-            orderId: order._id,
+            orderId: order._id
           });
 
           window.location.href = url;
@@ -67,8 +69,10 @@ const Checkout = () => {
         }
       } catch (error) {
         toast.error(handlingAxiosError(error).message);
+      } finally {
+        setIsLoading(true);
       }
-    },
+    }
   });
 
   useEffect(() => {
@@ -239,6 +243,7 @@ const Checkout = () => {
                 size={"medium"}
                 className="w-full mb-4"
                 inactive={"noOpacity"}
+                disabled={isLoading}
               >
                 ĐẶT HÀNG
               </Button>

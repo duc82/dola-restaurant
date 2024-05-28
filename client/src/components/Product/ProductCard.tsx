@@ -3,13 +3,13 @@ import formatVnd from "@/utils/formatVnd";
 import { CartFill, Eyes, Heart } from "@/icons";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { increaseQuantity } from "@/store/reducers/cartSlice";
-import { useModalCart } from "@/context/AddedCartContext";
+import { useModalCart } from "@/contexts/AddedCartContext";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { FullProduct } from "@/types/product";
 import useProductQuickview from "@/hooks/useProductQuickview";
 import {
   addFavoriteProducts,
-  removeFavoriteProducts,
+  removeFavoriteProducts
 } from "@/store/reducers/productSlice";
 
 const ProductCard = (product: FullProduct) => {
@@ -25,13 +25,13 @@ const ProductCard = (product: FullProduct) => {
       increaseQuantity({
         ...product,
         price: product.discountedPrice,
-        quantity: 1,
+        quantity: 1
       })
     );
     updateAddedCart({
       ...product,
       price: product.discountedPrice,
-      quantity: 1,
+      quantity: 1
     });
   };
 

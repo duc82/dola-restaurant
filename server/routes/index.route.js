@@ -9,6 +9,5 @@ router.use("/blogs", require("./blog.route"));
 router.use("/reviews", require("./review.route"));
 router.use("/addresses", require("./address.route"));
 router.use("/orders", require("./order.route"));
-router.use("/vouchers", require("./voucher.route"));
 
 module.exports = router;

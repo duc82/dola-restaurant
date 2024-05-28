@@ -15,7 +15,7 @@ import categoryService from "@/services/categoryService";
 import { updateCategory } from "@/store/reducers/categorySlice";
 import useCategory from "@/hooks/useCategory";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { storage } from "@/configs/firebase";
+import { storage } from "@/libs/firebase";
 
 const UpdateModal = ({ show, onClose, id }: UpdateModalProps) => {
   const dispatch = useAppDispatch();
@@ -25,7 +25,7 @@ const UpdateModal = ({ show, onClose, id }: UpdateModalProps) => {
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
-      "image/*": [],
+      "image/*": []
     },
     maxSize: 10485760, // 10MB
     multiple: false,
@@ -33,11 +33,11 @@ const UpdateModal = ({ show, onClose, id }: UpdateModalProps) => {
       const file = acceptedFiles[0];
       if (file) {
         const filePreview = Object.assign(file, {
-          preview: URL.createObjectURL(file),
+          preview: URL.createObjectURL(file)
         });
         setFile(filePreview);
       }
-    },
+    }
   });
 
   const category = categories.find((category) => category._id === id);
@@ -49,7 +49,7 @@ const UpdateModal = ({ show, onClose, id }: UpdateModalProps) => {
       image: category?.image || "",
       parentCategory: (category?.parentCategory?._id || "") as
         | string
-        | undefined,
+        | undefined
     },
     enableReinitialize: true,
     onSubmit: async (values) => {
@@ -78,7 +78,7 @@ const UpdateModal = ({ show, onClose, id }: UpdateModalProps) => {
       } catch (error) {
         toast.error(handlingAxiosError(error).message);
       }
-    },
+    }
   });
 
   return (

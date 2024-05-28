@@ -20,7 +20,7 @@ const initialState = {
   limit: 0,
   total: 0,
   skip: 0,
-  isLoading: false,
+  isLoading: false
 };
 
 const blogSlice = createSlice({
@@ -39,9 +39,7 @@ const blogSlice = createSlice({
       state.skip = payload.skip;
       state.total = payload.total;
     });
-
-    builder.addCase(getAllBlog.rejected, (state, { payload }) => {});
-  },
+  }
 });
 
 export default blogSlice.reducer;

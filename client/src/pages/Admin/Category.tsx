@@ -21,7 +21,7 @@ import Limit from "@/components/Limit";
 import cn from "@/utils/cn";
 import useLimit from "@/hooks/useLimit";
 import CategoryProvider from "@/providers/CategoryProvider";
-import Fancybox from "@/libs/Fancybox";
+import Fancybox from "@/components/Fancybox";
 import { Link } from "react-router-dom";
 
 const Category = () => {

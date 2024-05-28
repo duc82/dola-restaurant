@@ -6,7 +6,6 @@ import userReducer from "./userSlice";
 import cartReducer from "./cartSlice";
 import blogReducer from "./blogSlice";
 import orderReducer from "./orderSlice";
-import voucherReducer from "./voucherSlice";
 import addressReducer from "./addressSlice";
 import { PersistConfig, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
@@ -15,14 +14,14 @@ const authPersistConfig: PersistConfig<AuthState> = {
   key: "auth",
   version: 1,
   storage,
-  whitelist: ["accessToken"],
+  whitelist: ["accessToken"]
 };
 
 const viewedProductsPersistConfig: PersistConfig<ProductState> = {
   key: "viewedProducts",
   version: 1,
   storage,
-  whitelist: ["viewedProducts", "favoriteProducts"],
+  whitelist: ["viewedProducts", "favoriteProducts"]
 };
 
 const rootReducer = combineReducers({
@@ -33,8 +32,7 @@ const rootReducer = combineReducers({
   cart: cartReducer,
   blog: blogReducer,
   order: orderReducer,
-  voucher: voucherReducer,
-  address: addressReducer,
+  address: addressReducer
 });
 
 export default rootReducer;

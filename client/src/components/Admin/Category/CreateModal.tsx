@@ -13,7 +13,7 @@ import Select from "../Select";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Upload } from "@/icons";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { storage } from "@/configs/firebase";
+import { storage } from "@/libs/firebase";
 import useCategory from "@/hooks/useCategory";
 
 const CreateModal = ({ show, onClose }: CreateModalProps) => {
@@ -23,7 +23,7 @@ const CreateModal = ({ show, onClose }: CreateModalProps) => {
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
-      "image/*": [],
+      "image/*": []
     },
     maxSize: 10485760, // 10MB
     multiple: false,
@@ -31,11 +31,11 @@ const CreateModal = ({ show, onClose }: CreateModalProps) => {
       const file = acceptedFiles[0];
       if (file) {
         const filePreview = Object.assign(file, {
-          preview: URL.createObjectURL(file),
+          preview: URL.createObjectURL(file)
         });
         setFile(filePreview);
       }
-    },
+    }
   });
 
   const formik = useFormik({
@@ -43,7 +43,7 @@ const CreateModal = ({ show, onClose }: CreateModalProps) => {
       name: "",
       description: "",
       parentCategory: "" as string | undefined,
-      image: "",
+      image: ""
     },
     onSubmit: async (values, { resetForm }) => {
       try {
@@ -68,7 +68,7 @@ const CreateModal = ({ show, onClose }: CreateModalProps) => {
       } catch (error) {
         toast.error(handlingAxiosError(error).message);
       }
-    },
+    }
   });
 
   return (

@@ -14,8 +14,8 @@ import toast from "react-hot-toast";
 import handlingAxiosError from "@/utils/handlingAxiosError";
 import { productSchema, sizes, tastes } from "@/schemas/productSchema";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { storage } from "@/configs/firebase";
-import TextEditor from "@/libs/TextEditor";
+import { storage } from "@/libs/firebase";
+import TextEditor from "@/components/TextEditor";
 import { FullCategory } from "@/types/category";
 import categoryService from "@/services/categoryService";
 

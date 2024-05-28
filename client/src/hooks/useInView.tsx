@@ -1,12 +1,10 @@
 import { useState, useEffect, RefObject } from "react";
 
-interface Options {
-  threshold: number;
-  rootMargin: string;
-  triggerOnce: boolean;
+interface Options extends IntersectionObserverInit {
+  triggerOnce?: boolean;
 }
 
-const useInView = (ref: RefObject<Element>, options?: Partial<Options>) => {
+const useInView = (ref: RefObject<Element>, options?: Options) => {
   const [isInView, setInView] = useState(false);
 
   useEffect(() => {
@@ -14,15 +12,9 @@ const useInView = (ref: RefObject<Element>, options?: Partial<Options>) => {
 
     if (options?.triggerOnce && isInView) return;
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setInView(entry.isIntersecting);
-      },
-      {
-        rootMargin: options?.rootMargin || "0px",
-        threshold: options?.threshold || 0,
-      }
-    );
+    const observer = new IntersectionObserver(([entry]) => {
+      setInView(entry.isIntersecting);
+    }, options);
 
     observer.observe(ref.current);
 

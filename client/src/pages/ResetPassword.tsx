@@ -10,13 +10,12 @@ import { toast } from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 import authService from "@/services/authService";
 import Button from "../components/Form/Button";
-import { Spinner } from "@/icons";
 
 const title = "Đổi mật khẩu";
 
 const initialValues = {
   password: "",
-  confirmPassword: "",
+  confirmPassword: ""
 };
 
 const resetPasswordSchema = object().shape({
@@ -27,7 +26,7 @@ const resetPasswordSchema = object().shape({
   confirmPassword: string().oneOf(
     [ref("password")],
     "Xác nhận mật khẩu phải trùng với mật khẩu"
-  ),
+  )
 });
 
 const ResetPassword = () => {
@@ -44,7 +43,7 @@ const ResetPassword = () => {
         setIsLoading(true);
         const data = await authService.resetPassword({
           email,
-          password: values.password,
+          password: values.password
         });
         navigate("/dang-nhap");
         toast.success(data.message);
@@ -55,7 +54,7 @@ const ResetPassword = () => {
         setIsLoading(false);
         resetForm();
       }
-    },
+    }
   });
 
   useEffect(() => {
@@ -107,15 +106,9 @@ const ResetPassword = () => {
             <Button
               type="submit"
               inactive={isLoading ? "cursorNotAllowed" : "primaryHover"}
+              disabled={isLoading}
             >
-              {isLoading ? (
-                <div className="flex items-center space-x-2">
-                  <Spinner className="w-5 h-5 animate-spin" />
-                  <span>Đang tải</span>
-                </div>
-              ) : (
-                "Đặt lại mật khẩu"
-              )}
+              Đặt lại mật khẩu
             </Button>
           </form>
         </div>

@@ -35,7 +35,6 @@ import BlogDetail from "./pages/Blog/BlogDetail";
 import Address from "./pages/Account/Address";
 import CheckoutSuccess from "./pages/Checkout/CheckoutSuccess";
 import Order from "./pages/Account/Order";
-import Voucher from "./pages/Admin/Voucher";
 import Category from "./pages/Admin/Category";
 import CheckoutLayout from "./layouts/CheckoutLayout";
 
@@ -96,7 +95,6 @@ const App = () => {
         <Route path="nguoi-dung" element={<User />} />
         <Route path="san-pham" element={<Product />} />
         <Route path="danh-muc-san-pham" element={<Category />} />
-        <Route path="ma-giam-gia" element={<Voucher />} />
       </Route>
     </Routes>
   );

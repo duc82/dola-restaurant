@@ -17,7 +17,7 @@ import EditorText from "@/components/EditorText";
 import { FullCategory } from "@/types/category";
 import categoryService from "@/services/categoryService";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { storage } from "@/configs/firebase";
+import { storage } from "@/libs/firebase";
 
 const UpdateModal = ({ show, onClose, id }: UpdateModalProps) => {
   const [files, setFiles] = useState<FilePreview[]>([]);
@@ -38,7 +38,7 @@ const UpdateModal = ({ show, onClose, id }: UpdateModalProps) => {
       price: product?.price.toLocaleString() || "0",
       discountPercent: product?.discountPercent || 0,
       stock: product?.stock || 0,
-      images: product?.images || [],
+      images: product?.images || []
     },
     validationSchema: productSchema,
     validateOnChange: true,
@@ -58,7 +58,7 @@ const UpdateModal = ({ show, onClose, id }: UpdateModalProps) => {
         const data = {
           ...values,
           price,
-          images,
+          images
         };
 
         dispatch(updateProduct({ id, data }));
@@ -68,12 +68,12 @@ const UpdateModal = ({ show, onClose, id }: UpdateModalProps) => {
       } catch (error) {
         toast.error(handlingAxiosError(error).message);
       }
-    },
+    }
   });
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
-      "image/*": [],
+      "image/*": []
     },
     maxSize: 20 * 1024 * 1024, // 20 MB
     multiple: true,
@@ -83,7 +83,7 @@ const UpdateModal = ({ show, onClose, id }: UpdateModalProps) => {
         return Object.assign(file, { preview });
       });
       setFiles(files);
-    },
+    }
   });
 
   useEffect(() => {

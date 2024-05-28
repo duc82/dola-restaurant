@@ -1,7 +1,7 @@
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Link } from "react-router-dom";
 import formatVnd from "@/utils/formatVnd";
-import { useModalCart } from "@/context/AddedCartContext";
+import { useModalCart } from "@/contexts/AddedCartContext";
 import cn from "@/utils/cn";
 import { useAppSelector } from "@/store/hooks";
 import Overlay from "../Overlay";

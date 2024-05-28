@@ -1,4 +1,4 @@
-import CategoryContext from "@/context/CategoryContex";
+import CategoryContext from "@/contexts/CategoryContex";
 import categoryService from "@/services/categoryService";
 import { FullCategory } from "@/types/category";
 import { useEffect, useState } from "react";

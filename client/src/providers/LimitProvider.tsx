@@ -1,4 +1,4 @@
-import LimitContext from "@/context/LimitContext";
+import LimitContext from "@/contexts/LimitContext";
 import limits from "@/data/limits.json";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
