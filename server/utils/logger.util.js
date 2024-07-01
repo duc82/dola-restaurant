@@ -1,6 +1,8 @@
 const winston = require("winston");
 const { ansi_color_yellow } = require("./ansi_color.util");
 
+const NODE_ENV = process.env.NODE_ENV || "development";
+
 const logger = winston.createLogger({
   level: "info",
   format: winston.format.combine(
@@ -17,11 +19,13 @@ const logger = winston.createLogger({
         }),
         winston.format.printf(
           (info) =>
-            `[${info.level.toUpperCase()}] ${
-              info.timestamp
-            }: ${ansi_color_yellow}${info.message}`
+            `[${info.level.toUpperCase()}] ${info.timestamp}: ${
+              NODE_ENV === "development" ? ansi_color_yellow : ""
+            }${info.message}`
         ),
-        winston.format.colorize({ all: true })
+        winston.format.colorize({
+          all: NODE_ENV === "development",
+        })
       ),
     }),
     new winston.transports.File({
