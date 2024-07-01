@@ -13,6 +13,8 @@ import categoryService from "@/services/categoryService";
 import { setCategories } from "@/store/reducers/categorySlice";
 import Menu from "../Navbar/Desktop/Menu";
 import NavbarMobile from "../Navbar/Mobile/NavbarMobile";
+import { FullCategory } from "@/types/category";
+import logo from "@/assets/images/logo.webp";
 
 const Header = () => {
   const [isActiveNavbar, setIsActiveNavbar] = useState(false);
@@ -21,7 +23,7 @@ const Header = () => {
   const isDesktop = windowWidth >= 992;
   const { pathname } = useLocation();
   const isHomePage = pathname === "/";
-  const { count } = useAppSelector((state) => state.cart);
+  const { count: cartCount } = useAppSelector((state) => state.cart);
   const dispatch = useAppDispatch();
 
   const openNavbar = () => {
@@ -35,12 +37,9 @@ const Header = () => {
   };
 
   useEffect(() => {
-    categoryService
-      .getAll()
-      .then((data) => {
-        dispatch(setCategories(data));
-      })
-      .catch((error) => console.log(error));
+    categoryService.getAll().then((data) => {
+      dispatch(setCategories(data as FullCategory[]));
+    });
   }, [dispatch]);
 
   return (
@@ -56,7 +55,7 @@ const Header = () => {
           <div className="mx-auto py-2.5 lg:m-0 lg:p-0">
             <Link to="/" title="Logo">
               <img
-                src="/logo.webp"
+                src={logo}
                 width={172}
                 height={50}
                 alt="Dola Restaurant"
@@ -89,7 +88,7 @@ const Header = () => {
                 <Link to="/gio-hang" className="relative block">
                   <Cart />
                   <span className="absolute w-5 h-5 text-center -top-2.5 -right-2.5 bg-yellow-primary text-xs leading-5 rounded-full">
-                    {count}
+                    {cartCount}
                   </span>
                 </Link>
                 <HeaderCart />
@@ -107,13 +106,13 @@ const Header = () => {
                 <Geo className="w-5 h-5" />
               </Link>
 
-              {/* <Link
+              <Link
                 to="/dat-ban"
                 title="Đặt bàn"
                 className="py-2 px-5 text-lg lg:text-sm leading-relaxed lg:leading-relaxed rounded-lg bg-yellow-primary hover:bg-yellow-secondary flex justify-center items-center lg:py-1 lg:px-2.5 2xl:px-5 2xl:text-lg"
               >
                 Đặt bàn
-              </Link> */}
+              </Link>
             </div>
           </div>
           {/* Search Mobile */}

@@ -4,7 +4,7 @@ import type { CreateModalProps } from "@/types/admin";
 import { useFormik } from "formik";
 import Input from "../Input";
 import Select from "../Select";
-import { useEffect, useState } from "react";
+import { Suspense, lazy, useState } from "react";
 import { FilePreview } from "@/types";
 import { useDropzone } from "react-dropzone";
 import { Upload } from "@/icons";
@@ -15,9 +15,10 @@ import handlingAxiosError from "@/utils/handlingAxiosError";
 import { productSchema, sizes, tastes } from "@/schemas/productSchema";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "@/libs/firebase";
-import TextEditor from "@/components/TextEditor";
 import { FullCategory } from "@/types/category";
 import categoryService from "@/services/categoryService";
+
+const TextEditor = lazy(() => import("@/components/TextEditor"));
 
 const CreateModal = ({ show, onClose }: CreateModalProps) => {
   const [files, setFiles] = useState<FilePreview[]>([]);
@@ -34,7 +35,7 @@ const CreateModal = ({ show, onClose }: CreateModalProps) => {
       price: "0",
       discountPercent: 0,
       stock: 0,
-      images: [] as string[]
+      images: [] as string[],
     },
     validationSchema: productSchema,
     validateOnChange: true,
@@ -67,12 +68,12 @@ const CreateModal = ({ show, onClose }: CreateModalProps) => {
       } catch (error) {
         toast.error(handlingAxiosError(error).message);
       }
-    }
+    },
   });
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
-      "image/*": []
+      "image/*": [],
     },
     maxSize: 20 * 1024 * 1024, // 20MB
     multiple: true,
@@ -82,17 +83,8 @@ const CreateModal = ({ show, onClose }: CreateModalProps) => {
         return Object.assign(file, { preview });
       });
       setFiles(files);
-    }
+    },
   });
-
-  useEffect(() => {
-    if (show) {
-      categoryService
-        .getAllChilds()
-        .then((data) => setChildCategories(data))
-        .catch((error) => console.error(error));
-    }
-  }, [show]);
 
   return (
     <Modal
@@ -185,16 +177,18 @@ const CreateModal = ({ show, onClose }: CreateModalProps) => {
               </option>
             ))}
           </Select>
-          <div className="col-span-2">
-            <label htmlFor="description" className="mb-2 inline-block">
-              Mô tả
-            </label>
-            <TextEditor
-              value={formik.values.description}
-              onChange={(value) => formik.setFieldValue("description", value)}
-              className="bg-emerald-primary"
-            />
-          </div>
+          <Suspense fallback={null}>
+            <div className="col-span-2">
+              <label htmlFor="description" className="mb-2 inline-block">
+                Mô tả
+              </label>
+              <TextEditor
+                value={formik.values.description}
+                onChange={(value) => formik.setFieldValue("description", value)}
+                className="bg-emerald-primary"
+              />
+            </div>
+          </Suspense>
           <div className="col-span-2 ">
             <label htmlFor="images" className="mb-2 inline-block">
               Hình ảnh

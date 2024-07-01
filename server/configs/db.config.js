@@ -1,3 +1,4 @@
+require("dotenv").config();
 const { connect } = require("mongoose");
 const logger = require("../utils/logger.util");
 
@@ -14,6 +15,7 @@ const connectDB = async () => {
     logger.info(`MongoDB is connected: ${db.connection.host}`);
   } catch (error) {
     logger.error(`MongoDB connection failed: ${error}`);
+    process.exit(1);
   }
 };
 

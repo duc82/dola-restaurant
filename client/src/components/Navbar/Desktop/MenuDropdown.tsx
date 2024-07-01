@@ -22,10 +22,6 @@ const MenuDropdown = ({ categories, active, onClose }: MenuDropdownProps) => {
     ? "translate-y-0 visible opacity-100"
     : "translate-y-5 invisible opacity-0";
 
-  const parentCategories = categories.filter(
-    (category) => !category.parentCategory
-  );
-
   return (
     <div
       className={cn(
@@ -35,10 +31,9 @@ const MenuDropdown = ({ categories, active, onClose }: MenuDropdownProps) => {
     >
       <div className="flex-[0_0_75%] w-full px-4 ">
         <ul className="grid grid-cols-3 xl:grid-cols-4 w-full">
-          {parentCategories.map((category) => {
-            const childCategories = categories.filter(
-              (cate) => cate.parentCategory?._id === category._id
-            );
+          {categories.map((category) => {
+            const childrens = category.childrens;
+
             return (
               <li
                 key={category._id}
@@ -54,7 +49,7 @@ const MenuDropdown = ({ categories, active, onClose }: MenuDropdownProps) => {
                   {category.name}
                 </Link>
                 <ul className="mb-4">
-                  {childCategories.map((childCate) => (
+                  {childrens.map((childCate) => (
                     <li key={childCate._id}>
                       <Link
                         to={`/danh-muc-san-pham/${category.slug}`}

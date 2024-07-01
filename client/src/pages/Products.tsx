@@ -13,36 +13,36 @@ import { getAllProduct } from "@/store/reducers/productSlice";
 import { Helmet } from "react-helmet-async";
 import SelectedFilter from "../components/ProductCategory/SelectedFilter";
 import cn from "../utils/cn";
-import clsx from "clsx";
-import Products from "../components/Product/ProductList";
+import ProductList from "@/components/Product/ProductList";
 
 // ???
-const queryArray = (
-  urlSearchParams: URLSearchParams,
-  name: string
-): string[] => {
-  const query = urlSearchParams.get(name);
+const queryArray = (searchParams: URLSearchParams, name: string): string[] => {
+  const query = searchParams.get(name);
   if (query) {
     return query.split("-");
   }
   return [];
 };
 
-const ProductList = () => {
+const Products = () => {
   const dispatch = useAppDispatch();
   const topProductsRef = useRef<HTMLDivElement>(null);
   const { category } = useParams();
-  const [urlSearchParams, setUrlSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const [selectedFilter, setSelectedFilter] = useState<
     Record<string, string[]>
   >({
-    cost: queryArray(urlSearchParams, "cost"),
-    taste: queryArray(urlSearchParams, "taste"),
-    size: queryArray(urlSearchParams, "size"),
+    cost: queryArray(searchParams, "cost"),
+    taste: queryArray(searchParams, "taste"),
+    size: queryArray(searchParams, "size"),
   });
   const [isOpenFilterMobile, setIsOpenFilterMobile] = useState(false);
-  const { products, total, limit } = useAppSelector((state) => state.product);
-  const page = parseInt(urlSearchParams.get("page") ?? "1");
+
+  const { products, total, limit, isLoading } = useAppSelector(
+    (state) => state.product
+  );
+  const page = parseInt(searchParams.get("page") ?? "1");
 
   const updateSelectedFilter = useCallback(
     (value: string, name: string) => {
@@ -58,15 +58,15 @@ const ProductList = () => {
       setSelectedFilter({ ...selectedFilter, [name]: arr });
 
       if (arr.length > 0) {
-        urlSearchParams.set(name, arr.join("-"));
+        searchParams.set(name, arr.join("-"));
       } else {
-        urlSearchParams.delete(name);
+        searchParams.delete(name);
       }
 
-      setUrlSearchParams(urlSearchParams);
+      setSearchParams(searchParams);
       topProductsRef.current?.scrollIntoView();
     },
-    [selectedFilter, urlSearchParams, setUrlSearchParams]
+    [selectedFilter, searchParams, setSearchParams]
   );
 
   const clearSelectedFilter = () => {
@@ -75,14 +75,14 @@ const ProductList = () => {
       taste: [],
       size: [],
     });
-    setUrlSearchParams();
+    setSearchParams();
   };
 
   const toggelFilterMobile = () => setIsOpenFilterMobile(!isOpenFilterMobile);
 
   const handlePageChange = (page: number) => {
-    urlSearchParams.set("page", page.toString());
-    setUrlSearchParams(urlSearchParams);
+    searchParams.set("page", page.toString());
+    setSearchParams(searchParams);
     topProductsRef.current?.scrollIntoView();
   };
 
@@ -103,7 +103,7 @@ const ProductList = () => {
 
   const title = isCategoryAllProduct
     ? "Tất cả sản phẩm"
-    : products[0]?.childCategory.name;
+    : products[0]?.category.name;
 
   return (
     <>
@@ -124,9 +124,9 @@ const ProductList = () => {
           )}
         >
           <Category title="Danh mục sản phẩm" />
-          {(urlSearchParams.has("cost") ||
-            urlSearchParams.has("taste") ||
-            urlSearchParams.has("size")) && (
+          {(searchParams.has("cost") ||
+            searchParams.has("taste") ||
+            searchParams.has("size")) && (
             <SelectedFilter
               selected={selectedFilter}
               update={updateSelectedFilter}
@@ -160,7 +160,7 @@ const ProductList = () => {
             {isCategoryAllProduct ? "Tất cả món ăn" : title}
           </h1>
           <Sort />
-          <Products products={products} />
+          <ProductList products={products} isLoading={isLoading} />
           <Pagination
             pageCount={pageCount}
             onPageChange={handlePageChange}
@@ -171,7 +171,7 @@ const ProductList = () => {
         <button
           type="button"
           id="openFilterMobile"
-          className={clsx(
+          className={cn(
             "fixed top-[35%] right-0 z-[999] cursor-pointer bg-center bg-[length:16px] bg-no-repeat text-white bg-yellow-primary rounded-l-lg w-11 h-10 shadow-card2 transition-[visibility,right] ease-ease duration-300 lg:hidden",
             isOpenFilterMobile ? "bg-filterClose right-64" : "right-0 bg-filter"
           )}
@@ -187,4 +187,4 @@ const ProductList = () => {
   );
 };
 
-export default ProductList;
+export default Products;

@@ -1,9 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ChartWrapper from "./ChartWrapper";
 import ApexCharts, { Props } from "react-apexcharts";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import productService from "@/services/productService";
-import { getAllProduct } from "@/store/reducers/productSlice";
 
 function getChartOptions(seriesData: ApexAxisChartSeries[0]["data"]) {
   const chart: Props = {
@@ -25,6 +22,7 @@ function getChartOptions(seriesData: ApexAxisChartSeries[0]["data"]) {
         },
       },
       tooltip: {
+        theme: "dark",
         shared: false,
         intersect: false,
         style: {
@@ -84,7 +82,13 @@ function getChartOptions(seriesData: ApexAxisChartSeries[0]["data"]) {
   return chart;
 }
 
-const ChartProducts = () => {
+const ChartProducts = ({
+  className,
+  total,
+}: {
+  className?: string;
+  total: number;
+}) => {
   const [chartProducts, setChartProducts] = useState(
     getChartOptions([
       { x: "Ngày 1 Tháng 3", y: 170 },
@@ -97,20 +101,13 @@ const ChartProducts = () => {
     ])
   );
 
-  const dispatch = useAppDispatch();
-
-  const { total } = useAppSelector((state) => state.product);
-
-  useEffect(() => {
-    dispatch(getAllProduct());
-  }, [dispatch]);
-
   return (
     <ChartWrapper
       quantity={total}
       title="Số lượng sản phẩm"
       percent={{ value: 14.6, isGrowing: true }}
       report="sản phẩm"
+      className={className}
     >
       <ApexCharts
         type={chartProducts.type}

@@ -30,7 +30,9 @@ class AuthController {
   }
 
   async signUp(req, res) {
-    res.status(201).json(await this.authService.signUp(req.body));
+    res
+      .status(201)
+      .json(await this.authService.signUp(req.body, req.useragent));
   }
 
   async login(req, res) {

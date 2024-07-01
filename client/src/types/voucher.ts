@@ -3,8 +3,10 @@ import { FullType } from ".";
 interface Voucher {
   code: string;
   discount: number;
-  minimumCost: number;
-  isActive: boolean;
+  minAmount: number;
+  expiredAt: string;
+  quantity: number;
+  type: "shipping" | "discount";
 }
 
 interface FullVoucher extends FullType, Voucher {}

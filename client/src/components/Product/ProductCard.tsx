@@ -3,13 +3,13 @@ import formatVnd from "@/utils/formatVnd";
 import { CartFill, Eyes, Heart } from "@/icons";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { increaseQuantity } from "@/store/reducers/cartSlice";
-import { useModalCart } from "@/contexts/AddedCartContext";
+import { useModalCart } from "@/providers/CartProvider";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { FullProduct } from "@/types/product";
 import useProductQuickview from "@/hooks/useProductQuickview";
 import {
   addFavoriteProducts,
-  removeFavoriteProducts
+  removeFavoriteProducts,
 } from "@/store/reducers/productSlice";
 
 const ProductCard = (product: FullProduct) => {
@@ -25,13 +25,13 @@ const ProductCard = (product: FullProduct) => {
       increaseQuantity({
         ...product,
         price: product.discountedPrice,
-        quantity: 1
+        quantity: 1,
       })
     );
     updateAddedCart({
       ...product,
       price: product.discountedPrice,
-      quantity: 1
+      quantity: 1,
     });
   };
 
@@ -50,12 +50,8 @@ const ProductCard = (product: FullProduct) => {
           to={`/san-pham/${product.slug}`}
           className="absolute inset-1/4 opacity-0 bg-[rgba(136,136,136,0.5)] hidden transition-all ease-linear group-hover:opacity-100 group-hover:inset-0 lg:block"
         ></Link>
-        <Link to={`/san-pham/${product.slug}`} className="flex">
-          <LazyLoadImage
-            src={product.images[0].url}
-            alt={product.title}
-            effect="opacity"
-          />
+        <Link to={`/san-pham/${product.slug}`} className="block">
+          <img src={product.images[0].url} alt={product.title} />
         </Link>
         <div className="absolute inset-0 h-16 hidden lg:flex justify-center w-full m-auto z-20">
           <button

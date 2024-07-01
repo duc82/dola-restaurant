@@ -5,6 +5,7 @@ import type {
   OrderResponse,
   OrdersResponse,
 } from "../types/order";
+import { QueryOptions } from "@/types";
 
 const orderService = {
   create(data: Order): Promise<OrderResponse> {
@@ -15,9 +16,30 @@ const orderService = {
     });
   },
 
-  getAll(): Promise<OrdersResponse> {
-    return apiRequest<OrdersResponse>("/orders", {
+  getAll(queryOptions?: QueryOptions): Promise<OrdersResponse> {
+    let query = "";
+
+    if (queryOptions?.page) {
+      query += query
+        ? `&page=${queryOptions.page}`
+        : `?page=${queryOptions.page}`;
+    }
+
+    if (queryOptions?.limit) {
+      query += query
+        ? `&limit=${queryOptions.limit}`
+        : `?limit=${queryOptions.limit}`;
+    }
+
+    if (queryOptions?.search) {
+      query += query
+        ? `&search=${queryOptions.search}`
+        : `?search=${queryOptions.search}`;
+    }
+
+    return apiRequest<OrdersResponse>(`/orders${query}`, {
       method: "GET",
+      accessToken: true,
       refreshToken: true,
     });
   },

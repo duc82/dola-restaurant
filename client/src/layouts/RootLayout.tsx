@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, ScrollRestoration } from "react-router-dom";
 import Header from "../components/Header/Header";
 import Footer from "../components/Footer";
 import { createPortal } from "react-dom";
@@ -26,6 +26,7 @@ const RootLayout = () => {
         </>,
         document.body
       )}
+      <ScrollRestoration />
     </>
   );
 };

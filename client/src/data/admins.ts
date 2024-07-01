@@ -1,4 +1,11 @@
-import { Dashboard, Products, Settings, Users, Voucher } from "../icons";
+import {
+  Dashboard,
+  Menu,
+  Settings,
+  ShoppingBag,
+  Users,
+  Voucher,
+} from "../icons";
 
 const admins = [
   {
@@ -14,12 +21,17 @@ const admins = [
   {
     label: "Sản phẩm",
     link: "/admin/san-pham",
-    icon: Products,
+    icon: ShoppingBag,
   },
   {
     label: "Danh mục sản phẩm",
     link: "/admin/danh-muc-san-pham",
-    icon: Products,
+    icon: Menu,
+  },
+  {
+    label: "Đơn hàng",
+    link: "/admin/don-hang",
+    icon: ShoppingBag,
   },
   {
     label: "Mã giảm giá",

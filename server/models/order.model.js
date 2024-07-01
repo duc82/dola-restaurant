@@ -34,26 +34,11 @@ const orderSchema = new Schema(
       type: Number,
       required: true,
     },
-    isPaid: {
-      type: Boolean,
-      required: true,
-      default: false,
-    },
     paidAt: {
       type: Date,
     },
-    isDelivered: {
-      type: Boolean,
-      required: true,
-      default: false,
-    },
     deliveredAt: {
       type: Date,
-    },
-    isCancelled: {
-      type: Boolean,
-      required: true,
-      default: false,
     },
     cancelledAt: {
       type: Date,
@@ -66,6 +51,12 @@ const orderSchema = new Schema(
     note: {
       type: String,
     },
+    vouchers: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Voucher",
+      },
+    ],
   },
   {
     timestamps: true,

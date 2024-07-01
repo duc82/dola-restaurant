@@ -1,7 +1,7 @@
-import { InputHTMLAttributes } from "react";
+import { InputHTMLAttributes, ReactNode } from "react";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
-  label: string;
+  label: ReactNode;
   error?: string;
   wrapperClassName?: string;
   type?: InputHTMLAttributes<HTMLInputElement>["type"] | "currency";

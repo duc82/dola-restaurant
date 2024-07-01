@@ -71,10 +71,10 @@ const Orders = () => {
                 {order.paymentMethod}
               </td>
               <td className="text-center py-5 px-1 border border-gray-200">
-                {order.isPaid ? "Đã thanh toán" : "Chưa thu tiền"}
+                {order.paidAt ? "Đã thanh toán" : "Chưa thu tiền"}
               </td>
               <td className="text-center py-5 px-1 border border-gray-200">
-                {order.isDelivered ? "Đã chuyển" : "Chưa chuyến"}
+                {order.deliveredAt ? "Đã chuyển" : "Chưa chuyến"}
               </td>
             </tr>
           ))}

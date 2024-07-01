@@ -20,10 +20,17 @@ const categorySchema = new Schema(
       required: false,
     },
     // subdocument nested
-    parentCategory: {
+    parent: {
       type: Schema.Types.ObjectId,
       ref: "Category",
     },
+
+    childrens: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Category",
+      },
+    ],
   },
   {
     timestamps: true,

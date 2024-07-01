@@ -114,7 +114,7 @@ function getChartOptions({
   return chart;
 }
 
-const ChartSales = () => {
+const ChartSales = ({ className }: { className?: string }) => {
   const [chartSales, setChartSales] = useState(
     getChartOptions({
       categories: [
@@ -144,9 +144,10 @@ const ChartSales = () => {
   return (
     <ChartWrapper
       quantity={formatVnd(1000000)}
-      title="Doanh số bán hàng tuần này"
+      title="Doanh số bán hàng tháng này"
       percent={{ value: 12.5, isGrowing: true }}
       report="bán hàng"
+      className={className}
     >
       <ApexCharts
         options={chartSales.options}

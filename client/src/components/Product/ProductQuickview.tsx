@@ -5,11 +5,11 @@ import formatVnd from "@/utils/formatVnd";
 import useQuantity from "@/hooks/useQuantity";
 import { useAppDispatch } from "@/store/hooks";
 import { increaseQuantity } from "@/store/reducers/cartSlice";
-import { useModalCart } from "@/contexts/AddedCartContext";
 import cn from "@/utils/cn";
 import { FullProduct } from "@/types/product";
 import useProductQuickview from "@/hooks/useProductQuickview";
 import Overlay from "../Overlay";
+import { useModalCart } from "@/providers/CartProvider";
 
 const ProductQuickview = () => {
   const dispatch = useAppDispatch();
@@ -20,7 +20,7 @@ const ProductQuickview = () => {
     handleIncreaseQuantity,
     handleDecreaseQuantity,
     handleChangeQuantity,
-    resetQuantity
+    resetQuantity,
   } = useQuantity({ max: product?.stock });
 
   const handleAddCart = (product: FullProduct | null) => {

@@ -5,69 +5,65 @@ const productSchema = new Schema(
   {
     title: {
       type: String,
-      index: true
+      index: true,
     },
     slug: {
       type: String,
-      index: true
+      index: true,
     },
-    parentCategory: {
+    category: {
       type: Schema.Types.ObjectId,
-      ref: "Category"
-    },
-    childCategory: {
-      type: Schema.Types.ObjectId,
-      ref: "Category"
+      ref: "Category",
     },
     images: [
       {
         type: Schema.Types.ObjectId,
-        ref: "Image"
-      }
+        ref: "Image",
+      },
     ],
     price: Number,
     discountPercent: {
       type: Number,
-      default: 0
+      default: 0,
     },
 
     discountedPrice: {
       type: Number,
       default: function () {
         return this.price - (this.price * this.discountPercent) / 100;
-      }
+      },
     },
 
     stock: Number,
     taste: {
       type: String,
-      enum: ["mặn", "ngọt", "chua", "cay"]
+      enum: ["mặn", "ngọt", "chua", "cay"],
     },
     size: {
       type: String,
-      enum: ["nhỏ", "vừa", "lớn"]
+      enum: ["nhỏ", "vừa", "lớn"],
     },
     description: String,
     reviews: [
       {
         type: Schema.Types.ObjectId,
-        ref: "Review"
-      }
+        ref: "Review",
+      },
     ],
     avgRating: {
       type: Number,
-      default: 0
-    }
+      default: 0,
+    },
   },
   {
     timestamps: true,
-    versionKey: false
+    versionKey: false,
   }
 );
 
 // before save
 productSchema.pre("save", function (next) {
-  if (this.title) {
+  if (this.title && !this.slug) {
     this.slug = slug(this.title);
   }
 

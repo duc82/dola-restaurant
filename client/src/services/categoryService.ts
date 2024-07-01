@@ -7,35 +7,37 @@ import {
 import apiRequest from "./api";
 import { QueryOptions } from "@/types";
 
+interface GetAllOptions extends QueryOptions {
+  nested?: boolean;
+}
+
 const categoryService = {
-  getAll: () => {
-    return apiRequest<FullCategory[]>("/categories");
-  },
-
-  getAllChilds: () => {
-    return apiRequest<FullCategory[]>("/categories/childs");
-  },
-
-  getAllParents: () => {
-    return apiRequest<FullCategory[]>("/categories/parents");
-  },
-
-  getAllPaginate: (filter?: QueryOptions) => {
+  getAll: (filter?: GetAllOptions) => {
     let query = "";
-
-    if (filter?.page) {
-      query += query ? `&page=${filter.page}` : `?page=${filter.page}`;
-    }
 
     if (filter?.limit) {
       query += query ? `&limit=${filter.limit}` : `?limit=${filter.limit}`;
+    }
+
+    if (filter?.page) {
+      query += query ? `&page=${filter.page}` : `?page=${filter.page}`;
     }
 
     if (filter?.search) {
       query += query ? `&search=${filter.search}` : `?search=${filter.search}`;
     }
 
-    return apiRequest<CategoriesResponse>("/categories" + query);
+    if (filter?.nested !== undefined) {
+      query += query ? `&nested=${filter.nested}` : `?nested=${filter.nested}`;
+    }
+
+    return apiRequest<FullCategory[] | CategoriesResponse>(
+      "/categories" + query
+    );
+  },
+
+  getChildrens: () => {
+    return apiRequest<FullCategory[]>("/categories/childrens");
   },
 
   create: (data: CategoryDto) => {

@@ -1,9 +1,35 @@
 import Container from "../Container";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import statistics from "@/data/statistics.json";
 import CounterItem from "./CounterItem";
+import thong_ke1 from "@/assets/images/thong_ke1.webp";
+import thong_ke2 from "@/assets/images/thong_ke2.webp";
+import thong_ke3 from "@/assets/images/thong_ke3.png";
+import thong_ke4 from "@/assets/images/thong_ke4.webp";
 
 const Statistic = () => {
+  const statistics = [
+    {
+      title: "Cửa hàng",
+      quantity: 8,
+      image: thong_ke1,
+    },
+    {
+      title: "Nhân viên",
+      quantity: 200,
+      image: thong_ke2,
+    },
+    {
+      title: "Khách hàng",
+      quantity: 5000,
+      image: thong_ke3,
+    },
+    {
+      title: "Món ăn",
+      quantity: 50,
+      image: thong_ke4,
+    },
+  ];
+
   return (
     <section className="py-5 pb-[60px]">
       <Container className="px-0">

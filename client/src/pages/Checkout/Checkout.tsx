@@ -5,24 +5,37 @@ import { CreditCart, IdCard, Truck } from "@/icons";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import formatVnd from "@/utils/formatVnd";
 import { useFormik } from "formik";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import paymentMethods from "@/data/paymentMethods.json";
 import Button from "@/components/Form/Button";
 import Sidebar from "@/components/Checkout/Sidebar";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import orderService from "@/services/orderService";
 import toast from "react-hot-toast";
 import handlingAxiosError from "@/utils/handlingAxiosError";
 import { resetCart } from "@/store/reducers/cartSlice";
 import formatAddress from "@/utils/formatAddress";
+import voucherService from "@/services/voucherService";
+import { FullVoucher } from "@/types/voucher";
 
 const shippingFee = 40000;
 
+export interface VoucherDiscount {
+  shipping: FullVoucher | null;
+  discount: FullVoucher | null;
+}
+
 const Checkout = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const { subTotal, carts, count } = useAppSelector((state) => state.cart);
+  const { subTotal, carts } = useAppSelector((state) => state.cart);
   const { user } = useAppSelector((state) => state.user);
   const { addresses } = useAppSelector((state) => state.address);
+  const [isLoadingVoucher, setIsLoadingVoucher] = useState(false);
+  const [voucher, setVoucher] = useState<VoucherDiscount>({
+    shipping: null,
+    discount: null,
+  });
+  const [errorVoucher, setErrorVoucher] = useState<string>("");
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
@@ -34,21 +47,32 @@ const Checkout = () => {
       phone: defaultAddress?.phone,
       shippingAddress: defaultAddress?._id ?? "",
       user: user?._id ?? "",
-      total: subTotal + shippingFee,
-      shippingFee,
+      total:
+        subTotal +
+        shippingFee -
+        (voucher.shipping?.discount ?? 0) -
+        (voucher.discount?.discount ?? 0),
+      shippingFee: voucher.shipping ? 0 : shippingFee,
       products: carts.map((cart) => ({
         product: cart._id,
-        quantity: cart.quantity
+        quantity: cart.quantity,
       })),
       note: "",
       paymentMethod:
         paymentMethods.find((method) => method.default)?.name ?? "",
-      isPaid: false
+      vouchers: [] as string[],
     },
     enableReinitialize: true,
     onSubmit: async (values) => {
       delete values.fullName;
       delete values.phone;
+
+      const vouchers: string[] = Object.values(voucher)
+        .filter((v) => v !== null)
+        .map((v) => v._id);
+
+      values.vouchers = vouchers;
+
       try {
         setIsLoading(false);
         const { order } = await orderService.create(values);
@@ -59,7 +83,7 @@ const Checkout = () => {
             orderDescription: `Thanh toán đơn hàng ${
               order._id
             } tại Dola Restaurant. Số tiền: ${formatVnd(order.total)}`,
-            orderId: order._id
+            orderId: order._id,
           });
 
           window.location.href = url;
@@ -72,8 +96,35 @@ const Checkout = () => {
       } finally {
         setIsLoading(true);
       }
-    }
+    },
   });
+
+  const handleChangeAddress = (e: ChangeEvent<HTMLSelectElement>) => {
+    const address = addresses.find((address) => address._id === e.target.value);
+    if (address) {
+      formik.setFieldValue("fullName", address.fullName);
+      formik.setFieldValue("phone", address.phone);
+    }
+    formik.handleChange(e);
+  };
+
+  const handleVoucher = async (code: string) => {
+    setErrorVoucher("");
+    setIsLoadingVoucher(true);
+    try {
+      const voucher = await voucherService.getByCode(code, subTotal);
+      setVoucher((prev) => {
+        if (voucher.type === "shipping") {
+          return { ...prev, shipping: voucher };
+        } else {
+          return { ...prev, discount: voucher };
+        }
+      });
+    } catch (error) {
+      setErrorVoucher("Voucher không hợp lệ");
+    }
+    setIsLoadingVoucher(false);
+  };
 
   useEffect(() => {
     const urlSearchParams = new URLSearchParams(window.location.search);
@@ -99,14 +150,19 @@ const Checkout = () => {
     }
   }, [dispatch, navigate]);
 
-  if (count < 1) return <Navigate to="/gio-hang" />;
-
   return (
     <form
       onSubmit={formik.handleSubmit}
       className="flex flex-col lg:flex-row-reverse max-w-6xl lg:px-4 mx-auto text-sm"
     >
-      <Sidebar />
+      <Sidebar
+        shippingFee={shippingFee}
+        total={formik.values.total}
+        handleVoucher={handleVoucher}
+        voucher={voucher}
+        errorVoucher={errorVoucher}
+        isLoadingVoucher={isLoadingVoucher}
+      />
       <main className="lg:p-6 lg:w-2/3 px-4">
         <header className="hidden lg:block">
           <h1 className="text-[28px] leading-none text-blue-500 font-normal">
@@ -160,16 +216,7 @@ const Checkout = () => {
                 id="shippingAddress"
                 wrapperClassName="mb-3"
                 value={formik.values.shippingAddress}
-                onChange={(e) => {
-                  const address = addresses.find(
-                    (address) => address._id === e.target.value
-                  );
-                  if (address) {
-                    formik.setFieldValue("fullName", address.fullName);
-                    formik.setFieldValue("phone", address.phone);
-                  }
-                  formik.handleChange(e);
-                }}
+                onChange={handleChangeAddress}
               >
                 {addresses.map((address) => (
                   <Select.Option key={address._id} value={address._id}>
@@ -202,7 +249,7 @@ const Checkout = () => {
                 label={
                   <div className="flex items-center">
                     <span className="flex-1">Giao hàng tận nơi</span>
-                    <span className="ml-2">{formatVnd(40000)}</span>
+                    <span className="ml-2">{formatVnd(shippingFee)}</span>
                   </div>
                 }
               />

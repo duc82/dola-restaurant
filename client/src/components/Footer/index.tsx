@@ -5,6 +5,13 @@ import showrooms from "@/data/showrooms.json";
 import ListMenu from "./ListMenu";
 import guides from "@/data/guides.json";
 import policies from "@/data/policies.json";
+import logo from "@/assets/images/logo.webp";
+import zalo from "@/assets/images/zalo.svg";
+import facebook from "@/assets/images/facebook.svg";
+import youtube from "@/assets/images/youtube.svg";
+import payment_1 from "@/assets/images/payment_1.webp";
+import payment_2 from "@/assets/images/payment_2.webp";
+import payment_3 from "@/assets/images/payment_3.webp";
 
 const showroom = showrooms.find((showroom) => showroom.main);
 
@@ -23,7 +30,7 @@ const Footer = () => {
                 <LazyLoadImage
                   width={172}
                   effect="opacity"
-                  src={"/logo.webp"}
+                  src={logo}
                   alt="Dola Restaurant"
                   className="rounded-full"
                 />
@@ -62,11 +69,11 @@ const Footer = () => {
                 </li>
               </ul>
               <Link
-                to="/he-thong-cua-hang"
-                title="Hệ thống cửa hàng"
+                to="/he-thong-nha-hang"
+                title="Hệ thống nhà hàng"
                 className="text-white py-2.5 px-4 inline-block bg-yellow-primary rounded-lg shadow-card2 hover:bg-yellow-secondary"
               >
-                Hệ thống cửa hàng
+                Hệ thống nhà hàng
               </Link>
             </div>
             <div className="px-4">
@@ -91,7 +98,7 @@ const Footer = () => {
                     <LazyLoadImage
                       width={32}
                       height={32}
-                      src={"/zalo.svg"}
+                      src={zalo}
                       effect="opacity"
                     />
                   </Link>
@@ -101,7 +108,7 @@ const Footer = () => {
                     <LazyLoadImage
                       width={32}
                       height={32}
-                      src={"/facebook.svg"}
+                      src={facebook}
                       effect="opacity"
                     />
                   </Link>
@@ -111,7 +118,7 @@ const Footer = () => {
                     <LazyLoadImage
                       width={32}
                       height={32}
-                      src={"/youtube.svg"}
+                      src={youtube}
                       effect="opacity"
                     />
                   </Link>
@@ -122,25 +129,13 @@ const Footer = () => {
               </h2>
               <ul className="flex items-center space-x-3 mb-4">
                 <li>
-                  <LazyLoadImage
-                    src={"/payment_1.webp"}
-                    width={57}
-                    height={35}
-                  />
+                  <LazyLoadImage src={payment_1} width={57} height={35} />
                 </li>
                 <li>
-                  <LazyLoadImage
-                    src={"/payment_2.webp"}
-                    width={57}
-                    height={35}
-                  />
+                  <LazyLoadImage src={payment_2} width={57} height={35} />
                 </li>
                 <li>
-                  <LazyLoadImage
-                    src={"/payment_3.webp"}
-                    width={57}
-                    height={35}
-                  />
+                  <LazyLoadImage src={payment_3} width={57} height={35} />
                 </li>
               </ul>
             </div>
@@ -152,7 +147,7 @@ const Footer = () => {
           <span className="block sm:inline-block">
             Bản quyền thuộc về <b>Dola Restaurant</b>.
           </span>{" "}
-          <span>Thiết kế bởi Đức Đặng</span>
+          <span>Cung cấp bởi Sopa</span>
         </Container>
       </section>
     </footer>

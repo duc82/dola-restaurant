@@ -1,11 +1,10 @@
-import { useEffect } from "react";
+import { useCallback, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Dustbin, Edit, Plus2, Search } from "@/icons";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { useAppDispatch } from "@/store/hooks";
 import {
   deleteManyProduct,
   deleteProduct,
-  getAllProduct
 } from "@/store/reducers/productSlice";
 import formatVnd from "@/utils/formatVnd";
 import { LazyLoadImage } from "react-lazy-load-image-component";
@@ -22,6 +21,9 @@ import cn from "@/utils/cn";
 import Limit from "@/components/Limit";
 import Fancybox from "@/components/Fancybox";
 import { Link } from "react-router-dom";
+import useFetchPagination from "@/hooks/useFetchPagination";
+import { FullProduct } from "@/types/product";
+import productService from "@/services/productService";
 
 const title = "Danh sách sản phẩm";
 
@@ -31,27 +33,40 @@ const Product = () => {
     closeModal,
     openCreateModal,
     openUpdateModal,
-    id,
     selectedRows,
-    selectedRowsRef,
+    selectAllRowsRef,
     handleSelect,
     handleSelectAll,
-    clearSelectedRows
+    clearSelectedRows,
   } = useAdminModal();
   const [urlSearchParams, setUrlSearchParams] = useSearchParams();
-  const {
-    products,
-    total,
-    limit,
-    skip,
-    page: currentPage
-  } = useAppSelector((state) => state.product);
+  const [product, setProduct] = useState<FullProduct | null>(null);
 
   const dispatch = useAppDispatch();
   const { currentLimit, handleChangeLimit } = useLimit();
 
   const search = urlSearchParams.get("search") ?? "";
   const page = +(urlSearchParams.get("page") ?? "1");
+
+  const getProducts = useCallback(async () => {
+    const data = await productService.getAll({
+      limit: currentLimit,
+      page,
+      search,
+    });
+    return {
+      data: data.products,
+      total: data.total,
+      skip: data.skip,
+    };
+  }, [currentLimit, page, search]);
+
+  const {
+    data: products = [],
+    total,
+    skip,
+    setData: setProducts,
+  } = useFetchPagination<FullProduct[]>(getProducts, []);
 
   const onPageChange = (page: number) => {
     urlSearchParams.set("page", page.toString());
@@ -83,13 +98,9 @@ const Product = () => {
     }
   };
 
-  const pageCount = Math.ceil(total / limit);
+  const pageCount = Math.ceil(total / currentLimit);
 
-  const hasSelected = selectedRows.length > 0;
-
-  useEffect(() => {
-    dispatch(getAllProduct({ limit: currentLimit, page, search }));
-  }, [dispatch, page, search, currentLimit]);
+  const hasSelected = selectedRows.size > 0;
 
   return (
     <div className="overflow-y-auto w-full">
@@ -132,7 +143,7 @@ const Product = () => {
       <div className="p-4 lg:px-6 flex items-center">
         <button
           type="button"
-          onClick={() => handleDeleteMany(selectedRows)}
+          onClick={() => handleDeleteMany(Array.from(selectedRows.keys()))}
           disabled={!hasSelected}
           className={cn(
             "px-3 py-2 bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-900 rounded-lg inline-flex items-center font-medium justify-center text-sm transition",
@@ -143,7 +154,7 @@ const Product = () => {
           <span>Xóa</span>
         </button>
         <span className="ml-2">
-          {hasSelected ? `Đã chọn ${selectedRows.length} hàng` : ""}
+          {hasSelected ? `Đã chọn ${selectedRows.size} hàng` : ""}
         </span>
       </div>
 
@@ -156,7 +167,7 @@ const Product = () => {
                   type="checkbox"
                   name="all"
                   id="all"
-                  ref={selectedRowsRef}
+                  ref={selectAllRowsRef}
                   onChange={(e) =>
                     handleSelectAll(
                       e,
@@ -186,7 +197,7 @@ const Product = () => {
               key={product._id}
               className={cn(
                 "hover:bg-emerald-secondary transition",
-                selectedRows.includes(product._id) && "bg-emerald-secondary"
+                selectedRows.has(product._id) && "bg-emerald-secondary"
               )}
             >
               <td>
@@ -195,7 +206,7 @@ const Product = () => {
                     type="checkbox"
                     name="productId"
                     id={product._id}
-                    checked={selectedRows.includes(product._id)}
+                    checked={selectedRows.has(product._id)}
                     onChange={(e) =>
                       handleSelect(e, product._id, products.length)
                     }
@@ -228,9 +239,7 @@ const Product = () => {
                   ))}
                 </Fancybox>
               </td>
-              <td>
-                {product.childCategory.name} ({product.parentCategory.name})
-              </td>
+              <td>{product.category.name}</td>
               <td>
                 {product.discountPercent
                   ? `${product.discountPercent}%`
@@ -242,7 +251,10 @@ const Product = () => {
               <td className="whitespace-nowrap space-x-2.5">
                 <button
                   type="button"
-                  onClick={() => openUpdateModal(product._id)}
+                  onClick={() => {
+                    openUpdateModal();
+                    setProduct(product);
+                  }}
                   className="px-3 py-2 bg-amber-600 hover:bg-yellow-700 focus:ring-4 focus:ring-yellow-900 rounded-lg inline-flex items-center font-medium justify-center text-sm transition"
                 >
                   <Edit className="w-4 h-4 mr-2" />
@@ -270,7 +282,7 @@ const Product = () => {
         </span>
         <Pagination
           pageCount={pageCount}
-          currentPage={currentPage}
+          currentPage={page}
           onPageChange={onPageChange}
           variant="blue"
         />
@@ -282,7 +294,14 @@ const Product = () => {
       </div>
 
       <CreateModal show={activeModal.create} onClose={closeModal} />
-      <UpdateModal show={activeModal.update} onClose={closeModal} id={id} />
+      {product && (
+        <UpdateModal
+          show={activeModal.update}
+          onClose={closeModal}
+          product={product}
+          setProducts={setProducts}
+        />
+      )}
     </div>
   );
 };

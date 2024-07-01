@@ -4,7 +4,6 @@ import NavbarDropdown from "./NavbarDropdown";
 import { Minus, Plus } from "@/icons";
 import cn from "@/utils/cn";
 import { FullCategory } from "@/types/category";
-import { useAppSelector } from "@/store/hooks";
 
 interface NavbarDropdownItemProps {
   category: FullCategory;
@@ -21,16 +20,13 @@ const NavbarDropdownItem = ({
   linkClassName,
   onClose,
 }: NavbarDropdownItemProps) => {
-  const { categories } = useAppSelector((state) => state.category);
   const [isOpen, setIsOpen] = useState(false);
 
   const levelPadding = depthLevel > 0 ? "pl-2.5" : "";
 
   const toggleOpen = () => setIsOpen(!isOpen);
 
-  const childCategories = categories.filter(
-    (cate) => cate.parentCategory?._id === category._id
-  );
+  const childrens = category.childrens;
 
   return (
     <li className={className}>
@@ -47,7 +43,7 @@ const NavbarDropdownItem = ({
         >
           {category.name}
         </Link>
-        {childCategories.length > 0 && (
+        {childrens.length > 0 && (
           <button
             title={isOpen ? "Đóng" : "Mở"}
             onClick={toggleOpen}
@@ -61,10 +57,10 @@ const NavbarDropdownItem = ({
           </button>
         )}
       </div>
-      {childCategories.length > 0 && (
+      {childrens.length > 0 && (
         <NavbarDropdown
           active={isOpen}
-          dropdowns={childCategories}
+          dropdowns={childrens}
           depthLevel={depthLevel}
         />
       )}

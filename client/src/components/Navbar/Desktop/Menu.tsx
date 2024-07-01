@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { CaretDown } from "@/icons";
 import MenuDropdown from "./MenuDropdown";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import cn from "@/utils/cn";
 import { useAppSelector } from "@/store/hooks";
 

@@ -6,18 +6,31 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import Button from "../Form/Button";
 import cn from "@/utils/cn";
 import { Link } from "react-router-dom";
+import FloatingLabel from "../Form/FloatingLabel";
+import { VoucherDiscount } from "@/pages/Checkout/Checkout";
 
-const Sidebar = () => {
-  const { count, subTotal, carts } = useAppSelector((state) => state.cart);
+const Sidebar = ({
+  voucher,
+  shippingFee,
+  total,
+  handleVoucher,
+  errorVoucher,
+  isLoadingVoucher,
+}: {
+  voucher: VoucherDiscount;
+  shippingFee: number;
+  total: number;
+  handleVoucher: (code: string) => void;
+  isLoadingVoucher?: boolean;
+  errorVoucher?: string;
+}) => {
+  const { subTotal, carts } = useAppSelector((state) => state.cart);
   const [isShowProducts, setIsShowProducts] = useState(false);
+  const [voucherCode, setVoucherCode] = useState("");
 
   const toggleShowProducts = () => {
     setIsShowProducts(!isShowProducts);
   };
-
-  const shippingFee = 40000;
-
-  const total = subTotal + shippingFee;
 
   return (
     <aside className="text-[rgb(113,113,113)] bg-[rgb(250,250,250)] lg:w-1/3 lg:h-screen">
@@ -26,7 +39,7 @@ const Sidebar = () => {
         <button type="button" onClick={toggleShowProducts}>
           <div className="flex items-center">
             <h1 className="font-semibold text-lg leading-none text-[rgb(51,51,51)]">
-              Đơn hàng ({count} sản phẩm)
+              Đơn hàng ({carts.length} sản phẩm)
             </h1>
             {isShowProducts ? (
               <AngleUp className="w-4 h-4 ml-2" />
@@ -43,7 +56,7 @@ const Sidebar = () => {
       {/* Sidebar Header Desktop */}
       <header className="pl-5 py-5 border-b border-b-[rgb(225,225,225)] hidden lg:block">
         <h1 className="font-semibold text-lg leading-none text-[rgb(51,51,51)]">
-          Đơn hàng ({count} sản phẩm)
+          Đơn hàng ({carts.length} sản phẩm)
         </h1>
       </header>
 
@@ -80,35 +93,50 @@ const Sidebar = () => {
             </li>
           ))}
         </ul>
-        {/* <div className="flex items-center py-4 border-y border-y-[rgb(225,225,225)]">
+        <div className="flex items-center py-4 border-y border-y-[rgb(225,225,225)]">
           <FloatingLabel
             type="text"
-            id="coupon"
-            onChange={(e) => setCoupon(e.target.value)}
+            id="voucherCode"
+            onChange={(e) => setVoucherCode(e.target.value)}
+            error={errorVoucher}
             label="Nhập mã giảm giá"
             wrapperClassName="w-full"
           />
           <Button
             type="button"
-            disabled={coupon.length < 1}
-            inactive={coupon.length < 1 ? "opacity" : "noOpacity"}
+            disabled={voucherCode.length < 1}
+            inactive={voucherCode.length < 1 ? "opacity" : "noOpacity"}
             intent="secondary"
             size="medium"
+            hasSpinner={false}
             className="ml-3"
+            isLoading={isLoadingVoucher}
+            onClick={() => handleVoucher(voucherCode)}
           >
             Áp dụng
           </Button>
-        </div> */}
+        </div>
 
         <div className={cn("py-4", !isShowProducts && "hidden lg:block")}>
-          <div className="flex items-center justify-between pt-3">
+          <div className="flex items-center justify-between pt-3 mb-3">
             <p>Tạm tính</p>
             <span>{formatVnd(subTotal)}</span>
           </div>
-          <div className="flex items-center justify-between pt-3 mb-3">
+          <div
+            className={cn(
+              "flex items-center justify-between mb-3",
+              voucher.shipping && "line-through"
+            )}
+          >
             <p>Phí vận chuyển</p>
             <span>{formatVnd(shippingFee)}</span>
           </div>
+          {voucher.discount && (
+            <div className="flex items-center justify-between mb-3">
+              <p>Mã giảm giá ({voucher.discount.code})</p>
+              <span>-{formatVnd(voucher.discount.discount)}</span>
+            </div>
+          )}
           <div className="flex items-center justify-between pt-3 border-t border-t-[rgb(225,225,225)]">
             <p>Tổng cộng</p>
             <span className="text-blue-500 text-xl font-medium">

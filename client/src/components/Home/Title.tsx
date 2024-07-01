@@ -1,6 +1,7 @@
 import cn from "@/utils/cn";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Link } from "react-router-dom";
+import dish from "@/assets/images/dish.webp";
 
 interface TitleProps extends React.PropsWithChildren {
   url?: string;
@@ -16,7 +17,7 @@ const Title = ({ url, className, children }: TitleProps) => {
       )}
     >
       <LazyLoadImage
-        src="/dish.webp"
+        src={dish}
         width={45}
         height={43}
         alt="Title"
@@ -33,7 +34,7 @@ const Title = ({ url, className, children }: TitleProps) => {
         )}
       </h1>
       <LazyLoadImage
-        src="/dish.webp"
+        src={dish}
         width={45}
         height={43}
         alt="Title"

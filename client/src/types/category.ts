@@ -5,13 +5,14 @@ interface Category {
   slug: string;
   image: string;
   description?: string;
-  parentCategory?: string;
+  parent?: string;
 }
 
 type CategoryDto = Omit<Category, "slug">;
 
-interface FullCategory extends Omit<Category, "parentCategory">, FullType {
-  parentCategory?: FullCategory;
+interface FullCategory extends Omit<Category, "parent">, FullType {
+  parent?: FullCategory;
+  childrens: FullCategory[];
 }
 
 interface CategoryResponse {

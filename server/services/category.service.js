@@ -4,17 +4,17 @@ const CustomError = require("../utils/error.util");
 
 class CategoryService {
   async getById(id) {
-    return await Category.findById(id).populate("parentCategory");
+    return Category.findById(id).populate("parent");
   }
 
   async getAll(query) {
-    const { page, limit, search } = query;
+    const { page, limit, search, nested } = query;
 
-    const filter = search
-      ? {
-          name: { $regex: search, $options: "i" },
-        }
-      : {};
+    const filter = {};
+
+    if (search) {
+      filter.name = { $regex: search, $options: "i" };
+    }
 
     if (limit) {
       const skip = (page - 1) * limit;
@@ -22,28 +22,41 @@ class CategoryService {
       const categories = await Category.find(filter)
         .skip(skip)
         .limit(limit)
-        .populate("parentCategory");
+        .populate("parent")
+        .select("-childrens");
 
       const total = await Category.countDocuments(filter);
 
       return { categories, total, page, limit, skip };
     }
 
-    return await Category.find(filter).populate("parentCategory");
+    return Category.find(nested ? { ...filter, parent: null } : filter)
+      .populate(nested ? "childrens" : null)
+      .select(nested ? null : "-childrens");
   }
 
-  async getAllParents() {
-    return await Category.find({ parentCategory: null });
+  async getChildrens() {
+    return Category.find({
+      parent: {
+        $ne: null,
+      },
+    });
   }
 
-  async getAllChilds() {
-    return await Category.find({ parentCategory: { $ne: null } });
+  async getParents() {
+    return Category.find({ parent: null });
   }
 
   async create(body) {
     const category = await Category.create(body);
+    const parent = await Category.findById(category.parent);
 
-    await category.populate("parentCategory");
+    if (parent) {
+      parent.childrens.push(category);
+      await parent.save();
+    }
+
+    await category.populate("parent");
 
     return {
       message: "Tạo danh mục sản phẩm thành công",
@@ -87,12 +100,12 @@ class CategoryService {
     }
 
     await Product.deleteMany({
-      $or: [{ childCategory: id }, { parentCategory: id }],
+      $or: [{ childCategory: id }, { parent: id }],
     });
 
     // check if category is parent category
-    if (!category.parentCategory) {
-      await Category.deleteMany({ parentCategory: id });
+    if (!category.parent) {
+      await Category.deleteMany({ parent: id });
     }
 
     return {
@@ -110,7 +123,7 @@ class CategoryService {
       });
     }
 
-    await Category.deleteMany({ _id: { $in: ids } });
+    await Category.deleteMany({});
     await Product.deleteMany({
       $or: [{ childCategory: { $in: ids } }, { parentCategory: { $in: ids } }],
     });

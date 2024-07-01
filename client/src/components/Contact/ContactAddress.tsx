@@ -43,11 +43,11 @@ const Address = () => {
           </li>
         </ul>
         <Link
-          to="/he-thong-cua-hang"
-          title="Hệ thống cửa hàng"
+          to="/he-thong-nha-hang"
+          title="Hệ thống nhà hàng"
           className="text-white py-2.5 px-4 inline-block bg-yellow-primary rounded-lg shadow-card2 hover:bg-yellow-secondary"
         >
-          Hệ thống cửa hàng
+          Hệ thống nhà hàng
         </Link>
       </div>
     </div>

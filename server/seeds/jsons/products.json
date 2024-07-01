@@ -1,0 +1,31 @@
+[
+  {
+    "_id": "662c91226d98fb88645abc0a",
+    "title": "Salad rau mùa sốt cam",
+    "category": "6628ee16f876a9cbfd847999",
+    "images": [
+      "https://firebasestorage.googleapis.com/v0/b/dola-restaurant.appspot.com/o/products%2Fsalad-rau-mua-sot-cam.webp?alt=media&token=4cb07bac-b08a-46a2-8cfe-93719eb23693"
+    ],
+    "price": 70000,
+    "discountPercent": 3,
+    "stock": 100,
+    "taste": "chua",
+    "size": "nhỏ",
+    "description": "<p>Salad rau mùa sốt cam&nbsp;là sự lựa chọn tuyệt vời cho các tín đồ yêu eat clean. Món ăn có đến 5 loại xà lách (carol, frise, lô lô tím, xà lách mỡ và radicchio tím) kết hợp cùng các loại trái cây như táo, cà chua, ô liu... mang lại nguồn vitamin tổng hợp dồi dào, hỗ trợ tăng cường đề kháng cho cơ thể. Điểm nhấn tạo nên nét chấm phá cho món nằm ở nước sốt cam độc đáo với vị chua ngọt tự nhiên dịu dàng. Salad rau mùa sốt cam thực sự là một bữa tiệc về màu sắc, xua tan cơn nóng mùa hè, đánh thức tối đa vị giác.&nbsp;</p><p><br></p><h3>Thành phần :</h3><p>Xà lách carol, xà lách frise, xà lách lô lô tím, xà lách mỡ, xà lách radicchio tím, táo đỏ, táo xanh, cà chua bi, củ cải đường, rau mầm, cà rốt baby, trái olive đen, trái olive xanh.</p><p><br></p><h3>Khẩu phần:</h3><p>1 - 2 người</p><p><br></p><h3>Thời gian hoàn tất :</h3><p>6 - 8 phút</p>"
+  },
+  {
+    "_id": "662cc89c80b50441e912a5c2",
+    "title": "Gỏi tai heo hoa chuối",
+    "category": "6628eee0f876a9cbfd8479a7",
+    "images": [
+      "https://firebasestorage.googleapis.com/v0/b/dola-restaurant.appspot.com/o/products%2Fgoi-tai-heo-hoa-chuoi.webp?alt=media&token=cefd4a17-483c-4b96-b8c2-bea2cdbd8cb1",
+      "https://firebasestorage.googleapis.com/v0/b/dola-restaurant.appspot.com/o/products%2Fgoi-tai-heo-hoa-chuoi-2.webp?alt=media&token=673292f2-ffb9-4bf7-83f1-338ebb31a81f"
+    ],
+    "price": 125000,
+    "discountPercent": 0,
+    "stock": 200,
+    "taste": "chua",
+    "size": "nhỏ",
+    "description": "<p>Sử dụng nguyên liệu chuối tây cùng tai heo quen thuộc, các đầu bếp&nbsp;tạo nên sự khác biệt bằng phương pháp luộc hoa chuối để lọc bỏ hết nhựa, tạo cảm giác dễ chịu và an toàn khi ăn. Kết hợp cùng cà rốt, dưa leo, hành tây, củ kiệu, món gỏi chuối tai heo mang màu sắc bắt mắt và những nét chấm phá đặc biệt trong hương vị. Hoàn thiện tất cả là nước mắm chua ngọt dung hòa, tổng thể làm nên món ăn thơm ngon, giàu chất dinh dưỡng và thanh mát ngày hè.</p><h3>Thành phần :</h3><p>Ba rọi heo, tai heo, bắp chuối, cà rốt, dưa leo, hành tây, ớt sừng, tỏi, rau răm, ngò rí, húng cây,...</p><h3>Khẩu phần:</h3><p>1 người</p><h3>Năng lượng :</h3><p>Protein - 16.0,&nbsp;Carbs -&nbsp;55.2,&nbsp;Fat -10.2 (Total Kcal -&nbsp;376.4)</p>"
+  }
+]

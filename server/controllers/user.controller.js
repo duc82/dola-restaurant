@@ -23,7 +23,9 @@ class UserController {
   }
 
   async create(req, res) {
-    res.status(201).json(await this.userService.create(req.body));
+    res
+      .status(201)
+      .json(await this.userService.create(req.body, req.useragent));
   }
 
   async updateCurrent(req, res) {

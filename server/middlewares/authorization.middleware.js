@@ -1,7 +1,7 @@
-const authenticationMiddleware = require("./authentication.middleware");
+const authentication = require("./authentication.middleware");
 
-function authorizationMiddleware(req, res, next) {
-  authenticationMiddleware(req, res, () => {
+module.exports = (req, res, next) => {
+  authentication(req, res, () => {
     if (req.user.role === "admin") {
       return next();
     } else {
@@ -10,6 +10,4 @@ function authorizationMiddleware(req, res, next) {
         .json({ message: "Bạn không có quyền để làm điều này" });
     }
   });
-}
-
-module.exports = authorizationMiddleware;
+};

@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { Dustbin, Edit, Plus2 } from "@/icons";
+import { useEffect, useState } from "react";
+import { Dustbin, Edit, Plus2, Search } from "@/icons";
 import { Helmet } from "react-helmet-async";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { useSearchParams } from "react-router-dom";
@@ -8,7 +8,7 @@ import useAdminModal from "@/hooks/useAdminModal";
 import {
   deleteManyUser,
   deleteUser,
-  getAllUser
+  getAllUser,
 } from "@/store/reducers/userSlice";
 import formatDate from "@/utils/formatDate";
 import CreateModal from "@/components/Admin/User/CreateModal";
@@ -18,6 +18,7 @@ import UpdateModal from "@/components/Admin/User/UpdateModal";
 import cn from "@/utils/cn";
 import Limit from "@/components/Limit";
 import useLimit from "@/hooks/useLimit";
+import { FullUser } from "@/types/user";
 
 const title = "Quản lý người dùng";
 
@@ -27,21 +28,22 @@ const User = () => {
     total,
     limit,
     skip,
-    page: currentPage
+    page: currentPage,
   } = useAppSelector((state) => state.user);
+
   const {
     activeModal,
     openCreateModal,
     openUpdateModal,
     closeModal,
-    id,
     selectedRows,
     handleSelect,
     handleSelectAll,
-    selectedRowsRef
+    selectAllRowsRef,
   } = useAdminModal();
   const [urlSearchParams, setUrlSearchParams] = useSearchParams();
   const { currentLimit, handleChangeLimit } = useLimit();
+  const [user, setUser] = useState<FullUser | null>(null);
 
   const dispatch = useAppDispatch();
 
@@ -86,7 +88,7 @@ const User = () => {
 
   const pageCount = Math.ceil(total / limit);
 
-  const hasSelected = selectedRows.length > 0;
+  const hasSelected = selectedRows.size > 0;
 
   return (
     <div className="overflow-y-auto w-full">
@@ -97,7 +99,7 @@ const User = () => {
       <div className="p-4 lg:px-6 lg:pt-6">
         <h1 className="text-2xl font-semibold mb-4">Danh sách người dùng</h1>
         <div className="flex flex-wrap justify-between items-center gap-y-4">
-          <form className="w-64 xl:w-96 mr-2">
+          <form className="relative w-64 xl:w-96 mr-2">
             <label htmlFor="search" className="sr-only">
               Search
             </label>
@@ -108,8 +110,9 @@ const User = () => {
               autoComplete="off"
               placeholder="Tìm kiếm"
               defaultValue={search}
-              className="w-full bg-emerald-secondary p-2.5 border border-gray-600 rounded-lg text-sm placeholder:text-gray-400 transition"
+              className="w-full bg-emerald-secondary py-2.5 pl-10 pr-4 border border-gray-600 rounded-lg text-sm placeholder:text-gray-400 transition"
             />
+            <Search className="absolute top-1/2 left-4 -translate-y-1/2 w-4 h-4 text-gray-400" />
           </form>
           <button
             type="button"
@@ -117,7 +120,7 @@ const User = () => {
             className="px-3 py-2 bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-900 rounded-lg inline-flex items-center font-medium justify-center text-sm transition"
           >
             <Plus2 className="w-6 h-6 mr-1" />
-            <span>Thêm người dùng</span>
+            <span>Thêm mới</span>
           </button>
         </div>
       </div>
@@ -125,7 +128,7 @@ const User = () => {
       <div className="p-4 lg:px-6 flex items-center">
         <button
           type="button"
-          onClick={() => handleDeleteMany(selectedRows)}
+          onClick={() => handleDeleteMany(Array.from(selectedRows.keys()))}
           disabled={!hasSelected}
           className={cn(
             "px-3 py-2 bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-900 rounded-lg inline-flex items-center font-medium justify-center text-sm transition",
@@ -136,7 +139,7 @@ const User = () => {
           <span>Xóa</span>
         </button>
         <span className="ml-2">
-          {hasSelected ? `Đã chọn ${selectedRows.length} hàng` : ""}
+          {hasSelected ? `Đã chọn ${selectedRows.size} hàng` : ""}
         </span>
       </div>
 
@@ -149,7 +152,7 @@ const User = () => {
                   type="checkbox"
                   name="all"
                   id="all"
-                  ref={selectedRowsRef}
+                  ref={selectAllRowsRef}
                   onChange={(e) =>
                     handleSelectAll(
                       e,
@@ -177,7 +180,7 @@ const User = () => {
               key={user._id}
               className={cn(
                 "hover:bg-emerald-secondary transition",
-                selectedRows.includes(user._id) && "bg-emerald-secondary"
+                selectedRows.has(user._id) && "bg-emerald-secondary"
               )}
             >
               <td>
@@ -186,7 +189,7 @@ const User = () => {
                     type="checkbox"
                     name="userId"
                     id={user._id}
-                    checked={selectedRows.includes(user._id)}
+                    checked={selectedRows.has(user._id)}
                     onChange={(e) => handleSelect(e, user._id, users.length)}
                     className="w-4 h-4 cursor-pointer bg-emerald-primary rounded focus:ring-2 focus:ring-offset-emerald-primary"
                   />
@@ -206,7 +209,8 @@ const User = () => {
                 <button
                   type="button"
                   onClick={() => {
-                    openUpdateModal(user._id);
+                    openUpdateModal();
+                    setUser(user);
                   }}
                   className="px-3 py-2 bg-amber-600 hover:bg-yellow-700 focus:ring-4 focus:ring-yellow-900 rounded-lg inline-flex items-center font-medium justify-center text-sm transition"
                 >
@@ -249,7 +253,13 @@ const User = () => {
       </div>
 
       <CreateModal onClose={closeModal} show={activeModal.create} />
-      <UpdateModal onClose={closeModal} show={activeModal.update} id={id} />
+      {user && (
+        <UpdateModal
+          onClose={closeModal}
+          show={activeModal.update}
+          user={user}
+        />
+      )}
     </div>
   );
 };

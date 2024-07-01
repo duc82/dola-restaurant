@@ -8,13 +8,14 @@ import {
 } from "react-lazy-load-image-component";
 import Title from "./Title";
 import { useAppSelector } from "@/store/hooks";
+import cac_mon_khac from "@/assets/images/cac-mon-khac.webp";
 
 const Category = () => {
   const { categories } = useAppSelector((state) => state.category);
 
-  const mainDishes = categories.filter(
-    (category) => category.parentCategory?.slug === "mon-chinh"
-  );
+  const mainDishes = categories.find(
+    (category) => category.slug === "mon-chinh"
+  )?.childrens;
 
   return (
     <section className="py-[60px] bg-emerald-secondary">
@@ -41,7 +42,7 @@ const Category = () => {
               },
             }}
           >
-            {mainDishes.map((dish) => (
+            {mainDishes?.map((dish) => (
               <SwiperSlide
                 className="py-7 px-6 relative border border-white rounded-lg group"
                 key={dish._id}
@@ -80,7 +81,7 @@ const Category = () => {
               >
                 <div>
                   <LazyLoadImage
-                    src={"/cac-mon-khac.webp"}
+                    src={cac_mon_khac}
                     alt={"Các món khác"}
                     width={160}
                     height={160}

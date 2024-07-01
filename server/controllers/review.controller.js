@@ -1,34 +1,25 @@
 const asyncHandler = require("../middlewares/asyncHandler.middleware");
-const Product = require("../models/product.model");
-const Review = require("../models/review.model");
+const ReviewService = require("../services/review.service");
 
 class ReviewController {
   constructor() {
-    this.createReview = asyncHandler(this.createReview.bind(this));
-    this.updateReview = asyncHandler(this.updateReview.bind(this));
+    this.reviewService = new ReviewService();
+    this.create = asyncHandler(this.create.bind(this));
+    this.update = asyncHandler(this.update.bind(this));
+    this.getByProduct = asyncHandler(this.getByProduct.bind(this));
   }
 
-  async createReview(req, res) {
-    const { userId } = req.user;
-    const { rating, comment, productId } = req.body;
-
-    const product = await Product.findById(productId);
-    const newReview = await Review.create({
-      rating,
-      comment,
-      user: userId,
-      product: product._id,
-    });
-
-    product.reviews.push(newReview._id);
-    await product.save();
-
-    res
-      .status(201)
-      .json({ message: "Thêm mới đánh giá thành công", review: newReview });
+  async create(req, res) {
+    res.status(201).json(await this.reviewService.create(req.user, req.body));
   }
 
-  async updateReview(req, res) {}
+  async update(req, res) {}
+
+  async getByProduct(req, res) {
+    res.json(
+      await this.reviewService.getByProduct(req.params.productId, req.query)
+    );
+  }
 }
 
 module.exports = new ReviewController();

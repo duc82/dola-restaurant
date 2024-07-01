@@ -1,13 +1,15 @@
 import { Link } from "react-router-dom";
 import "animate.css";
+import slider_mb_1 from "@/assets/images/slider_mb_1.webp";
+import slider_1 from "@/assets/images/slider_mb_1.webp";
 
 const Hero = () => {
   return (
     <section className="relative overflow-hidden lg:h-screen">
       <picture>
-        <source media="(min-width: 992px)" srcSet="/slider_1.webp" />
+        <source media="(min-width: 992px)" srcSet={slider_1} />
         <img
-          src="/slider_mb_1.webp"
+          src={slider_mb_1}
           alt="Slide 1"
           width={1920}
           height={930}

@@ -6,7 +6,6 @@ interface CreateModalProps {
 interface UpdateModalProps {
   show: boolean;
   onClose: () => void;
-  id: string;
 }
 
 export type { CreateModalProps, UpdateModalProps };

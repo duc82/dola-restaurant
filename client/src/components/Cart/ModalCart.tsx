@@ -1,14 +1,16 @@
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Link } from "react-router-dom";
 import formatVnd from "@/utils/formatVnd";
-import { useModalCart } from "@/contexts/AddedCartContext";
+import { useModalCart } from "@/providers/CartProvider";
 import cn from "@/utils/cn";
 import { useAppSelector } from "@/store/hooks";
 import Overlay from "../Overlay";
 
 const ModalCart = () => {
-  const { count } = useAppSelector((state) => state.cart);
+  const { carts } = useAppSelector((state) => state.cart);
   const { isOpen, closeModalCart, addedCart } = useModalCart();
+
+  const count = carts.length;
 
   return (
     <div

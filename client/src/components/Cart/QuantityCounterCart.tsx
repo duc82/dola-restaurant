@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent } from "react";
 import { useAppDispatch } from "../../store/hooks";
 import {
   changeQuantity,
@@ -16,17 +16,14 @@ const QuantityCounterCart = ({
   disabledLabel = false,
   cart,
 }: QuantityCounterCartProps) => {
-  const [quantity, setQuantity] = useState<string>(cart.quantity.toString());
   const dispatch = useAppDispatch();
 
   const handleIncreaseQuantity = (cart: Cart) => {
     if (cart.quantity >= cart.stock) return;
-    setQuantity((prev) => +prev + 1 + "");
     dispatch(increaseQuantity({ ...cart, quantity: 1 }));
   };
 
   const handleDecreaseQuantity = (cart: Cart) => {
-    setQuantity((prev) => +prev - 1 + "");
     dispatch(decreaseQuantity({ ...cart, quantity: 1 }));
   };
 
@@ -38,8 +35,6 @@ const QuantityCounterCart = ({
     if (+newQuantity > cart.stock) {
       return;
     }
-
-    setQuantity(newQuantity);
 
     if (newQuantity) {
       dispatch(changeQuantity({ ...cart, quantity: +newQuantity }));
@@ -66,7 +61,7 @@ const QuantityCounterCart = ({
           type="text"
           name="quantity"
           id="quantityCart"
-          value={quantity}
+          value={cart.quantity}
           className="w-10 h-6 p-0 text-center border border-yellow-primary rounded-md text-sm"
           onChange={(e) => handleChangeQuantity(e, cart)}
           autoComplete="off"

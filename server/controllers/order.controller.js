@@ -19,7 +19,7 @@ class OrderController {
   }
 
   async getAll(req, res) {
-    res.status(200).json(await this.orderService.getAll(req.user.userId));
+    res.status(200).json(await this.orderService.getAll(req.query));
   }
 
   async getById(req, res) {
@@ -69,8 +69,6 @@ class OrderController {
 
     vnp_params = this.sortObject(vnp_params);
 
-    console.log(vnp_params);
-
     const signData = querystring.stringify(vnp_params, {
       encode: false,
     });
@@ -109,7 +107,6 @@ class OrderController {
     const orderId = vnp_params["vnp_TxnRef"];
 
     await this.orderService.update(orderId, {
-      isPaid: true,
       paidAt: new Date(),
     });
 

@@ -1,47 +1,52 @@
 import Modal from "@/components/Modal/Modal";
 import { productSchema, sizes, tastes } from "@/schemas/productSchema";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { updateProduct } from "@/store/reducers/productSlice";
 import { FilePreview } from "@/types";
 import { UpdateModalProps } from "@/types/admin";
 import handlingAxiosError from "@/utils/handlingAxiosError";
 import { useFormik } from "formik";
-import { useEffect, useState } from "react";
+import { Suspense, lazy, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import toast from "react-hot-toast";
 import Input from "../Input";
 import Select from "../Select";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Upload } from "@/icons";
-import EditorText from "@/components/EditorText";
 import { FullCategory } from "@/types/category";
 import categoryService from "@/services/categoryService";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "@/libs/firebase";
+import { FullProduct } from "@/types/product";
+import productService from "@/services/productService";
 
-const UpdateModal = ({ show, onClose, id }: UpdateModalProps) => {
+const TextEditor = lazy(() => import("@/components/TextEditor"));
+
+interface UpdateModalProductProps extends UpdateModalProps {
+  product: FullProduct;
+  setProducts: React.Dispatch<React.SetStateAction<FullProduct[]>>;
+}
+
+const UpdateModal = ({
+  show,
+  onClose,
+  product,
+  setProducts,
+}: UpdateModalProductProps) => {
   const [files, setFiles] = useState<FilePreview[]>([]);
-  const { products } = useAppSelector((state) => state.product);
   const [childCategories, setChildCategories] = useState<FullCategory[]>([]);
-
-  const dispatch = useAppDispatch();
-
-  const product = products.find((p) => p._id === id);
 
   const formik = useFormik({
     initialValues: {
-      title: product?.title || "",
-      category: product?.childCategory._id || "",
-      description: product?.description || "",
-      taste: product?.taste || "",
-      size: product?.size || "",
-      price: product?.price.toLocaleString() || "0",
-      discountPercent: product?.discountPercent || 0,
-      stock: product?.stock || 0,
-      images: product?.images || []
+      title: product.title,
+      category: product.category._id,
+      description: product.description,
+      taste: product.taste,
+      size: product.size,
+      price: product.price.toLocaleString(),
+      discountPercent: product.discountPercent,
+      stock: product.stock,
+      images: product.images,
     },
     validationSchema: productSchema,
-    validateOnChange: true,
     enableReinitialize: true,
     onSubmit: async (values) => {
       try {
@@ -58,22 +63,30 @@ const UpdateModal = ({ show, onClose, id }: UpdateModalProps) => {
         const data = {
           ...values,
           price,
-          images
+          images,
         };
 
-        dispatch(updateProduct({ id, data }));
+        const res = await productService.update(product._id, data);
+
+        setProducts((prev) => {
+          const index = prev.findIndex((p) => p._id === product._id);
+          if (index !== -1) {
+            prev[index] = res.product;
+          }
+          return prev;
+        });
         setFiles([]);
         onClose();
         toast.success("Cập nhật sản phẩm thành công");
       } catch (error) {
         toast.error(handlingAxiosError(error).message);
       }
-    }
+    },
   });
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
-      "image/*": []
+      "image/*": [],
     },
     maxSize: 20 * 1024 * 1024, // 20 MB
     multiple: true,
@@ -83,21 +96,14 @@ const UpdateModal = ({ show, onClose, id }: UpdateModalProps) => {
         return Object.assign(file, { preview });
       });
       setFiles(files);
-    }
+    },
   });
 
   useEffect(() => {
-    if (show) {
-      categoryService
-        .getAllChilds()
-        .then((data) => setChildCategories(data))
-        .catch((error) => console.error(error));
-    }
-  }, [show]);
-
-  useEffect(() => {
-    console.log(formik.errors);
-  }, [formik]);
+    categoryService.getChildrens().then((data) => {
+      setChildCategories(data);
+    });
+  }, []);
 
   return (
     <Modal
@@ -190,15 +196,18 @@ const UpdateModal = ({ show, onClose, id }: UpdateModalProps) => {
               </option>
             ))}
           </Select>
-          <div className="col-span-2">
-            <label htmlFor="description" className="mb-2 inline-block">
-              Mô tả
-            </label>
-            <EditorText
-              value={formik.values.description}
-              onChange={(value) => formik.setFieldValue("description", value)}
-            />
-          </div>
+          <Suspense fallback={null}>
+            <div className="col-span-2">
+              <label htmlFor="description" className="mb-2 inline-block">
+                Mô tả
+              </label>
+              <TextEditor
+                value={formik.values.description}
+                onChange={(value) => formik.setFieldValue("description", value)}
+              />
+            </div>
+          </Suspense>
+
           <div className="col-span-2">
             <label htmlFor="images" className="mb-2 inline-block">
               Hình ảnh

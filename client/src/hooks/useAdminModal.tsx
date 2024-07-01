@@ -7,9 +7,10 @@ const initialActiveModal = {
 
 const useAdminModal = () => {
   const [activeModal, setActiveModal] = useState(initialActiveModal);
-  const [selectedRows, setSelectedRows] = useState<string[]>([]);
-  const [id, setId] = useState("");
-  const selectedRowsRef = useRef<HTMLInputElement | null>(null);
+  const [selectedRows, setSelectedRows] = useState<Map<string, boolean>>(
+    new Map()
+  );
+  const selectAllRowsRef = useRef<HTMLInputElement | null>(null);
 
   const openCreateModal = () => {
     setActiveModal({
@@ -18,8 +19,7 @@ const useAdminModal = () => {
     });
   };
 
-  const openUpdateModal = (id: string) => {
-    setId(id);
+  const openUpdateModal = () => {
     setActiveModal({
       create: false,
       update: true,
@@ -30,34 +30,39 @@ const useAdminModal = () => {
     setActiveModal(initialActiveModal);
   };
 
-  const handleSelectAll = (
-    e: ChangeEvent<HTMLInputElement>,
-    selectedRows: string[]
-  ) => {
+  const handleSelectAll = (e: ChangeEvent<HTMLInputElement>, ids: string[]) => {
     const isSelectAll = e.target.checked;
-    setSelectedRows(isSelectAll ? selectedRows : []);
+    if (isSelectAll) {
+      const newSelectedRows = new Map<string, boolean>();
+
+      ids.forEach((id) => {
+        newSelectedRows.set(id, true);
+      });
+
+      setSelectedRows(newSelectedRows);
+    } else {
+      setSelectedRows(new Map());
+    }
   };
 
   const handleSelect = useCallback(
     (e: ChangeEvent<HTMLInputElement>, id: string, maxLength: number) => {
       const isSelect = e.target.checked;
 
-      const selectedAll = selectedRowsRef.current;
+      const selectedAll = selectAllRowsRef.current;
       if (!selectedAll) return;
 
-      const newSelected = [...selectedRows];
+      const newSelectedRows = new Map(selectedRows);
+
       if (isSelect) {
-        newSelected.push(id);
-        setSelectedRows(newSelected);
-        if (newSelected.length === maxLength) {
+        newSelectedRows.set(id, true);
+        setSelectedRows(newSelectedRows);
+        if (newSelectedRows.size === maxLength) {
           selectedAll.checked = true;
         }
       } else {
-        const index = newSelected.indexOf(id);
-        if (index !== -1) {
-          newSelected.splice(index, 1);
-          setSelectedRows(newSelected);
-        }
+        newSelectedRows.delete(id);
+        setSelectedRows(newSelectedRows);
         selectedAll.checked = false;
       }
     },
@@ -65,20 +70,19 @@ const useAdminModal = () => {
   );
 
   const clearSelectedRows = () => {
-    setSelectedRows([]);
-    if (selectedRowsRef.current) {
-      selectedRowsRef.current.checked = false;
+    setSelectedRows(new Map());
+    if (selectAllRowsRef.current) {
+      selectAllRowsRef.current.checked = false;
     }
   };
 
   return {
     activeModal,
-    id,
     selectedRows,
     openCreateModal,
     openUpdateModal,
     closeModal,
-    selectedRowsRef,
+    selectAllRowsRef,
     handleSelectAll,
     handleSelect,
     clearSelectedRows,

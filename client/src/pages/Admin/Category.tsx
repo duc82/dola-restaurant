@@ -2,17 +2,13 @@ import CreateModal from "@/components/Admin/Category/CreateModal";
 import UpdateModal from "@/components/Admin/Category/UpdateModal";
 import Pagination from "@/components/Pagination";
 import useAdminModal from "@/hooks/useAdminModal";
-import { Dustbin, Edit, Plus2 } from "@/icons";
+import { Dustbin, Edit, Plus2, Search } from "@/icons";
 import categoryService from "@/services/categoryService";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import {
-  deleteCategory,
-  setCategories,
-  setCategoriesPagination
-} from "@/store/reducers/categorySlice";
+import { useAppDispatch } from "@/store/hooks";
+import { deleteCategory } from "@/store/reducers/categorySlice";
 import formatDate from "@/utils/formatDate";
 import handlingAxiosError from "@/utils/handlingAxiosError";
-import { useEffect } from "react";
+import { useCallback, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
 import { LazyLoadImage } from "react-lazy-load-image-component";
@@ -20,9 +16,10 @@ import { useSearchParams } from "react-router-dom";
 import Limit from "@/components/Limit";
 import cn from "@/utils/cn";
 import useLimit from "@/hooks/useLimit";
-import CategoryProvider from "@/providers/CategoryProvider";
 import Fancybox from "@/components/Fancybox";
 import { Link } from "react-router-dom";
+import { CategoriesResponse, FullCategory } from "@/types/category";
+import useFetchPagination from "@/hooks/useFetchPagination";
 
 const Category = () => {
   const {
@@ -30,28 +27,20 @@ const Category = () => {
     openCreateModal,
     openUpdateModal,
     closeModal,
-    id,
     selectedRows,
-    selectedRowsRef,
+    selectAllRowsRef,
     handleSelect,
     handleSelectAll,
-    clearSelectedRows
+    clearSelectedRows,
   } = useAdminModal();
 
   const dispatch = useAppDispatch();
   const [urlSearchParams, setUrlSearchParams] = useSearchParams();
-
   const { currentLimit, handleChangeLimit } = useLimit();
+  const [category, setCategory] = useState<FullCategory | null>(null);
 
   const search = urlSearchParams.get("search") ?? "";
   const page = +(urlSearchParams.get("page") ?? "1");
-
-  const {
-    categories,
-    total,
-    skip,
-    page: currentPage
-  } = useAppSelector((state) => state.category);
 
   const handleDelete = async (id: string) => {
     try {
@@ -86,33 +75,37 @@ const Category = () => {
   };
 
   const onPageChange = (page: number) => {
+    clearSelectedRows();
     urlSearchParams.set("page", page.toString());
     setUrlSearchParams(urlSearchParams);
   };
 
-  useEffect(() => {
-    categoryService
-      .getAllPaginate({
-        search,
-        page,
-        limit: currentLimit
-      })
-      .then((data) => {
-        dispatch(setCategories(data.categories));
-        dispatch(
-          setCategoriesPagination({
-            total: data.total,
-            skip: data.skip,
-            limit: data.limit,
-            page: data.page
-          })
-        );
-      });
-  }, [dispatch, search, page, currentLimit]);
+  const getCategories = useCallback(async () => {
+    const res = await categoryService.getAll({
+      search,
+      page,
+      limit: currentLimit,
+    });
+
+    const newData = res as CategoriesResponse;
+
+    return {
+      data: newData.categories,
+      total: newData.total,
+      skip: newData.skip,
+    };
+  }, [search, page, currentLimit]);
+
+  const {
+    data: categories,
+    total,
+    skip,
+    setData: setCategories,
+  } = useFetchPagination<FullCategory[]>(getCategories, []);
 
   const pageCount = Math.ceil(total / currentLimit);
 
-  const hasSelected = selectedRows.length > 0;
+  const hasSelected = selectedRows.size > 0;
 
   return (
     <div className="overflow-y-auto w-full">
@@ -126,7 +119,7 @@ const Category = () => {
         </h1>
         <div className="flex flex-wrap justify-between items-center gap-y-4">
           <div className="flex items-center">
-            <form className="w-64 xl:w-96 mr-2">
+            <form className="relative w-64 xl:w-96 mr-2">
               <label htmlFor="search" className="sr-only">
                 Search
               </label>
@@ -135,10 +128,11 @@ const Category = () => {
                 id="search"
                 name="search"
                 autoComplete="off"
-                placeholder="Tìm kiếm danh mục sản phẩm"
+                placeholder="Tìm kiếm"
                 defaultValue={search}
-                className="w-full bg-emerald-secondary p-2.5 border border-gray-600 rounded-lg text-sm placeholder:text-gray-400 transition"
+                className="w-full bg-emerald-secondary py-2.5 pl-10 pr-4 border border-gray-600 rounded-lg text-sm placeholder:text-gray-400 transition"
               />
+              <Search className="absolute top-1/2 left-4 -translate-y-1/2 w-4 h-4 text-gray-400" />
             </form>
           </div>
           <button
@@ -147,27 +141,30 @@ const Category = () => {
             className="px-3 py-2 bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-900 rounded-lg inline-flex items-center font-medium justify-center text-sm transition"
           >
             <Plus2 className="w-6 h-6 mr-1" />
-            <span>Thêm danh mục</span>
+            <span>Thêm mới</span>
           </button>
         </div>
       </div>
 
-      <div className="p-4 lg:px-6 flex items-center">
-        <button
-          type="button"
-          onClick={() => handleDeleteMany(selectedRows)}
-          disabled={!hasSelected}
-          className={cn(
-            "px-3 py-2 bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-900 rounded-lg inline-flex items-center font-medium justify-center text-sm transition",
-            !hasSelected && "hover:bg-red-600 opacity-50 cursor-not-allowed"
-          )}
-        >
-          <Dustbin className="mr-2" />
-          <span>Xóa</span>
-        </button>
-        <span className="ml-2">
-          {hasSelected ? `Đã chọn ${selectedRows.length} hàng` : ""}
-        </span>
+      <div className="p-4 lg:px-6 flex items-center justify-between">
+        <div className="flex items-center">
+          <button
+            type="button"
+            onClick={() => handleDeleteMany(Array.from(selectedRows.keys()))}
+            disabled={!hasSelected}
+            className={cn(
+              "px-3 py-2 bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-900 rounded-lg inline-flex items-center font-medium justify-center text-sm transition",
+              !hasSelected && "hover:bg-red-600 opacity-50 cursor-not-allowed"
+            )}
+          >
+            <Dustbin className="mr-2" />
+            <span>Xóa</span>
+          </button>
+
+          <span className="ml-2">
+            {hasSelected && `Đã chọn ${selectedRows.size} hàng`}
+          </span>
+        </div>
       </div>
 
       <table className="table-admin">
@@ -179,7 +176,7 @@ const Category = () => {
                   type="checkbox"
                   name="all"
                   id="all"
-                  ref={selectedRowsRef}
+                  ref={selectAllRowsRef}
                   onChange={(e) =>
                     handleSelectAll(
                       e,
@@ -209,7 +206,7 @@ const Category = () => {
               key={category._id}
               className={cn(
                 "hover:bg-emerald-secondary transition",
-                selectedRows.includes(category._id) && "bg-emerald-secondary"
+                selectedRows.has(category._id) && "bg-emerald-secondary"
               )}
             >
               <td>
@@ -218,7 +215,7 @@ const Category = () => {
                     type="checkbox"
                     name="categoryId"
                     id={category._id}
-                    checked={selectedRows.includes(category._id)}
+                    checked={selectedRows.has(category._id)}
                     onChange={(e) =>
                       handleSelect(e, category._id, categories.length)
                     }
@@ -230,7 +227,7 @@ const Category = () => {
                 </div>
               </td>
               <td>{category.name}</td>
-              <td>{category.parentCategory?.name || "Không có"}</td>
+              <td>{category.parent?.name || "Không có"}</td>
               <td>
                 {category.image ? (
                   <Fancybox>
@@ -259,7 +256,10 @@ const Category = () => {
               <td className="whitespace-nowrap space-x-2.5">
                 <button
                   type="button"
-                  onClick={() => openUpdateModal(category._id)}
+                  onClick={() => {
+                    openUpdateModal();
+                    setCategory(category);
+                  }}
                   className="px-3 py-2 bg-amber-600 hover:bg-yellow-700 focus:ring-4 focus:ring-yellow-900 rounded-lg inline-flex items-center font-medium justify-center text-sm transition"
                 >
                   <Edit className="w-4 h-4 mr-2" />
@@ -287,7 +287,7 @@ const Category = () => {
         </span>
         <Pagination
           pageCount={pageCount}
-          currentPage={currentPage}
+          currentPage={page}
           onPageChange={onPageChange}
           variant="blue"
         />
@@ -298,10 +298,13 @@ const Category = () => {
         />
       </div>
 
-      <CategoryProvider>
-        <CreateModal show={activeModal.create} onClose={closeModal} />
-        <UpdateModal show={activeModal.update} onClose={closeModal} id={id} />
-      </CategoryProvider>
+      <CreateModal show={activeModal.create} onClose={closeModal} />
+      <UpdateModal
+        show={activeModal.update}
+        onClose={closeModal}
+        category={category}
+        setCategories={setCategories}
+      />
     </div>
   );
 };

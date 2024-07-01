@@ -1,25 +1,22 @@
 import ProductCard from "./ProductCard";
-import { useAppSelector } from "@/store/hooks";
 import { FullProduct } from "@/types/product";
 import cn from "@/utils/cn";
+import ProductCardSkeleton from "../Skeleton/ProductCardSkeleton";
+import { SkeletonTheme } from "react-loading-skeleton";
 
 interface ProductListsProps {
   products: FullProduct[];
   wrapperClassName?: string;
-  page?: string;
+  isLoading: boolean;
+  skeletonCount?: number;
 }
 
 const ProductList = ({
   products,
   wrapperClassName,
-  page,
+  isLoading,
+  skeletonCount = 4,
 }: ProductListsProps) => {
-  const { isLoading } = useAppSelector((state) => state.product);
-
-  if (page === "Home" && isLoading) {
-    return <div className="text-center">Đang tải dữ liệu...</div>;
-  }
-
   if (!isLoading && products.length < 1)
     return (
       <div className="py-3 px-5 rounded-md mb-5 text-warning bg-[rgb(255,243,205)]">
@@ -34,9 +31,17 @@ const ProductList = ({
         wrapperClassName
       )}
     >
-      {products.map((product, i) => (
-        <ProductCard key={i} {...product} />
-      ))}
+      {isLoading && (
+        <SkeletonTheme baseColor="rgb(200,200,200)">
+          {Array.from({ length: skeletonCount }, (_, i) => (
+            <ProductCardSkeleton key={i} />
+          ))}
+        </SkeletonTheme>
+      )}
+      {!isLoading &&
+        products.map((product) => (
+          <ProductCard key={product._id} {...product} />
+        ))}
     </section>
   );
 };

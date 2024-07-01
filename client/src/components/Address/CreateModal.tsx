@@ -12,7 +12,6 @@ import useProvince from "@/hooks/useProvince";
 import Checkbox from "../Form/Checkbox";
 import Button from "../Form/Button";
 import { addressSchema } from "@/schemas/addressSchema";
-import { useEffect } from "react";
 
 const CreateModal = ({ show, onClose }: CreateModalProps) => {
   const dispatch = useAppDispatch();
@@ -26,7 +25,7 @@ const CreateModal = ({ show, onClose }: CreateModalProps) => {
       district: "",
       ward: "",
       detail: "",
-      isDefault: addresses.length > 0 ? false : true
+      isDefault: addresses.length > 0 ? false : true,
     },
     validationSchema: addressSchema,
     onSubmit: async (values, { resetForm }) => {
@@ -39,7 +38,7 @@ const CreateModal = ({ show, onClose }: CreateModalProps) => {
       } catch (error) {
         toast.error(handlingAxiosError(error).message);
       }
-    }
+    },
   });
 
   const handleClose = () => {
@@ -49,12 +48,8 @@ const CreateModal = ({ show, onClose }: CreateModalProps) => {
 
   const { provinces, districts, wards } = useProvince({
     province: formik.values.province,
-    district: formik.values.district
+    district: formik.values.district,
   });
-
-  useEffect(() => {
-    console.log(formik.values);
-  }, [formik]);
 
   return (
     <Modal show={show} onHide={handleClose}>

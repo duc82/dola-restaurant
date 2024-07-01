@@ -28,12 +28,7 @@ const Select = ({ label, id, wrapperClassName, ...props }: SelectProps) => {
         <Option value="" hidden>
           ---
         </Option>
-        {React.Children.map(props.children, (child) => {
-          if (React.isValidElement(child)) {
-            return React.cloneElement(child);
-          }
-          return child;
-        })}
+        {props.children}
       </select>
     </div>
   );

@@ -9,19 +9,19 @@ const swaggerSpec = swaggerJSDoc({
       description: "Tài liệu Dola Restaurant API",
       license: {
         name: "MIT",
-        url: "https://spdx.org/licenses/MIT.html"
+        url: "https://spdx.org/licenses/MIT.html",
       },
       contact: {
         name: "Dola Restaurant",
         url: "https://dola-restaurant.vercel.app",
-        email: "duccdht123@gmail.com"
-      }
+        email: "duccdht123@gmail.com",
+      },
     },
 
     servers: [
       {
-        url: process.env.HOST_SERVER + "/api/v1"
-      }
+        url: process.env.HOST_SERVER + "/api/v1",
+      },
     ],
 
     components: {
@@ -30,13 +30,13 @@ const swaggerSpec = swaggerJSDoc({
           type: "http",
           scheme: "bearer",
           bearerFormat: "JWT",
-          description: "Nhập token JWT để truy cập API"
-        }
-      }
-    }
+          description: "Nhập token JWT để xác thực người dùng",
+        },
+      },
+    },
   },
 
-  apis: ["./routes/*.js"]
+  apis: ["./routes/*.js"],
 });
 
 module.exports = swaggerSpec;

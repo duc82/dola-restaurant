@@ -26,6 +26,9 @@ const Order = () => {
     }
   }, [id, dispatch, order]);
 
+  const voucherShipping = order?.vouchers.find((v) => v.type === "shipping");
+  const voucherDiscount = order?.vouchers.find((v) => v.type === "discount");
+
   return (
     <>
       <Helmet>
@@ -48,16 +51,16 @@ const Order = () => {
           <div className="mr-8 inline-block">
             <span>Trạng thái thanh toán: </span>
             <i>
-              <strong style={{ color: order?.isPaid ? "green" : "red" }}>
-                {order?.isPaid ? "Đã thanh toán" : "Chưa thanh toán"}
+              <strong style={{ color: order?.paidAt ? "green" : "red" }}>
+                {order?.paidAt ? "Đã thanh toán" : "Chưa thanh toán"}
               </strong>
             </i>
           </div>
           <div className="inline-block">
             <span>Trạng thái vận chuyển: </span>
             <i>
-              <strong style={{ color: order?.isDelivered ? "green" : "red" }}>
-                {order?.isDelivered ? "Đã giao hàng" : "Chưa giao hàng"}
+              <strong style={{ color: order?.deliveredAt ? "green" : "red" }}>
+                {order?.deliveredAt ? "Đã giao hàng" : "Chưa giao hàng"}
               </strong>
             </i>
           </div>
@@ -156,14 +159,23 @@ const Order = () => {
 
               <table className="w-full text-base">
                 <tfoot>
-                  <tr>
-                    <td className="py-4 w-3/4 text-end">Khuyến mại</td>
-                    <td className="py-4 w-1/4 text-end">{formatVnd(0)}</td>
-                  </tr>
+                  {voucherDiscount && (
+                    <tr>
+                      <td className="py-4 w-3/4 text-end">Giảm giá</td>
+                      <td className="py-4 w-1/4 text-end">
+                        -{formatVnd(voucherDiscount.discount)}
+                      </td>
+                    </tr>
+                  )}
                   <tr>
                     <td className="py-4 w-3/4 text-end">Phí vận chuyển</td>
                     <td className="py-4 w-1/4 text-end">
-                      {formatVnd(40000)} (Giao hàng tận nơi)
+                      {formatVnd(
+                        voucherShipping
+                          ? voucherShipping.discount - 40000
+                          : 40000
+                      )}{" "}
+                      (Giao hàng tận nơi)
                     </td>
                   </tr>
                   <tr>

@@ -5,12 +5,11 @@ class CategoryController {
   constructor() {
     this.categoryService = new CategoryService();
     this.getAll = asyncHandler(this.getAll.bind(this));
-    this.getAllChilds = asyncHandler(this.getAllChilds.bind(this));
-    this.getAllParents = asyncHandler(this.getAllParents.bind(this));
+    this.getChildrens = asyncHandler(this.getChildrens.bind(this));
     this.create = asyncHandler(this.create.bind(this));
     this.update = asyncHandler(this.update.bind(this));
     this.delete = asyncHandler(this.delete.bind(this));
-    this.deletMany = asyncHandler(this.deletMany.bind(this));
+    this.deleteMany = asyncHandler(this.deleteMany.bind(this));
   }
 
   async create(req, res) {
@@ -21,12 +20,8 @@ class CategoryController {
     res.json(await this.categoryService.getAll(req.query));
   }
 
-  async getAllChilds(req, res) {
-    res.json(await this.categoryService.getAllChilds());
-  }
-
-  async getAllParents(req, res) {
-    res.json(await this.categoryService.getAllParents());
+  async getChildrens(req, res) {
+    res.json(await this.categoryService.getChildrens());
   }
 
   async update(req, res) {
@@ -39,7 +34,7 @@ class CategoryController {
     res.json(await this.categoryService.delete(req.params.id));
   }
 
-  async deletMany(req, res) {
+  async deleteMany(req, res) {
     res.json(await this.categoryService.deleteMany(req.body.ids));
   }
 }

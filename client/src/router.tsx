@@ -10,6 +10,35 @@ import AccountLayout from "./layouts/AccountLayout";
 import Logout from "./pages/Logout";
 import Order from "./pages/Account/Order";
 import Orders from "./pages/Account/Orders";
+import ChangePassword from "./pages/Account/ChangePassword";
+import Address from "./pages/Account/Address";
+import About from "./pages/About";
+import Blog from "./components/Home/Blog";
+import BlogDetail from "./pages/Blog/BlogDetail";
+import Showroom from "./pages/Showroom";
+import Contact from "./pages/Contact";
+import Booking from "./pages/Booking";
+import ProductList from "./pages/Products";
+import ProductDetail from "./pages/ProductDetail";
+import BuyingGuide from "./pages/BuyingGuide";
+import PaymentInstruction from "./pages/PaymentInstruction";
+import PaymentPolicy from "./pages/PaymentPolicy";
+import Security from "./pages/Security";
+import GratitudeGifts from "./pages/GratitudeGifts";
+import NotFound from "./pages/NotFound";
+import CheckoutLayout from "./layouts/CheckoutLayout";
+import Checkout from "./pages/Checkout/Checkout";
+import CheckoutSuccess from "./pages/Checkout/CheckoutSuccess";
+import AdminLayout from "./layouts/AdminLayout";
+import User from "./pages/Admin/User";
+import Dashboard from "./pages/Admin/Dashboard";
+import Product from "./pages/Admin/Product";
+import Category from "./pages/Admin/Category";
+import Cart from "./pages/Cart";
+import AccountInfo from "./pages/Account/AccountInfo";
+import ProductFavorite from "./pages/ProductFavorite";
+import OrderAdmin from "./pages/Admin/OrderAdmin";
+import VoucherAdmin from "./pages/Admin/VoucherAdmin";
 
 const router = createBrowserRouter([
   {
@@ -17,46 +46,175 @@ const router = createBrowserRouter([
     element: <RootLayout />,
     children: [
       {
-        element: <Home />
+        index: true,
+        element: <Home />,
       },
       {
         element: <AuthLayout />,
         children: [
           {
             path: "dang-nhap",
-            element: <Login />
+            element: <Login />,
           },
           {
             path: "dang-ky",
-            element: <SignUp />
+            element: <SignUp />,
           },
           {
             path: "doi-mat-khau/:email/:token",
-            element: <ResetPassword />
-          }
-        ]
+            element: <ResetPassword />,
+          },
+        ],
       },
       {
         element: <PrivateLayout redirect="/dang-nhap" />,
         children: [
           {
+            path: "tai-khoan",
             element: <AccountLayout />,
             children: [
               {
-                element: <Orders />
+                index: true,
+                element: <AccountInfo />,
               },
               {
-                element: <
-              }
-            ]
+                path: "don-hang",
+                element: <Orders />,
+              },
+              {
+                path: "don-hang/:id",
+                element: <Order />,
+              },
+              {
+                path: "doi-mat-khau",
+                element: <ChangePassword />,
+              },
+              {
+                path: "dia-chi",
+                element: <Address />,
+              },
+            ],
           },
           {
-            element: <Logout />
-          }
-        ]
-      }
-    ]
-  }
+            path: "dang-xuat",
+            element: <Logout />,
+          },
+        ],
+      },
+      {
+        path: "gioi-thieu",
+        element: <About />,
+      },
+      {
+        path: "tin-tuc",
+        element: <Blog />,
+      },
+      {
+        path: "tin-tuc/:title",
+        element: <BlogDetail />,
+      },
+      {
+        path: "he-thong-nha-hang",
+        element: <Showroom />,
+      },
+      {
+        path: "lien-he",
+        element: <Contact />,
+      },
+      {
+        path: "dat-ban",
+        element: <Booking />,
+      },
+      {
+        path: "danh-muc-san-pham/:category",
+        element: <ProductList />,
+      },
+      {
+        path: "san-pham/:slug",
+        element: <ProductDetail />,
+      },
+      {
+        path: "mon-an-yeu-thich",
+        element: <ProductFavorite />,
+      },
+      {
+        path: "gio-hang",
+        element: <Cart />,
+      },
+      {
+        path: "huong-dan-mua-hang",
+        element: <BuyingGuide />,
+      },
+      {
+        path: "huong-dan-thanh-toan",
+        element: <PaymentInstruction />,
+      },
+      {
+        path: "chinh-sach-thanh-toan",
+        element: <PaymentPolicy />,
+      },
+      {
+        path: "bao-mat-thong-tin-ca-nhan",
+        element: <Security />,
+      },
+      {
+        path: "qua-tang-tri-an",
+        element: <GratitudeGifts />,
+      },
+      {
+        path: "*",
+        element: <NotFound />,
+      },
+    ],
+  },
+  {
+    path: "/thanh-toan",
+    element: <CheckoutLayout />,
+    children: [
+      {
+        index: true,
+        element: <Checkout />,
+      },
+      {
+        path: "vnpay-return",
+        element: <Checkout />,
+      },
+      {
+        path: "thanh-cong/:id",
+        element: <CheckoutSuccess />,
+      },
+    ],
+  },
+  {
+    path: "/admin",
+    element: <AdminLayout />,
+    children: [
+      {
+        index: true,
+        element: <Dashboard />,
+      },
+      {
+        path: "nguoi-dung",
+        element: <User />,
+      },
+      {
+        path: "san-pham",
+        element: <Product />,
+      },
+      {
+        path: "danh-muc-san-pham",
+        element: <Category />,
+      },
+      {
+        path: "don-hang",
+        element: <OrderAdmin />,
+      },
+      {
+        path: "ma-giam-gia",
+        element: <VoucherAdmin />,
+      },
+    ],
+  },
 ]);
 
 export default router;

@@ -15,7 +15,7 @@ import Breadcrumb from "@/components/Breadcrumb";
 const title = "Giỏ hàng";
 
 const Cart = () => {
-  const { carts, subTotal, count } = useAppSelector((state) => state.cart);
+  const { carts, subTotal } = useAppSelector((state) => state.cart);
   const windowWidth = useWindowResize();
   const dispatch = useAppDispatch();
 
@@ -29,7 +29,7 @@ const Cart = () => {
         <Breadcrumb.Item active>{title}</Breadcrumb.Item>
       </Breadcrumb>
       <Container className="h-full flex flex-col lg:flex-row">
-        {count > 0 ? (
+        {carts.length > 0 ? (
           <>
             <div className="lg:w-2/3 flex-none lg:pr-4 mb-10">
               <h1 className="text-[22px] font-medium mb-5">Giỏ hàng của bạn</h1>

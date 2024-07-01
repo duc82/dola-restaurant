@@ -1,10 +1,27 @@
+import addressService from "@/services/addressService";
+import { RejectValue } from "@/types";
 import { FullAddress } from "@/types/address";
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import handlingAxiosError from "@/utils/handlingAxiosError";
+import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+
+export const getCurrentAddresses = createAsyncThunk<
+  FullAddress[],
+  void,
+  RejectValue
+>("address/getCurrent", async (_, thunkApi) => {
+  try {
+    const addresses = await addressService.getCurrent();
+    return addresses;
+  } catch (error) {
+    return thunkApi.rejectWithValue(handlingAxiosError(error));
+  }
+});
 
 const addressSlice = createSlice({
   name: "address",
   initialState: {
     addresses: [] as FullAddress[],
+    isLoading: false,
   },
   reducers: {
     setAddress: (state, action: PayloadAction<FullAddress[]>) => {
@@ -43,6 +60,21 @@ const addressSlice = createSlice({
         (address) => address._id !== action.payload
       );
     },
+  },
+
+  extraReducers: (builder) => {
+    builder.addCase(getCurrentAddresses.pending, (state) => {
+      state.isLoading = true;
+    });
+
+    builder.addCase(getCurrentAddresses.fulfilled, (state, action) => {
+      state.addresses = action.payload;
+      state.isLoading = false;
+    });
+
+    builder.addCase(getCurrentAddresses.rejected, (state) => {
+      state.isLoading = false;
+    });
   },
 });
 

@@ -7,6 +7,7 @@ const swaggerSpec = require("./utils/swagger.util");
 const cors = require("cors");
 const logger = require("./utils/logger.util");
 const morganLogger = require("./middlewares/morganLogger.middleware");
+const useragent = require("express-useragent");
 
 const app = express();
 
@@ -14,10 +15,10 @@ const app = express();
 app.use(express.json());
 // Allow to parse nested object
 app.use(express.urlencoded({ extended: true }));
+// User agent
+app.use(useragent.express());
 // Http logger
-app.use(
-  morganLogger(process.env.NODE_ENV === "production" ? "combined" : "dev")
-);
+app.use(morganLogger());
 // CORS
 const allowedOrigins = [
   "http://localhost:4173",

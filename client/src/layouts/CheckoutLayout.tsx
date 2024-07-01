@@ -1,35 +1,40 @@
-import addressService from "@/services/addressService";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { setAddress } from "@/store/reducers/addressSlice";
+import { getCurrentAddresses } from "@/store/reducers/addressSlice";
 import { resetAuth } from "@/store/reducers/authSlice";
 import { getCurrentUser } from "@/store/reducers/userSlice";
+import cn from "@/utils/cn";
 import { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 
 const CheckoutLayout = () => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
+  const { pathname } = useLocation();
 
   useEffect(() => {
     if (!user) {
-      dispatch(getCurrentUser())
-        .unwrap()
-        .then(() => {
-          addressService
-            .getCurrent()
-            .then((data) => dispatch(setAddress(data)));
-        })
-        .catch(() => {
-          dispatch(resetAuth());
-          window.location.replace("/dang-nhap");
-        });
+      try {
+        dispatch(getCurrentUser()).unwrap();
+      } catch (error) {
+        dispatch(resetAuth());
+        window.location.replace("/dang-nhap");
+      }
     }
   }, [dispatch, user]);
 
+  useEffect(() => {
+    dispatch(getCurrentAddresses());
+  }, [dispatch]);
+
   return (
-    <div className="bg-white text-[rgb(51,51,51)]">
+    <div
+      className={cn(
+        "text-[rgb(51,51,51)] h-screen",
+        pathname === "/thanh-toan" ? "bg-white" : "bg-[rgb(230,232,234)]"
+      )}
+    >
       <Helmet>
         <title>Thanh toán đơn hàng</title>
       </Helmet>

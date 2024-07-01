@@ -2,7 +2,7 @@ import {
   FullProduct,
   Product,
   ProductResponse,
-  ProductsResponse
+  ProductsResponse,
 } from "@/types/product";
 import apiRequest from "./api";
 import { QueryOptions } from "@/types";
@@ -37,6 +37,28 @@ const productService = {
     return apiRequest<ProductsResponse>("/products" + query);
   },
 
+  getByParentCategory: async (
+    slug: string,
+    queryOptions?: Omit<QueryOptions, "search">
+  ) => {
+    let query = "";
+    if (queryOptions?.page) {
+      query += query
+        ? `&page=${queryOptions.page}`
+        : `?page=${queryOptions.page}`;
+    }
+
+    if (queryOptions?.limit) {
+      query += query
+        ? `&limit=${queryOptions.limit}`
+        : `?limit=${queryOptions.limit}`;
+    }
+
+    return apiRequest<ProductsResponse>(
+      `/products/parent-category/${slug}${query}`
+    );
+  },
+
   getBySlug: (slug: string) => {
     return apiRequest<FullProduct>(`/products/by-slug/${slug}`);
   },
@@ -46,7 +68,7 @@ const productService = {
       method: "POST",
       accessToken: true,
       refreshToken: true,
-      data
+      data,
     });
   },
 
@@ -55,7 +77,7 @@ const productService = {
       method: "PUT",
       accessToken: true,
       refreshToken: true,
-      data
+      data,
     });
   },
 
@@ -63,7 +85,7 @@ const productService = {
     return apiRequest<{ message: string }>(`/products/delete/${id}`, {
       method: "DELETE",
       accessToken: true,
-      refreshToken: true
+      refreshToken: true,
     });
   },
 
@@ -72,9 +94,9 @@ const productService = {
       method: "DELETE",
       accessToken: true,
       refreshToken: true,
-      data: { selectedRows }
+      data: { selectedRows },
     });
-  }
+  },
 };
 
 export default productService;

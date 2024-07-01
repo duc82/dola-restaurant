@@ -2,7 +2,7 @@ const AuthService = require("../services/auth.service");
 
 const authService = new AuthService();
 
-async function authenticationMiddleware(req, res, next) {
+module.exports = async (req, res, next) => {
   const accessToken = req.headers.authorization?.split(" ")[1];
 
   if (!accessToken) {
@@ -20,6 +20,4 @@ async function authenticationMiddleware(req, res, next) {
       message: "Token không hợp lệ",
     });
   }
-}
-
-module.exports = authenticationMiddleware;
+};

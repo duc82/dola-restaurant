@@ -1,4 +1,3 @@
-import { UpdateModalProps } from "@/types/admin";
 import Modal from "../Modal/Modal";
 import { useFormik } from "formik";
 import { addressSchema } from "@/schemas/addressSchema";
@@ -13,7 +12,13 @@ import useProvince from "@/hooks/useProvince";
 import Checkbox from "../Form/Checkbox";
 import Button from "../Form/Button";
 
-const EditModal = ({ show, onClose, id }: UpdateModalProps) => {
+interface EditModalProps {
+  show: boolean;
+  onClose: () => void;
+  id: string;
+}
+
+const EditModal = ({ show, onClose, id }: EditModalProps) => {
   const dispatch = useAppDispatch();
   const { addresses } = useAppSelector((state) => state.address);
 
@@ -27,7 +32,7 @@ const EditModal = ({ show, onClose, id }: UpdateModalProps) => {
       district: address?.district || "",
       ward: address?.ward || "",
       detail: address?.detail || "",
-      isDefault: address?.isDefault || false
+      isDefault: address?.isDefault || false,
     },
     enableReinitialize: true,
     validationSchema: addressSchema,
@@ -40,12 +45,12 @@ const EditModal = ({ show, onClose, id }: UpdateModalProps) => {
       } catch (error) {
         toast.error(handlingAxiosError(error).message);
       }
-    }
+    },
   });
 
   const { provinces, districts, wards } = useProvince({
     province: formik.values.province,
-    district: formik.values.district
+    district: formik.values.district,
   });
 
   return (

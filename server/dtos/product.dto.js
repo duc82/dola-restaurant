@@ -10,14 +10,21 @@ class ProductDto extends BaseDto {
 
   get getAll() {
     return Joi.object({
-      limit: this.limit,
+      limit: this.limitDefault,
       page: this.page,
       serach: this.search,
       cost: this.cost,
       tastte: this.taste,
       size: this.size,
       sort: this.sort,
-      categorySlug: this.categorySlug
+      categorySlug: this.categorySlug,
+    });
+  }
+
+  get getParentCategory() {
+    return Joi.object({
+      limit: this.limitDefault,
+      page: this.page,
     });
   }
 }

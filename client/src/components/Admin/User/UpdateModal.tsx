@@ -1,5 +1,5 @@
 import Modal from "@/components/Modal/Modal";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { useAppDispatch } from "@/store/hooks";
 import { UpdateModalProps } from "@/types/admin";
 import { useFormik } from "formik";
 import Input from "../Input";
@@ -7,12 +7,14 @@ import Select from "../Select";
 import handlingAxiosError from "@/utils/handlingAxiosError";
 import toast from "react-hot-toast";
 import { updateUser } from "@/store/reducers/userSlice";
+import { FullUser } from "@/types/user";
 
-const UpdateModal = ({ show, onClose, id }: UpdateModalProps) => {
+interface UpdateModalUserProps extends UpdateModalProps {
+  user: FullUser;
+}
+
+const UpdateModal = ({ show, onClose, user }: UpdateModalUserProps) => {
   const dispatch = useAppDispatch();
-  const { users } = useAppSelector((state) => state.user);
-
-  const user = users.find((user) => user._id === id);
 
   const formik = useFormik({
     initialValues: {
@@ -31,7 +33,7 @@ const UpdateModal = ({ show, onClose, id }: UpdateModalProps) => {
 
       try {
         const { message } = await dispatch(
-          updateUser({ id, data: values })
+          updateUser({ id: user._id, data: values })
         ).unwrap();
         onClose();
         resetForm();

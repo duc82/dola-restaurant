@@ -1,6 +1,7 @@
 import Container from "../Container";
 import { Link } from "react-router-dom";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import aboutImage from "@/assets/images/about_image.webp";
 
 const About = () => {
   return (
@@ -35,7 +36,7 @@ const About = () => {
           <div className="px-4 mt-5 lg:flex-1 lg:mt-0">
             <div className="overflow-hidden">
               <LazyLoadImage
-                src="/about_image.webp"
+                src={aboutImage}
                 effect="opacity"
                 alt="Về chúng tôi"
                 title="Về chúng tôi"

@@ -20,11 +20,9 @@ const authSlice = createSlice({
     authSuccess: (state) => {
       state.isLoading = false;
     },
-
     loginSuccess: (state, { payload }: PayloadAction<string>) => {
       state.accessToken = payload;
     },
-
     resetAuth: () => initialState,
   },
 });

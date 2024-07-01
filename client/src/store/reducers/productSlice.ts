@@ -6,7 +6,7 @@ import {
   FullProduct,
   Product,
   ProductResponse,
-  ProductsResponse
+  ProductsResponse,
 } from "@/types/product";
 import limits from "@/data/limits.json";
 
@@ -31,19 +31,6 @@ export const createProduct = createAsyncThunk<
   try {
     const data = await productService.create(product);
     return data;
-  } catch (error) {
-    return thunkApi.rejectWithValue(handlingAxiosError(error));
-  }
-});
-
-export const updateProduct = createAsyncThunk<
-  ProductResponse,
-  { id: string; data: Partial<Product> },
-  RejectValue
->("products/update", async ({ id, data }, thunkApi) => {
-  try {
-    const result = await productService.update(id, data);
-    return result;
   } catch (error) {
     return thunkApi.rejectWithValue(handlingAxiosError(error));
   }
@@ -90,7 +77,7 @@ const initialState: ProductState = {
   skip: 0,
   total: 0,
   page: 1,
-  isLoading: false
+  isLoading: false,
 };
 
 const productSlice = createSlice({
@@ -110,7 +97,7 @@ const productSlice = createSlice({
     removeFavoriteProducts: (state, { payload }: PayloadAction<string>) => {
       const index = state.favoriteProducts.findIndex((p) => p._id === payload);
       state.favoriteProducts.splice(index, 1);
-    }
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getAllProduct.pending, (state) => {
@@ -138,16 +125,6 @@ const productSlice = createSlice({
       state.products.push(payload.product);
     });
 
-    builder.addCase(updateProduct.fulfilled, (state, { payload }) => {
-      const index = state.products.findIndex(
-        (product) => product._id === payload.product._id
-      );
-
-      if (index !== -1) {
-        state.products[index] = payload.product;
-      }
-    });
-
     builder.addCase(deleteProduct.fulfilled, (state, { payload }) => {
       state.total--;
       const indexProduct = state.products.findIndex(
@@ -158,12 +135,12 @@ const productSlice = createSlice({
         state.products.splice(indexProduct, 1);
       }
     });
-  }
+  },
 });
 
 export default productSlice.reducer;
 export const {
   addViewedProducts,
   addFavoriteProducts,
-  removeFavoriteProducts
+  removeFavoriteProducts,
 } = productSlice.actions;

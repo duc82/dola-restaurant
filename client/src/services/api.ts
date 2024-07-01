@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import authService from "./authService";
-import { ToolkitStore } from "@reduxjs/toolkit/dist/configureStore";
 import { loginSuccess } from "@/store/reducers/authSlice";
+import { AppStore } from "@/store";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -9,9 +9,9 @@ if (!API_URL) {
   throw new Error("Vui lòng nhập VITE_API ở env!");
 }
 
-let store: ToolkitStore;
+let store: AppStore;
 
-export const injectStore = (s: ToolkitStore) => {
+export const injectStore = (s: AppStore) => {
   store = s;
 };
 

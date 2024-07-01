@@ -33,8 +33,7 @@ interface FullProduct extends FullType, Omit<Product, "images" | "category"> {
   discountedPrice: number;
   images: FullImage[];
   reviews: FullReview[];
-  childCategory: FullCategory;
-  parentCategory: FullCategory;
+  category: FullCategory;
 }
 
 interface ProductResponse {

@@ -1,11 +1,12 @@
 import Button from "@/components/Form/Button";
-import { Down, Up } from "@/icons";
+import { Down, Print, Up } from "@/icons";
 import orderService from "@/services/orderService";
 import { FullOrder } from "@/types/order";
 import cn from "@/utils/cn";
 import formatAddress from "@/utils/formatAddress";
 import formatVnd from "@/utils/formatVnd";
 import { useEffect, useState } from "react";
+import { Helmet } from "react-helmet-async";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
@@ -23,7 +24,10 @@ const CheckoutSuccess = () => {
   }, [id]);
 
   return (
-    <div className="bg-[rgb(230,232,234)] h-screen">
+    <div className="bg-[rgb(230,232,234)]">
+      <Helmet>
+        <title>Dola Restaurant - Cảm ơn</title>
+      </Helmet>
       <div className="md:max-w-3xl lg:max-w-7xl lg:px-8 mx-auto">
         <main className="py-6 lg:p-8">
           <header className="hidden lg:block mb-6">
@@ -60,7 +64,7 @@ const CheckoutSuccess = () => {
               <aside className="bg-zinc-50 border border-zinc-200">
                 <div className="py-2 px-4 flex justify-between">
                   <h2 className="font-semibold">
-                    Đơn hàng ({order?.products.length})
+                    Đơn hàng {order?._id} ({order?.products.length})
                   </h2>
                   <button
                     type="button"
@@ -172,6 +176,14 @@ const CheckoutSuccess = () => {
                 >
                   Tiếp tục mua hàng
                 </Button>
+                <button
+                  type="button"
+                  className="flex items-center space-x-2 text-blue-500 mx-8 text-2xl"
+                  onClick={() => window.print()}
+                >
+                  <Print className="w-6 h-6" />
+                  <span>In </span>
+                </button>
               </div>
             </div>
           </article>

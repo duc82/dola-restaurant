@@ -1,12 +1,12 @@
 const CustomError = require("../utils/error.util");
 
 const Body = (schema) => {
-  return (req, res, next) => {
+  return (req, _res, next) => {
     const { error, value } = schema.validate(req.body);
     if (error) {
       throw new CustomError({
         status: 400,
-        message: error.message
+        message: error.message,
       });
     }
 
@@ -17,12 +17,12 @@ const Body = (schema) => {
 };
 
 const Query = (schema) => {
-  return (req, res, next) => {
+  return (req, _res, next) => {
     const { error, value } = schema.validate(req.query);
     if (error) {
       throw new CustomError({
         status: 400,
-        message: error.message
+        message: error.message,
       });
     }
 
@@ -33,12 +33,12 @@ const Query = (schema) => {
 };
 
 const Params = (schema) => {
-  return (req, res, next) => {
+  return (req, _res, next) => {
     const { error, value } = schema.validate(req.params);
     if (error) {
       throw new CustomError({
         status: 400,
-        message: error.message
+        message: error.message,
       });
     }
 
@@ -51,5 +51,5 @@ const Params = (schema) => {
 module.exports = {
   Body,
   Query,
-  Params
+  Params,
 };

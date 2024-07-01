@@ -34,8 +34,9 @@ export default {
         ease: "ease",
       },
       backgroundImage: {
-        rating: "url('/danhgia.webp')",
+        rating: "url('src/assets/images/danhgia.webp')",
         select: "url('/ico-select_1.webp')",
+        select2: "url('/ico-select_2.png')",
         filter: "url('/icon-filter-bg.webp')",
         filterClose: "url('/icon-filter-close-bg.webp')",
         booking: "url('/datban.webp')",

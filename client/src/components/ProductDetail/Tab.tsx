@@ -29,15 +29,17 @@ const Tab = ({ product }: { product: FullProduct | null }) => {
         ))}
       </ul>
 
-      <div className="py-6 -mt-[1px] border-t border-t-[rgb(225,225,225)]">
-        {currentTab === TabName.DESCRIPTION && product?.description && (
-          <div
-            dangerouslySetInnerHTML={{ __html: product.description }}
-            id="description"
-          ></div>
-        )}
-        {currentTab === TabName.REVIEW && <Review />}
-      </div>
+      {product && (
+        <div className="py-6 -mt-[1px] border-t border-t-[rgb(225,225,225)]">
+          {currentTab === TabName.DESCRIPTION && product?.description && (
+            <div
+              dangerouslySetInnerHTML={{ __html: product.description }}
+              id="description"
+            ></div>
+          )}
+          {currentTab === TabName.REVIEW && <Review productId={product._id} />}
+        </div>
+      )}
     </div>
   );
 };

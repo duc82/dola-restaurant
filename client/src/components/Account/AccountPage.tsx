@@ -38,9 +38,10 @@ const AccountPage = () => {
           <li key={account.url}>
             <Link
               to={account.url}
-              className={cn("hover:text-yellow-primary", {
-                "text-yellow-primary": pathname === account.url,
-              })}
+              className={cn(
+                "hover:text-yellow-primary",
+                pathname === account.url && "text-yellow-primary"
+              )}
             >
               {account.name}{" "}
               {account.url === "/tai-khoan/dia-chi" && `(${addresses.length})`}

@@ -6,6 +6,7 @@ class ProductController {
   constructor() {
     this.productService = new ProductService();
     this.getAll = asyncHandler(this.getAll.bind(this));
+    this.getParentCategory = asyncHandler(this.getParentCategory.bind(this));
     this.getBySlug = asyncHandler(this.getBySlug.bind(this));
     this.create = asyncHandler(this.create.bind(this));
     this.update = asyncHandler(this.update.bind(this));
@@ -14,11 +15,17 @@ class ProductController {
   }
 
   async getAll(req, res) {
-    res.status(200).json(await this.productService.getAll(req.query));
+    res.json(await this.productService.getAll(req.query));
+  }
+
+  async getParentCategory(req, res) {
+    res.json(
+      await this.productService.getParentCategory(req.params.slug, req.query)
+    );
   }
 
   async getBySlug(req, res) {
-    res.status(200).json(await this.productService.getBySlug(req.params.slug));
+    res.json(await this.productService.getBySlug(req.params.slug));
   }
 
   async create(req, res) {

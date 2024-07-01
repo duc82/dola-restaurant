@@ -3,14 +3,14 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 interface CartState {
   carts: Cart[];
-  subTotal: number;
   count: number;
+  subTotal: number;
 }
 
 const initialState: CartState = {
   carts: [],
-  subTotal: 0,
   count: 0,
+  subTotal: 0,
 };
 
 const cartSlice = createSlice({
@@ -68,7 +68,6 @@ const cartSlice = createSlice({
       if (indexCart !== -1) {
         const oldQuantity = state.carts[indexCart].quantity;
         state.subTotal -= state.carts[indexCart].price * oldQuantity;
-        state.count -= oldQuantity;
 
         state.carts[indexCart].quantity = payload.quantity;
       } else {
@@ -76,7 +75,6 @@ const cartSlice = createSlice({
       }
 
       state.subTotal += payload.discountedPrice * payload.quantity;
-      state.count += payload.quantity;
     },
 
     removeCart: (state, { payload }: PayloadAction<string>) => {

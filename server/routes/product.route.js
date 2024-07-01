@@ -7,10 +7,13 @@
  *    required:
  *     - url
  *    properties:
+ *      _id:
+ *        type: string
+ *        format: ObjectId
+ *        description: Id ảnh
  *      url:
  *       type: string
  *       description: Đường dẫn ảnh
- *       example: https://res.cloudinary.com/dofqucuyy/image/upload/v1620228239/ecommerce/1620228238560-1.jpg
  */
 
 /**
@@ -23,8 +26,7 @@
  *        - title
  *        - price
  *        - stock
- *        - childCategory
- *        - parentCategory
+ *        - category
  *        - images
  *        - taste
  *        - size
@@ -34,23 +36,16 @@
  *          type: string
  *          format: ObjectId
  *          description: Id của sản phẩm
- *          example: jgsger3423434
  *        title:
  *          type: string
  *          description: Tiêu đề của sản phẩm
- *          example: Rau
  *        slug:
  *          type: string
  *          description: Slug của sản phẩm
- *          example: rau
  *        images:
  *          type: array
  *          items:
- *            type: object
- *            properties:
- *              url:
- *                type: string
- *                example: https://res.cloudinary.com/dofqucuyy/image/upload/v1620228239/ecommerce/1620228238560-1.jpg
+ *            $ref: '#/components/schemas/Image'
  *        createdAt:
  *          type: string
  *          format: date-time
@@ -73,6 +68,12 @@ const router = Router();
 const productDto = new ProductDto();
 
 router.get("/", Query(productDto.getAll), productController.getAll);
+
+router.get(
+  "/parent-category/:slug",
+  Query(productDto.getParentCategory),
+  productController.getParentCategory
+);
 
 router.get("/by-slug/:slug", productController.getBySlug);
 

@@ -1,4 +1,4 @@
-import cn from "../../../utils/cn";
+import cn from "@/utils/cn";
 import { ReactNode } from "react";
 
 interface ChartWrapperProps {
@@ -9,6 +9,7 @@ interface ChartWrapperProps {
     isGrowing: boolean;
   };
   report: string;
+  className?: string;
   children?: ReactNode;
 }
 
@@ -17,10 +18,16 @@ const ChartWrapper = ({
   title,
   percent,
   report,
+  className,
   children,
 }: ChartWrapperProps) => {
   return (
-    <div className="p-4 border-gray-600 border rounded-lg shadow-sm sm:p-6 bg-emerald-secondary">
+    <div
+      className={cn(
+        "p-4 border-gray-600 border rounded-lg shadow-sm sm:p-6 bg-emerald-secondary",
+        className
+      )}
+    >
       <div className="flex items-center justify-between mb-4">
         <div className="flex-shrink-0">
           <span className="text-xl font-bold leading-none sm:text-2xl text-white">

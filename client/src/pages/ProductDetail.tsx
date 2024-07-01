@@ -20,10 +20,13 @@ import productService from "@/services/productService";
 import ProductViewed from "@/components/ProductDetail/ProductViewed";
 import { FullProduct } from "@/types/product";
 import Fancybox from "@/components/Fancybox";
+import Voucher from "@/components/Voucher";
+import { useModalCart } from "@/providers/CartProvider";
 
 const ProductDetail = () => {
   const dispatch = useAppDispatch();
   const [product, setProduct] = useState<FullProduct | null>(null);
+  const { updateAddedCart } = useModalCart();
 
   const { slug } = useParams();
   const {
@@ -31,7 +34,7 @@ const ProductDetail = () => {
     handleIncreaseQuantity,
     handleDecreaseQuantity,
     handleChangeQuantity,
-    resetQuantity
+    resetQuantity,
   } = useQuantity({ max: product?.stock });
 
   const [indexActiveImage, setIndexActiveImage] = useState(0);
@@ -48,13 +51,16 @@ const ProductDetail = () => {
     if (!quantity) {
       resetQuantity();
     }
-    dispatch(
-      increaseQuantity({
-        ...product,
-        price: product.discountedPrice,
-        quantity: quantity ? +quantity : 1
-      })
-    );
+
+    const cart = {
+      ...product,
+      price: product.discountedPrice,
+      quantity: quantity ? +quantity : 1,
+    };
+
+    dispatch(increaseQuantity(cart));
+
+    updateAddedCart(cart);
   };
 
   useEffect(() => {
@@ -77,15 +83,15 @@ const ProductDetail = () => {
       </Helmet>
       <Breadcrumb>
         <Breadcrumb.Item>Trang chủ</Breadcrumb.Item>
-        <Breadcrumb.Item
-          href={`/danh-muc-san-pham/${product?.parentCategory.slug}`}
-        >
-          {product?.parentCategory.name}
-        </Breadcrumb.Item>
-        <Breadcrumb.Item
-          href={`/danh-muc-san-pham/${product?.childCategory.slug}`}
-        >
-          {product?.childCategory.name}
+        {product?.category.parent && (
+          <Breadcrumb.Item
+            href={`/danh-muc-san-pham/${product?.category.parent.slug}`}
+          >
+            {product?.category.parent.name}
+          </Breadcrumb.Item>
+        )}
+        <Breadcrumb.Item href={`/danh-muc-san-pham/${product?.category.slug}`}>
+          {product?.category.name}
         </Breadcrumb.Item>
         <Breadcrumb.Item active>{product?.title}</Breadcrumb.Item>
       </Breadcrumb>
@@ -226,12 +232,12 @@ const ProductDetail = () => {
                 </div>
               </div>
               {/* Voucher */}
-              {/* <Voucher /> */}
+              <Voucher />
             </div>
           </div>
           <Tab product={product} />
           {/* Product relate */}
-          <ProductRelate parentCategorySlug={product?.parentCategory.slug} />
+          <ProductRelate parentCategorySlug={product?.category.parent?.slug} />
           {/* Product viewed  */}
           {product && <ProductViewed product={product} />}
         </div>

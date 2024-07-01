@@ -1,9 +1,7 @@
 import Modal from "@/components/Modal/Modal";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import type { UpdateModalProps } from "@/types/admin";
 import { useFormik } from "formik";
 import Input from "../Input";
-import Select from "../Select";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { useState } from "react";
 import type { FilePreview } from "@/types";
@@ -12,20 +10,26 @@ import { Upload } from "@/icons";
 import toast from "react-hot-toast";
 import handlingAxiosError from "@/utils/handlingAxiosError";
 import categoryService from "@/services/categoryService";
-import { updateCategory } from "@/store/reducers/categorySlice";
-import useCategory from "@/hooks/useCategory";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "@/libs/firebase";
+import { FullCategory } from "@/types/category";
 
-const UpdateModal = ({ show, onClose, id }: UpdateModalProps) => {
-  const dispatch = useAppDispatch();
-  const { categories } = useAppSelector((state) => state.category);
-  const { parentCategories } = useCategory();
+interface UpdateModalCategoryProps extends UpdateModalProps {
+  category: FullCategory | null;
+  setCategories: React.Dispatch<React.SetStateAction<FullCategory[]>>;
+}
+
+const UpdateModal = ({
+  show,
+  onClose,
+  category,
+  setCategories,
+}: UpdateModalCategoryProps) => {
   const [file, setFile] = useState<FilePreview | null>(null);
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
-      "image/*": []
+      "image/*": [],
     },
     maxSize: 10485760, // 10MB
     multiple: false,
@@ -33,32 +37,25 @@ const UpdateModal = ({ show, onClose, id }: UpdateModalProps) => {
       const file = acceptedFiles[0];
       if (file) {
         const filePreview = Object.assign(file, {
-          preview: URL.createObjectURL(file)
+          preview: URL.createObjectURL(file),
         });
         setFile(filePreview);
       }
-    }
+    },
   });
-
-  const category = categories.find((category) => category._id === id);
 
   const formik = useFormik({
     initialValues: {
       name: category?.name || "",
       description: category?.description || "",
       image: category?.image || "",
-      parentCategory: (category?.parentCategory?._id || "") as
-        | string
-        | undefined
     },
     enableReinitialize: true,
     onSubmit: async (values) => {
       try {
-        const storageRef = ref(storage, `categories/${file?.name}`);
+        if (!category) return;
 
-        if (!values.parentCategory) {
-          delete values.parentCategory;
-        }
+        const storageRef = ref(storage, `categories/${file?.name}`);
 
         if (file) {
           await uploadBytes(storageRef, file as File)
@@ -68,9 +65,15 @@ const UpdateModal = ({ show, onClose, id }: UpdateModalProps) => {
             });
         }
 
-        const data = await categoryService.update(id, values);
+        const data = await categoryService.update(category._id, values);
 
-        dispatch(updateCategory(data.category));
+        setCategories((prev) => {
+          const index = prev.findIndex((item) => item._id === category._id);
+          if (index !== -1) {
+            prev[index] = data.category;
+          }
+          return prev;
+        });
 
         setFile(null);
         onClose();
@@ -78,7 +81,7 @@ const UpdateModal = ({ show, onClose, id }: UpdateModalProps) => {
       } catch (error) {
         toast.error(handlingAxiosError(error).message);
       }
-    }
+    },
   });
 
   return (
@@ -100,33 +103,22 @@ const UpdateModal = ({ show, onClose, id }: UpdateModalProps) => {
               label="Tên danh mục"
               name="name"
               id="name"
-              placeholder="Món chính"
               autoComplete="off"
               value={formik.values.name}
               onChange={formik.handleChange}
               error={formik.errors.name}
+              wrapperClassName="col-span-2"
             />
-            <Select
-              label="Danh mục cha"
-              name="parentCategory"
-              id="parentCategory"
-              onChange={formik.handleChange}
-              value={formik.values.parentCategory}
-            >
-              <option value="">Không có</option>
-              {parentCategories.map((category) => (
-                <option key={category._id} value={category._id}>
-                  {category.name}
-                </option>
-              ))}
-            </Select>
 
             <Input
               type="text"
-              label="Mô tả"
+              label={
+                <>
+                  Mô tả <span className="text-gray-400">(không bắt buộc)</span>
+                </>
+              }
               name="description"
               id="description"
-              placeholder="Mô tả danh mục"
               autoComplete="off"
               value={formik.values.description}
               onChange={formik.handleChange}

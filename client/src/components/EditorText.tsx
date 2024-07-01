@@ -18,6 +18,9 @@ const modules = {
       { indent: "+1" },
     ],
   ],
+  clipboard: {
+    matchVisual: false,
+  },
 };
 
 const formats = [

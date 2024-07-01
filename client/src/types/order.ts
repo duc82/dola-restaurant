@@ -1,7 +1,8 @@
-import { Timestamp } from ".";
+import { Pagination, Timestamp } from ".";
 import { FullAddress } from "./address";
 import { FullProduct } from "./product";
 import { FullUser } from "./user";
+import { FullVoucher } from "./voucher";
 
 interface Order {
   user: string;
@@ -13,13 +14,10 @@ interface Order {
   paymentMethod: string;
   shippingFee: number;
   total: number;
-  isPaid: boolean;
-  paidAt?: string;
-  isDelivered?: boolean;
-  deliveredAt?: string;
-  isCancelled?: boolean;
-  cancelledAt?: string;
-  note?: string;
+  paidAt?: string | null;
+  deliveredAt?: string | null;
+  cancelledAt?: string | null;
+  note?: string | null;
 }
 
 interface FullOrder
@@ -32,6 +30,7 @@ interface FullOrder
     quantity: number;
   }[];
   shippingAddress: FullAddress;
+  vouchers: FullVoucher[];
 }
 
 interface OrderResponse {
@@ -39,7 +38,7 @@ interface OrderResponse {
   message: string;
 }
 
-interface OrdersResponse {
+interface OrdersResponse extends Pagination {
   orders: FullOrder[];
 }
 
@@ -53,5 +52,5 @@ export type {
   FullOrder,
   OrderResponse,
   OrdersResponse,
-  CreatePaymentUrlResponse
+  CreatePaymentUrlResponse,
 };

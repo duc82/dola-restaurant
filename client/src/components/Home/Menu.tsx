@@ -1,39 +1,43 @@
 import { useEffect, useRef, useState } from "react";
 import Title from "./Title";
 import Container from "../Container";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { getAllProduct } from "@/store/reducers/productSlice";
+import { useAppSelector } from "@/store/hooks";
 import cn from "@/utils/cn";
 import ProductList from "../Product/ProductList";
 import useInView from "@/hooks/useInView";
+import productService from "@/services/productService";
+import { FullProduct } from "@/types/product";
 
 const Menu = () => {
-  const dispatch = useAppDispatch();
   const ref = useRef(null);
   const isInView = useInView(ref, { triggerOnce: true });
   const { categories } = useAppSelector((state) => state.category);
 
-  const parentCategories = categories.filter(
-    (category) => !category.parentCategory
-  );
-
   const [categorySlug, setCategorySlug] = useState("");
-
-  const { products } = useAppSelector((state) => state.product);
+  const [products, setProducts] = useState<FullProduct[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (!categorySlug) return;
 
     if (isInView) {
-      dispatch(getAllProduct({ category: categorySlug, limit: 10 }));
+      setIsLoading(true);
+      productService
+        .getByParentCategory(categorySlug, { limit: 10 })
+        .then((value) => {
+          setProducts(value.products);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
     }
-  }, [categorySlug, dispatch, isInView]);
+  }, [categorySlug, isInView]);
 
   useEffect(() => {
-    if (parentCategories.length > 0 && !categorySlug) {
-      setCategorySlug(parentCategories[0].slug);
+    if (categories.length > 0 && !categorySlug) {
+      setCategorySlug(categories[0].slug);
     }
-  }, [parentCategories, categorySlug]);
+  }, [categories, categorySlug]);
 
   return (
     <section className="py-[60px]">
@@ -43,7 +47,7 @@ const Menu = () => {
           ref={ref}
           className="space-x-2.5 flex w-full mb-4 overflow-x-auto lg:justify-center"
         >
-          {parentCategories.map((menu) => (
+          {categories.map((menu) => (
             <li
               key={menu._id}
               onClick={() => setCategorySlug(menu.slug)}
@@ -57,11 +61,14 @@ const Menu = () => {
             </li>
           ))}
         </ul>
-        <ProductList
-          products={products}
-          wrapperClassName="xl:grid-cols-5"
-          page="Home"
-        />
+        {
+          <ProductList
+            products={products}
+            wrapperClassName="xl:grid-cols-5"
+            isLoading={isLoading}
+            skeletonCount={5}
+          />
+        }
       </Container>
     </section>
   );

@@ -19,8 +19,6 @@ const NavbarMobileItem = ({
 }: NavbarItemsProps) => {
   const [isOpenDropdown, setIsOpenDropdown] = useState(false);
   const { categories } = useAppSelector((state) => state.category);
-  const parentCategories = categories.filter((cate) => !cate.parentCategory);
-
   const toggleDropdown = () => setIsOpenDropdown(!isOpenDropdown);
 
   if (hasChild) {
@@ -48,7 +46,7 @@ const NavbarMobileItem = ({
           </button>
         </div>
         <NavbarDropdown
-          dropdowns={parentCategories}
+          dropdowns={categories}
           active={isOpenDropdown}
           depthLevel={1}
         />
