@@ -4,7 +4,7 @@ import type { CreateModalProps } from "@/types/admin";
 import { useFormik } from "formik";
 import Input from "../Input";
 import Select from "../Select";
-import { Suspense, lazy, useState } from "react";
+import React, { Suspense, lazy, useEffect, useState } from "react";
 import { FilePreview } from "@/types";
 import { useDropzone } from "react-dropzone";
 import { Upload } from "@/icons";
@@ -17,10 +17,19 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "@/libs/firebase";
 import { FullCategory } from "@/types/category";
 import categoryService from "@/services/categoryService";
+import { FullProduct } from "@/types/product";
 
 const TextEditor = lazy(() => import("@/components/TextEditor"));
 
-const CreateModal = ({ show, onClose }: CreateModalProps) => {
+interface CreateProductModalProps extends CreateModalProps {
+  setProducts: React.Dispatch<React.SetStateAction<FullProduct[]>>;
+}
+
+const CreateModal = ({
+  show,
+  onClose,
+  setProducts,
+}: CreateProductModalProps) => {
   const [files, setFiles] = useState<FilePreview[]>([]);
   const [childCategories, setChildCategories] = useState<FullCategory[]>([]);
   const dispatch = useAppDispatch();
@@ -61,10 +70,12 @@ const CreateModal = ({ show, onClose }: CreateModalProps) => {
           createProduct({ ...values, price })
         ).unwrap();
 
-        resetForm();
+        setProducts((prev) => [...prev, data.product]);
+
         onClose();
 
         toast.success(data.message);
+        resetForm();
       } catch (error) {
         toast.error(handlingAxiosError(error).message);
       }
@@ -85,6 +96,12 @@ const CreateModal = ({ show, onClose }: CreateModalProps) => {
       setFiles(files);
     },
   });
+
+  useEffect(() => {
+    if (show) {
+      categoryService.getChildrens().then((data) => setChildCategories(data));
+    }
+  }, [show]);
 
   return (
     <Modal

@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 
 interface FuncState<T> {
   data: T;
-  total: number;
-  skip: number;
+  total?: number;
+  skip?: number;
 }
 
 export default function useFetchPagination<T>(
@@ -21,8 +21,10 @@ export default function useFetchPagination<T>(
     func()
       .then((res) => {
         setData(res.data);
-        setTotal(res.total);
-        setSkip(res.skip);
+        if (res.total !== undefined && res.skip !== undefined) {
+          setTotal(res.total);
+          setSkip(res.skip);
+        }
       })
       .catch((err) => setError(err))
       .finally(() => setIsLoading(false));

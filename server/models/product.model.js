@@ -74,7 +74,7 @@ productSchema.pre("save", function (next) {
 productSchema.pre(["updateOne", "findOneAndUpdate"], function (next) {
   const update = this.getUpdate();
 
-  if (update.title) {
+  if (update.title && !update.slug) {
     this.slug = slug(update.title);
   }
 

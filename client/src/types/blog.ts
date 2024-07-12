@@ -1,16 +1,13 @@
 import { FullType } from ".";
-import { User } from "./user";
 
 interface Blog {
   title: string;
   description: string;
   image: string;
-  user?: string;
+  slug: string;
 }
 
-interface FullBlog extends FullType, Omit<Blog, "user"> {
-  user?: User;
-}
+interface FullBlog extends FullType, Omit<Blog, "user"> {}
 
 interface BlogResponse {
   blog: FullBlog;

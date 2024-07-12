@@ -59,7 +59,10 @@ const Orders = () => {
                 </Link>
               </td>
               <td className="text-center py-5 px-1 border border-gray-200">
-                {formatDate(order.createdAt)}
+                {formatDate(order.createdAt, {
+                  dateStyle: "short",
+                  timeStyle: "short",
+                })}
               </td>
               <td className="text-center py-5 px-1 border border-gray-200">
                 {formatAddress(order.shippingAddress)}

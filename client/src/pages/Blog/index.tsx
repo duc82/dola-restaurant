@@ -1,12 +1,13 @@
-import Breadcrumb from "../../components/Breadcrumb";
-import Category from "../../components/ProductCategory/Category";
-import Container from "../../components/Container";
-import BlogCard from "../../components/Blog/BlogCard";
-import Prominent from "../../components/Blog/Prominent";
-import { Helmet } from "react-helmet-async";
 import { useEffect } from "react";
+import Breadcrumb from "@/components/Breadcrumb";
+import Category from "@/components/ProductCategory/Category";
+import Container from "@/components/Container";
+import BlogCard from "@/components/Blog/BlogCard";
+import { Helmet } from "react-helmet-async";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { getAllBlog } from "@/store/reducers/blogSlice";
+import blogService from "@/services/blogService";
+import { getAllBlogs } from "@/store/reducers/blogSlice";
+import BlogRelate from "@/components/Blog/BlogRelate";
 
 const title = "Tin tức";
 
@@ -15,7 +16,7 @@ const Blog = () => {
   const { blogs } = useAppSelector((state) => state.blog);
 
   useEffect(() => {
-    dispatch(getAllBlog());
+    blogService.getAll({ limit: 12 }).then((res) => dispatch(getAllBlogs(res)));
   }, [dispatch]);
 
   return (
@@ -34,13 +35,13 @@ const Blog = () => {
           </h1>
           <ul className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
             {blogs.map((blog, i) => (
-              <BlogCard key={i} {...blog} />
+              <BlogCard key={i} blog={blog} />
             ))}
           </ul>
         </div>
         <aside className="flex-[25%] lg:pr-4">
           <Category title="Danh mục tin tức" />
-          <Prominent />
+          <BlogRelate blogs={blogs} />
         </aside>
       </Container>
     </>

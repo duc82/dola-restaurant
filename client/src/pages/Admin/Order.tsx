@@ -1,11 +1,14 @@
+import UpdateModal from "@/components/Admin/Order/UpdateModal";
+import Limit from "@/components/Limit";
+import Pagination from "@/components/Pagination";
 import useAdminModal from "@/hooks/useAdminModal";
 import useFetchPagination from "@/hooks/useFetchPagination";
 import useLimit from "@/hooks/useLimit";
-import { Dustbin, Edit, Plus2, Search } from "@/icons";
-import categoryService from "@/services/categoryService";
+import { Dustbin, Edit, Search } from "@/icons";
 import orderService from "@/services/orderService";
 import { FullOrder } from "@/types/order";
 import cn from "@/utils/cn";
+import formatAddress from "@/utils/formatAddress";
 import formatDate from "@/utils/formatDate";
 import formatVnd from "@/utils/formatVnd";
 import handlingAxiosError from "@/utils/handlingAxiosError";
@@ -14,10 +17,9 @@ import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
 import { useSearchParams } from "react-router-dom";
 
-export default function OrderAdmin() {
+export default function Order() {
   const {
     activeModal,
-    openCreateModal,
     openUpdateModal,
     closeModal,
     selectedRows,
@@ -38,7 +40,8 @@ export default function OrderAdmin() {
       const confirm = window.confirm("Bạn có chắc chắn muốn xóa danh mục này?");
       if (!confirm) return;
 
-      const data = await categoryService.delete(id);
+      const data = await orderService.delete(id);
+      setOrders((prevOrders) => prevOrders.filter((order) => order._id !== id));
       closeModal();
       toast.success(data.message);
     } catch (error) {
@@ -53,13 +56,21 @@ export default function OrderAdmin() {
       );
       if (!confirm) return;
 
-      const data = await categoryService.deleteMany(selectedRows);
-
+      const data = await orderService.deleteMany(selectedRows);
+      setOrders((prevOrders) =>
+        prevOrders.filter((order) => !selectedRows.includes(order._id))
+      );
       clearSelectedRows();
       toast.success(data.message);
     } catch (error) {
       toast.error(handlingAxiosError(error).message);
     }
+  };
+
+  const onPageChange = (page: number) => {
+    clearSelectedRows();
+    urlSearchParams.set("page", page.toString());
+    setUrlSearchParams(urlSearchParams);
   };
 
   const getOrders = useCallback(async () => {
@@ -84,11 +95,12 @@ export default function OrderAdmin() {
   } = useFetchPagination<FullOrder[]>(getOrders, []);
 
   const hasSelected = selectedRows.size > 0;
+  const pageCount = Math.ceil(total / currentLimit);
 
   return (
     <div className="overflow-y-auto w-full">
       <Helmet>
-        <title>Danh sách đơn hàng</title>
+        <title>Quản lý đơn hàng</title>
       </Helmet>
       <div className="p-4 lg:px-6 lg:pt-6">
         <h1 className="text-2xl font-semibold mb-4">Danh sách đơn hàng</h1>
@@ -110,14 +122,6 @@ export default function OrderAdmin() {
               <Search className="absolute top-1/2 left-4 -translate-y-1/2 w-4 h-4 text-gray-400" />
             </form>
           </div>
-          <button
-            type="button"
-            onClick={openCreateModal}
-            className="px-3 py-2 bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-900 rounded-lg inline-flex items-center font-medium justify-center text-sm transition"
-          >
-            <Plus2 className="w-6 h-6 mr-1" />
-            <span>Thêm mới</span>
-          </button>
         </div>
       </div>
 
@@ -166,6 +170,9 @@ export default function OrderAdmin() {
             <th>Tổng cộng</th>
             <th>Địa chỉ giao hàng</th>
             <th>Phí vận chuyển</th>
+            <th>PT thanh toán</th>
+            <th>TT thanh toán</th>
+            <th>TT vận chuyển</th>
             <th>Thời gian tạo</th>
             <th>Chức năng</th>
           </tr>
@@ -196,9 +203,17 @@ export default function OrderAdmin() {
               </td>
               <td>{order._id}</td>
               <td>{formatVnd(order.total)}</td>
-              <td>{order.shippingAddress.detail}</td>
+              <td>{formatAddress(order.shippingAddress)}</td>
               <td>{formatVnd(order.shippingFee)}</td>
-              <td>{formatDate(order.createdAt)}</td>
+              <td>{order.paymentMethod}</td>
+              <td>{order.paidAt ? "Đã thanh toán" : "Chưa thanh toán"}</td>
+              <td>{order.deliveredAt ? "Đã giao hàng" : "Chưa giao hàng"}</td>
+              <td>
+                {formatDate(order.createdAt, {
+                  dateStyle: "short",
+                  timeStyle: "short",
+                })}
+              </td>
               <td className="whitespace-nowrap space-x-2.5">
                 <button
                   type="button"
@@ -224,6 +239,34 @@ export default function OrderAdmin() {
           ))}
         </tbody>
       </table>
+
+      <div className="p-4 lg:px-6 flex items-center justify-between border-t border-t-gray-600">
+        <span className="text-sm text-gray-400">
+          Hiển thị {skip + 1 > total ? 0 : skip + 1} -{" "}
+          {skip + orders.length > total ? 0 : skip + orders.length} trên tổng số{" "}
+          {total}
+        </span>
+        <Pagination
+          pageCount={pageCount}
+          currentPage={page}
+          onPageChange={onPageChange}
+          variant="blue"
+        />
+        <Limit
+          currentLimit={currentLimit}
+          handleClick={(limit) => handleChangeLimit(limit, total, page)}
+          variant="blue"
+        />
+      </div>
+
+      {order && (
+        <UpdateModal
+          show={activeModal.update}
+          onClose={closeModal}
+          order={order}
+          setOrders={setOrders}
+        />
+      )}
     </div>
   );
 }

@@ -3,6 +3,24 @@ const Product = require("../models/product.model");
 const CustomError = require("../utils/error.util");
 
 class ReviewService {
+  async getAll(query) {
+    const { page, limit } = query;
+
+    const skip = (page - 1) * limit;
+
+    const reviews = await Review.find().limit(limit).skip(skip);
+
+    const total = await Review.countDocuments();
+
+    return {
+      reviews,
+      page,
+      limit,
+      total,
+      skip,
+    };
+  }
+
   async create(user, body) {
     const { rating, comment, productId } = body;
 

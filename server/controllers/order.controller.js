@@ -12,6 +12,9 @@ class OrderController {
     this.getById = asyncHandler(this.getById.bind(this));
     this.createPaymentUrl = asyncHandler(this.createPaymentUrl.bind(this));
     this.vnpayReturn = asyncHandler(this.vnpayReturn.bind(this));
+    this.update = asyncHandler(this.update.bind(this));
+    this.delete = asyncHandler(this.delete.bind(this));
+    this.deleteMany = asyncHandler(this.deleteMany.bind(this));
   }
 
   async create(req, res) {
@@ -114,6 +117,20 @@ class OrderController {
       code: vnp_params["vnp_ResponseCode"],
       message: "Thanh toán thành công",
     });
+  }
+
+  async update(req, res) {
+    res
+      .status(200)
+      .json(await this.orderService.update(req.params.id, req.body));
+  }
+
+  async delete(req, res) {
+    res.status(200).json(await this.orderService.delete(req.params.id));
+  }
+
+  async deleteMany(req, res) {
+    res.status(200).json(await this.orderService.deleteMany(req.body.ids));
   }
 
   sortObject(obj) {

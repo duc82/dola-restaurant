@@ -7,8 +7,16 @@ import {
 import apiRequest from "./api";
 import { QueryOptions } from "@/types";
 
+export interface GetAllProductParams extends QueryOptions {
+  category?: string | null;
+  sort?: string | null;
+  price?: string | null;
+  taste?: string | null;
+  size?: string | null;
+}
+
 const productService = {
-  getAll: (queryOptions?: QueryOptions & { category?: string }) => {
+  getAll: (queryOptions?: GetAllProductParams) => {
     let query = "";
 
     if (queryOptions?.page) {
@@ -32,6 +40,30 @@ const productService = {
       query += query
         ? `&search=${queryOptions.search}`
         : `?search=${queryOptions.search}`;
+    }
+
+    if (queryOptions?.sort) {
+      query += query
+        ? `&sort=${queryOptions.sort}`
+        : `?sort=${queryOptions.sort}`;
+    }
+
+    if (queryOptions?.price) {
+      query += query
+        ? `&price=${queryOptions.price}`
+        : `?price=${queryOptions.price}`;
+    }
+
+    if (queryOptions?.taste) {
+      query += query
+        ? `&taste=${queryOptions.taste}`
+        : `?taste=${queryOptions.taste}`;
+    }
+
+    if (queryOptions?.size) {
+      query += query
+        ? `&size=${queryOptions.size}`
+        : `?size=${queryOptions.size}`;
     }
 
     return apiRequest<ProductsResponse>("/products" + query);

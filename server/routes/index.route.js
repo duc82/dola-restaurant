@@ -11,5 +11,6 @@ router.use("/addresses", require("./address.route"));
 router.use("/orders", require("./order.route"));
 router.use("/statistics", require("./statistic.route"));
 router.use("/vouchers", require("./voucher.route"));
+router.use("/contacts", require("./contact.route"));
 
 module.exports = router;

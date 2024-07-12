@@ -4,6 +4,7 @@ import type {
   Order,
   OrderResponse,
   OrdersResponse,
+  VnpayReturnResponse,
 } from "../types/order";
 import { QueryOptions } from "@/types";
 
@@ -38,7 +39,6 @@ const orderService = {
     }
 
     return apiRequest<OrdersResponse>(`/orders${query}`, {
-      method: "GET",
       accessToken: true,
       refreshToken: true,
     });
@@ -46,7 +46,6 @@ const orderService = {
 
   getById(id: string): Promise<OrderResponse> {
     return apiRequest<OrderResponse>(`/orders/${id}`, {
-      method: "GET",
       refreshToken: true,
     });
   },
@@ -64,15 +63,37 @@ const orderService = {
     });
   },
 
-  vnpayReturn(query: string): Promise<{ code: string; message: string }> {
-    return apiRequest<{ code: string; message: string }>(
-      `/orders/vnpay_return?${query}`,
-      {
-        method: "GET",
-        accessToken: true,
-        refreshToken: true,
-      }
-    );
+  vnpayReturn(query: string): Promise<VnpayReturnResponse> {
+    return apiRequest<VnpayReturnResponse>(`/orders/vnpay_return?${query}`, {
+      accessToken: true,
+      refreshToken: true,
+    });
+  },
+
+  update(id: string, data: Partial<Order>): Promise<OrderResponse> {
+    return apiRequest<OrderResponse>(`/orders/update/${id}`, {
+      method: "PUT",
+      accessToken: true,
+      refreshToken: true,
+      data,
+    });
+  },
+
+  delete(id: string): Promise<{ message: string }> {
+    return apiRequest<{ message: string }>(`/orders/delete/${id}`, {
+      method: "DELETE",
+      accessToken: true,
+      refreshToken: true,
+    });
+  },
+
+  deleteMany(ids: string[]): Promise<{ message: string }> {
+    return apiRequest<{ message: string }>(`/orders/delete-many`, {
+      method: "DELETE",
+      accessToken: true,
+      refreshToken: true,
+      data: { ids },
+    });
   },
 };
 

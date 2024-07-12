@@ -104,9 +104,15 @@ const Showroom = () => {
                   className="w-full text-white appearance-none bg-yellow-primary text-sm font-medium h-9 rounded-lg border border-yellow-primary px-3 py-1 bg-select bg-auto mb-2.5"
                   onChange={handleChangeProvince}
                 >
-                  <option value="">Chọn tỉnh thành</option>
+                  <option value="" className="text-black bg-white">
+                    Chọn tỉnh thành
+                  </option>
                   {provinces.map((province) => (
-                    <option key={province} value={province}>
+                    <option
+                      key={province}
+                      value={province}
+                      className="text-black bg-white"
+                    >
                       {province}
                     </option>
                   ))}

@@ -24,7 +24,7 @@ const SelectedFilter = ({
           <Close className="ml-1 w-4 h-4" />
         </button>
         <ul>
-          {selected.cost.map((value) => (
+          {selected.price.map((value) => (
             <li
               key={value}
               className="mb-4 mr-4 p-1.5 bg-yellow-primary rounded-md inline-block"
@@ -32,10 +32,10 @@ const SelectedFilter = ({
               <button
                 type="button"
                 className="flex items-center"
-                onClick={() => update(value, "cost")}
+                onClick={() => update(value, "price")}
               >
                 <Close className="w-4 h-4 mr-1" />
-                {filter.costs.find((f) => f.value === value)?.name}
+                {filter.prices.find((f) => f.value === value)?.name}
               </button>
             </li>
           ))}

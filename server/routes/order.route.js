@@ -1,8 +1,9 @@
 const { Router } = require("express");
 const orderController = require("../controllers/order.controller");
-const { Body } = require("../middlewares/validation.middleware");
+const { Body, Params } = require("../middlewares/validation.middleware");
 const OrderDto = require("../dtos/order.dto");
 const authentication = require("../middlewares/authentication.middleware");
+const authorization = require("../middlewares/authorization.middleware");
 
 const orderDto = new OrderDto();
 
@@ -24,5 +25,16 @@ router.post(
   authentication,
   orderController.createPaymentUrl
 );
+
+router.put(
+  "/update/:id",
+  Params(orderDto.getById),
+  Body(orderDto.update),
+  authentication,
+  orderController.update
+);
+
+router.delete("/delete/:id", authorization, orderController.delete);
+router.delete("/delete-many", authorization, orderController.deleteMany);
 
 module.exports = router;

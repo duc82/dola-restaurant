@@ -33,7 +33,7 @@ const Products = () => {
   const [selectedFilter, setSelectedFilter] = useState<
     Record<string, string[]>
   >({
-    cost: queryArray(searchParams, "cost"),
+    price: queryArray(searchParams, "price"),
     taste: queryArray(searchParams, "taste"),
     size: queryArray(searchParams, "size"),
   });
@@ -71,7 +71,7 @@ const Products = () => {
 
   const clearSelectedFilter = () => {
     setSelectedFilter({
-      cost: [],
+      price: [],
       taste: [],
       size: [],
     });
@@ -89,13 +89,24 @@ const Products = () => {
   useEffect(() => {
     if (!category) return;
 
+    const sort = searchParams.get("sort");
+    const price = searchParams.get("price");
+    const taste = searchParams.get("taste");
+    const size = searchParams.get("size");
+    const page = parseInt(searchParams.get("page") ?? "1");
+
     dispatch(
       getAllProduct({
-        category: category === "tat-ca-san-pham" ? undefined : category,
+        category: category === "tat-ca-san-pham" ? null : category,
         limit: 12,
+        sort,
+        price,
+        taste,
+        size,
+        page,
       })
     );
-  }, [category, dispatch]);
+  }, [category, dispatch, searchParams]);
 
   const pageCount = limit > 0 ? Math.ceil(total / limit) : 0;
 
@@ -124,7 +135,7 @@ const Products = () => {
           )}
         >
           <Category title="Danh mục sản phẩm" />
-          {(searchParams.has("cost") ||
+          {(searchParams.has("price") ||
             searchParams.has("taste") ||
             searchParams.has("size")) && (
             <SelectedFilter
@@ -135,9 +146,9 @@ const Products = () => {
           )}
           <FilterGroup
             title="Chọn mức giá"
-            items={filter.costs}
-            name="cost"
-            selected={selectedFilter.cost}
+            items={filter.prices}
+            name="price"
+            selected={selectedFilter.price}
             onChange={updateSelectedFilter}
           />
           <FilterGroup
@@ -160,11 +171,16 @@ const Products = () => {
             {isCategoryAllProduct ? "Tất cả món ăn" : title}
           </h1>
           <Sort />
-          <ProductList products={products} isLoading={isLoading} />
+          <ProductList
+            products={products}
+            isLoading={isLoading}
+            skeletonCount={12}
+          />
           <Pagination
             pageCount={pageCount}
             onPageChange={handlePageChange}
             currentPage={page}
+            wrapperClassName="mb-[30px]"
           />
         </div>
 

@@ -1,6 +1,7 @@
 const Joi = require("joi");
+const BaseDto = require("./index.dto");
 
-class OrderDto {
+class OrderDto extends BaseDto {
   user = Joi.string().required().messages({
     "string.empty": "Vui lòng nhập id người dùng!",
   });
@@ -29,13 +30,14 @@ class OrderDto {
     "number.empty": "Vui lòng nhập tổng tiền!",
   });
   paymentMethod = Joi.string()
-    .valid("PayPal", "VnPay", "Thanh toán khi giao hàng (COD)")
+    .valid("VnPay", "Thanh toán khi giao hàng (COD)")
     .messages({
       "string.empty": "Vui lòng nhập phương thức thanh toán!",
       "any.only": "Phương thức thanh toán không hợp lệ!",
     });
   note = Joi.string().optional().allow("");
   paidAt = Joi.date().optional().allow("");
+  deliveredAt = Joi.date().optional().allow("");
   vouchers = Joi.array().items(Joi.string()).optional().allow("");
 
   get create() {
@@ -49,6 +51,32 @@ class OrderDto {
       note: this.note,
       paidAt: this.paidAt,
       vouchers: this.vouchers,
+    });
+  }
+
+  get update() {
+    return Joi.object({
+      total: this.total,
+      shippingFee: this.shippingFee,
+      paymentMethod: this.paymentMethod,
+      shippingAddress: this.shippingAddress,
+      note: this.note,
+      paidAt: Joi.date()
+        .optional()
+        .when("isPaid", {
+          is: true,
+          then: Joi.date().default(new Date()),
+          otherwise: Joi.date().default(null),
+        }),
+      isPaid: Joi.boolean().optional().allow(""),
+      isDelivered: Joi.boolean().optional().allow(""),
+      deliveredAt: Joi.date()
+        .optional()
+        .when("isDelivered", {
+          is: true,
+          then: Joi.date().default(new Date()),
+          otherwise: Joi.date().default(null),
+        }),
     });
   }
 }

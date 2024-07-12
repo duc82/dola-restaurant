@@ -1,26 +1,22 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Title from "../Home/Title";
 import ProductListSlider from "../Product/ProductListSlider";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { getAllProduct } from "@/store/reducers/productSlice";
 import useInView from "@/hooks/useInView";
+import { FullProduct } from "@/types/product";
+import productService from "@/services/productService";
 
-const ProductRelate = ({
-  parentCategorySlug,
-}: {
-  parentCategorySlug?: string;
-}) => {
+const ProductRelate = ({ categorySlug }: { categorySlug?: string }) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { triggerOnce: true });
-
-  const dispatch = useAppDispatch();
-  const { products } = useAppSelector((state) => state.product);
+  const [products, setProducts] = useState<FullProduct[]>([]);
 
   useEffect(() => {
-    if (parentCategorySlug && isInView) {
-      dispatch(getAllProduct({ category: parentCategorySlug }));
+    if (categorySlug && isInView) {
+      productService
+        .getAll({ category: categorySlug })
+        .then((res) => setProducts(res.products));
     }
-  }, [dispatch, parentCategorySlug, isInView]);
+  }, [categorySlug, isInView]);
 
   return (
     <div className="mb-10" ref={ref}>

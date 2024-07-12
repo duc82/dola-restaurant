@@ -50,7 +50,6 @@ const UpdateModal = ({
     enableReinitialize: true,
     onSubmit: async (values) => {
       try {
-        const price = +values.price.replace(/\D/g, "");
         const images: string[] = [];
 
         for (const file of files) {
@@ -62,7 +61,7 @@ const UpdateModal = ({
 
         const data = {
           ...values,
-          price,
+          price: parseInt(values.price.replace(/\D/g, "")),
           images,
         };
 
@@ -166,9 +165,9 @@ const UpdateModal = ({
             value={formik.values.taste}
           >
             {tastes.map((taste) => (
-              <option key={taste} value={taste}>
+              <Select.Option key={taste} value={taste}>
                 {taste.charAt(0).toUpperCase() + taste.slice(1)}
-              </option>
+              </Select.Option>
             ))}
           </Select>
           <Select
@@ -178,9 +177,9 @@ const UpdateModal = ({
             value={formik.values.size}
           >
             {sizes.map((size) => (
-              <option key={size} value={size}>
+              <Select.Option key={size} value={size}>
                 {size.charAt(0).toUpperCase() + size.slice(1)}
-              </option>
+              </Select.Option>
             ))}
           </Select>
           <Select
@@ -191,9 +190,9 @@ const UpdateModal = ({
             value={formik.values.category}
           >
             {childCategories.map((childCate) => (
-              <option key={childCate._id} value={childCate._id}>
+              <Select.Option key={childCate._id} value={childCate._id}>
                 {childCate.name}
-              </option>
+              </Select.Option>
             ))}
           </Select>
           <Suspense fallback={null}>

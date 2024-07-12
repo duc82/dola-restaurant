@@ -204,7 +204,12 @@ const User = () => {
               <td className="capitalize">
                 {user.role === "user" ? "Người dùng" : user.role}
               </td>
-              <td>{formatDate(user.createdAt)}</td>
+              <td>
+                {formatDate(user.createdAt, {
+                  dateStyle: "short",
+                  timeStyle: "short",
+                })}
+              </td>
               <td className="whitespace-nowrap space-x-2.5">
                 <button
                   type="button"

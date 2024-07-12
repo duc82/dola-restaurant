@@ -46,7 +46,13 @@ const Order = () => {
         <div className="flex-[0_0_75%]">
           <div className="flex items-center justify-between mb-7">
             <h1 className="text-lg">Chi tiết đơn hàng #{id}</h1>
-            <p>Thời gian tạo: {formatDate(order?.createdAt)}</p>
+            <p>
+              Thời gian tạo:{" "}
+              {formatDate(order?.createdAt, {
+                dateStyle: "short",
+                timeStyle: "short",
+              })}
+            </p>
           </div>
           <div className="mr-8 inline-block">
             <span>Trạng thái thanh toán: </span>

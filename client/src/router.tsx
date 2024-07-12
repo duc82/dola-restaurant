@@ -13,7 +13,6 @@ import Orders from "./pages/Account/Orders";
 import ChangePassword from "./pages/Account/ChangePassword";
 import Address from "./pages/Account/Address";
 import About from "./pages/About";
-import Blog from "./components/Home/Blog";
 import BlogDetail from "./pages/Blog/BlogDetail";
 import Showroom from "./pages/Showroom";
 import Contact from "./pages/Contact";
@@ -30,15 +29,17 @@ import CheckoutLayout from "./layouts/CheckoutLayout";
 import Checkout from "./pages/Checkout/Checkout";
 import CheckoutSuccess from "./pages/Checkout/CheckoutSuccess";
 import AdminLayout from "./layouts/AdminLayout";
-import User from "./pages/Admin/User";
+import UserAdmin from "./pages/Admin/User";
 import Dashboard from "./pages/Admin/Dashboard";
-import Product from "./pages/Admin/Product";
-import Category from "./pages/Admin/Category";
+import ProductAdmin from "./pages/Admin/Product";
+import CategoryAdmin from "./pages/Admin/Category";
 import Cart from "./pages/Cart";
 import AccountInfo from "./pages/Account/AccountInfo";
 import ProductFavorite from "./pages/ProductFavorite";
-import OrderAdmin from "./pages/Admin/OrderAdmin";
-import VoucherAdmin from "./pages/Admin/VoucherAdmin";
+import OrderAdmin from "./pages/Admin/Order";
+import VoucherAdmin from "./pages/Admin/Voucher";
+import Blog from "./pages/Blog";
+import BlogAdmin from "./pages/Admin/Blog";
 
 const router = createBrowserRouter([
   {
@@ -195,15 +196,15 @@ const router = createBrowserRouter([
       },
       {
         path: "nguoi-dung",
-        element: <User />,
+        element: <UserAdmin />,
       },
       {
         path: "san-pham",
-        element: <Product />,
+        element: <ProductAdmin />,
       },
       {
         path: "danh-muc-san-pham",
-        element: <Category />,
+        element: <CategoryAdmin />,
       },
       {
         path: "don-hang",
@@ -212,6 +213,10 @@ const router = createBrowserRouter([
       {
         path: "ma-giam-gia",
         element: <VoucherAdmin />,
+      },
+      {
+        path: "blog",
+        element: <BlogAdmin />,
       },
     ],
   },

@@ -1,45 +1,26 @@
-import blogService from "@/services/blogService";
-import { FullBlog } from "@/types/blog";
-import handlingAxiosError from "@/utils/handlingAxiosError";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-
-export const getAllBlog = createAsyncThunk(
-  "blog/getAllBlog",
-  async (_, thunkApi) => {
-    try {
-      const data = await blogService.getAll();
-      return data;
-    } catch (error) {
-      return thunkApi.rejectWithValue(handlingAxiosError(error));
-    }
-  }
-);
+import { BlogsResponse, FullBlog } from "@/types/blog";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState = {
   blogs: [] as FullBlog[],
   limit: 0,
   total: 0,
   skip: 0,
-  isLoading: false
+  isLoading: false,
 };
 
 const blogSlice = createSlice({
   name: "blog",
   initialState,
-  reducers: {},
-  extraReducers: (builder) => {
-    builder.addCase(getAllBlog.pending, (state) => {
-      state.isLoading = true;
-    });
-
-    builder.addCase(getAllBlog.fulfilled, (state, { payload }) => {
-      state.isLoading = false;
+  reducers: {
+    getAllBlogs: (state, { payload }: PayloadAction<BlogsResponse>) => {
       state.blogs = payload.blogs;
       state.limit = payload.limit;
-      state.skip = payload.skip;
       state.total = payload.total;
-    });
-  }
+      state.skip = payload.skip;
+    },
+  },
 });
 
+export const { getAllBlogs } = blogSlice.actions;
 export default blogSlice.reducer;

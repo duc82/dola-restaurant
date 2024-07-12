@@ -25,7 +25,7 @@ import useFetchPagination from "@/hooks/useFetchPagination";
 import { FullProduct } from "@/types/product";
 import productService from "@/services/productService";
 
-const title = "Danh sách sản phẩm";
+const title = "Quản lý sản phẩm";
 
 const Product = () => {
   const {
@@ -135,7 +135,7 @@ const Product = () => {
             className="px-3 py-2 bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-900 rounded-lg inline-flex items-center font-medium justify-center text-sm transition"
           >
             <Plus2 className="w-6 h-6 mr-1" />
-            <span>Thêm sản phẩm</span>
+            <span>Thêm mới</span>
           </button>
         </div>
       </div>
@@ -240,14 +240,15 @@ const Product = () => {
                 </Fancybox>
               </td>
               <td>{product.category.name}</td>
-              <td>
-                {product.discountPercent
-                  ? `${product.discountPercent}%`
-                  : "Không"}
-              </td>
+              <td>{`${product.discountPercent}%`}</td>
               <td>{formatVnd(product.discountedPrice)}</td>
               <td>{product.stock}</td>
-              <td>{formatDate(product.createdAt)}</td>
+              <td>
+                {formatDate(product.createdAt, {
+                  dateStyle: "short",
+                  timeStyle: "short",
+                })}
+              </td>
               <td className="whitespace-nowrap space-x-2.5">
                 <button
                   type="button"
@@ -293,7 +294,11 @@ const Product = () => {
         />
       </div>
 
-      <CreateModal show={activeModal.create} onClose={closeModal} />
+      <CreateModal
+        show={activeModal.create}
+        onClose={closeModal}
+        setProducts={setProducts}
+      />
       {product && (
         <UpdateModal
           show={activeModal.update}

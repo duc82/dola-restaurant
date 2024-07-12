@@ -2,6 +2,7 @@ const connectDB = require("../configs/db.config");
 const category = require("./category");
 const product = require("./product");
 const voucher = require("./voucher");
+const blog = require("./blog");
 
 async function seed() {
   await connectDB();
@@ -17,6 +18,9 @@ async function seed() {
       break;
     case "voucher":
       await voucher();
+      break;
+    case "blog":
+      await blog();
       break;
     default:
       break;

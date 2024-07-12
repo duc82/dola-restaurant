@@ -36,13 +36,13 @@ const orderSchema = new Schema(
     },
     paidAt: {
       type: Date,
+      nullable: true,
     },
     deliveredAt: {
       type: Date,
+      nullable: true,
     },
-    cancelledAt: {
-      type: Date,
-    },
+
     paymentMethod: {
       type: String,
       required: true,

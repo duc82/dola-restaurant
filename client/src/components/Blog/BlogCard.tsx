@@ -2,36 +2,53 @@ import { Link } from "react-router-dom";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import formatDate from "@/utils/formatDate";
 import { FullBlog } from "@/types/blog";
+import clsx from "clsx";
 
-const BlogCard = (blog: FullBlog) => {
+interface BlogCardProps {
+  blog: FullBlog;
+  reverse?: boolean;
+}
+
+const BlogCard = ({ blog, reverse = false }: BlogCardProps) => {
   return (
-    <li className="bg-black rounded-lg">
+    <li
+      className={clsx(
+        "bg-black rounded-lg flex",
+        reverse ? "flex-col-reverse" : "flex-col"
+      )}
+    >
       <div className="relative">
-        <Link to="/">
+        <Link to={`/tin-tuc/${blog.slug}`}>
           <LazyLoadImage
             src={blog.image}
-            effect="opacity"
-            wrapperClassName="overflow-hidden rounded-tr-lg rounded-tl-lg !block"
-            className="hover:scale-110 transition-all ease-ease duration-1000 object-cover"
             alt={blog.title}
+            effect="opacity"
+            wrapperClassName={clsx(
+              "overflow-hidden !block",
+              reverse
+                ? "rounded-br-lg rounded-bl-lg"
+                : "rounded-tr-lg rounded-tl-lg"
+            )}
+            className="hover:scale-110 transition-all ease-ease duration-1000 object-contain w-full"
           />
         </Link>
         <div className="absolute top-4 left-4 text-center py-1 px-4 bg-yellow-primary rounded-lg">
-          {formatDate(blog.createdAt)}
+          {formatDate(blog.createdAt, {
+            dateStyle: "short",
+          })}
         </div>
       </div>
       <div className="p-4 pb-0">
-        <p className="mb-2.5 text-base">Đăng bởi: {blog.user?.fullName}</p>
+        <p className="mb-2.5 text-base">Đăng bởi: Admin Dola</p>
         <Link
           title="test"
-          to="/"
+          to={`/tin-tuc/${blog.slug}`}
           className="line-clamp-2 hover:text-yellow-primary text-lg mb-2.5 font-bold"
         >
           {blog.title}
         </Link>
         <p className="mb-4 text-base line-clamp-2 text-gray-300">
-          Canh cá nấu mẻ là món ăn dân dã, quen thuộc trong mỗi mâm cơm gia đình
-          Việt. Mùa hè nắng...
+          {blog.description}
         </p>
         <div className="block w-full text-base leading-none text-yellow-primary relative py-5 border-t border-t-white">
           <Link

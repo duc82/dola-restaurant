@@ -38,11 +38,6 @@ const admins = [
     link: "/admin/ma-giam-gia",
     icon: Voucher,
   },
-  {
-    label: "Cài đặt",
-    link: "/admin/cai-dat",
-    icon: Settings,
-  },
 ];
 
 export default admins;

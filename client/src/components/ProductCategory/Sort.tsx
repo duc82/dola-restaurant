@@ -51,7 +51,7 @@ const Sort = () => {
 
   return (
     <div className="flex items-center justify-between bg-yellow-primary text-white mb-5 pl-2.5 rounded-md lg:float-right lg:w-1/4">
-      <label htmlFor="sortBy" className="font-bold leading-[30px] w-1/2">
+      <label htmlFor="sortBy" className="font-bold leading-[30px]">
         Sắp xếp:
       </label>
       <div

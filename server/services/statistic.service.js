@@ -42,28 +42,36 @@ class StatisticService {
       },
     ]);
     const totalProduct = await Product.countDocuments();
+
+    const profit = await Order.aggregate([
+      {
+        $match: {
+          paidAt: { $ne: null },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          total: {
+            $sum: "$total",
+          },
+        },
+      },
+    ]);
+
     const orders = await Order.aggregate([
       {
         $group: {
           _id: null,
-          totalProfit: {
-            $sum: {
-              $cond: {
-                if: { $eq: ["$isPaid", true] },
-                then: "$total",
-                else: 0,
-              },
-            },
-          },
-          totalOrder: {
+          total: {
             $sum: 1,
           },
         },
       },
     ]);
 
-    const totalProfit = orders[0].totalProfit;
-    const totalOrder = orders[0].totalOrder;
+    const totalProfit = profit.length === 0 ? 0 : profit[0].total;
+    const totalOrder = orders.length === 0 ? 0 : orders[0].total;
     const totalUser = users[0].totalUser;
     const totalDesktopUser = users[0].totalDesktopUser;
     const totalTabletUser = users[0].totalTabletUser;

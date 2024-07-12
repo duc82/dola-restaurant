@@ -3,7 +3,7 @@ import cn from "@/utils/cn";
 
 interface CartItemProps {
   title: string;
-  total: number;
+  total: number | string;
   percentage: {
     value: number;
     increase: boolean;

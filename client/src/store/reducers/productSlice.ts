@@ -1,7 +1,7 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import handlingAxiosError from "../../utils/handlingAxiosError";
-import { Pagination, QueryOptions, RejectValue } from "@/types";
-import productService from "@/services/productService";
+import { Pagination, RejectValue } from "@/types";
+import productService, { GetAllProductParams } from "@/services/productService";
 import {
   FullProduct,
   Product,
@@ -12,7 +12,7 @@ import limits from "@/data/limits.json";
 
 export const getAllProduct = createAsyncThunk<
   ProductsResponse,
-  (QueryOptions & { category?: string }) | undefined,
+  GetAllProductParams | undefined,
   RejectValue
 >("products/getAll", async (queryOptions, thunkApi) => {
   try {

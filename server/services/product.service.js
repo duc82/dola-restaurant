@@ -30,7 +30,15 @@ class ProductService {
       images,
     });
 
-    await product.populate(["images", "parent"]);
+    await product.populate([
+      {
+        path: "category",
+        populate: {
+          path: "parent",
+        },
+      },
+      { path: "images" },
+    ]);
 
     return {
       message: "Thêm sản phẩm mới thành công",
@@ -39,12 +47,13 @@ class ProductService {
   }
 
   async getAll(query) {
-    const { cost, taste, size, sort, search, page, limit } = query;
+    const { price, taste, size, sort, search, page, limit } = query;
+
     const skip = (page - 1) * limit;
 
     const filter = {};
 
-    if (taste || size || cost || search) {
+    if (taste || size || price || search) {
       filter.$and = [];
 
       if (search) {
@@ -65,9 +74,11 @@ class ProductService {
         filter.$and.push({ $or: sizes.map((s) => ({ size: s })) });
       }
 
-      if (cost) {
-        const costs = cost.split("-");
-        filter.$and.push({ $or: costs.map((c) => ({ cost: JSON.parse(c) })) });
+      if (price) {
+        const prices = price.split("-");
+        filter.$and.push({
+          $or: prices.map((c) => ({ discountedPrice: JSON.parse(c) })),
+        });
       }
     }
 
@@ -144,7 +155,7 @@ class ProductService {
   }
 
   async update(id, body) {
-    const product = await Product.findById(id).populate(["images", "category"]);
+    const product = await Product.findById(id);
 
     if (!product) {
       throw new CustomError({
@@ -153,17 +164,17 @@ class ProductService {
       });
     }
 
-    const { category, images, ...data } = body;
+    const { images, ...data } = body;
 
-    if (category !== product.category._id.toString()) {
-      const newCategory = await Category.findById(body.category);
-      if (!newCategory) {
+    if (data.category !== product.category.toString()) {
+      const categoryExists = await Category.findById(data.category);
+      if (!categoryExists) {
         throw new CustomError({
           message: "Danh mục sản phẩm không tồn tại",
           status: 404,
         });
       }
-      data.category = newCategory._id;
+      product.category = data.category;
     }
 
     if (images.length > 0) {
@@ -171,14 +182,23 @@ class ProductService {
         images.map((image) => ({ url: image }))
       );
       await Image.deleteMany({
-        _id: { $in: product.images.map((image) => image._id) },
+        _id: { $in: product.images },
       });
-      data.images = newImages;
+      product.images = newImages;
     }
 
-    product.set(data);
-
-    await product.save();
+    await Promise.all([
+      product.save(),
+      product.populate([
+        {
+          path: "category",
+          populate: {
+            path: "parent",
+          },
+        },
+        { path: "images" },
+      ]),
+    ]);
 
     return {
       message: "Cập nhật sản phẩm thành công",

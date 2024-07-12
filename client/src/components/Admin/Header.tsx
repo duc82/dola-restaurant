@@ -1,5 +1,6 @@
 import { Account, MenuBar } from "@/icons";
 import { Link } from "react-router-dom";
+import logo from "@/assets/images/logo.webp";
 import AccountDropdown from "../Header/AccountDropdown";
 
 const Header = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
@@ -16,7 +17,7 @@ const Header = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
           </button>
           <Link to="/admin" title="Logo" className="md:mr-24">
             <img
-              src="/logo.webp"
+              src={logo}
               width={172}
               height={50}
               alt="Dola Restaurant"
@@ -24,9 +25,9 @@ const Header = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
             />
           </Link>
         </div>
-        <div className="relative hover:text-yellow-primary lg:py-6">
+        <div className="relative group hover:text-yellow-primary lg:py-6">
           <Account className="cursor-pointer" />
-          <AccountDropdown />
+          <AccountDropdown isAdminPage={true} />
         </div>
       </div>
     </header>

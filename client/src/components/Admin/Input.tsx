@@ -25,13 +25,16 @@ const Input = ({
         onChange={(e) => {
           if (type === "currency") {
             const value = e.target.value.replace(/\D/g, "");
-            const currencyFormat = (+value).toLocaleString();
-            e.target.value = currencyFormat;
-          }
 
-          if (attribute.onChange) {
-            attribute.onChange(e);
+            if (!value) {
+              e.target.value = value;
+              attribute.onChange?.(e);
+              return;
+            }
+            const currentFormat = parseInt(value).toLocaleString();
+            e.target.value = currentFormat;
           }
+          attribute.onChange?.(e);
         }}
         className="text-sm p-2.5 rounded-lg w-full bg-emerald-primary border border-gray-600 placeholder:text-gray-400"
       />

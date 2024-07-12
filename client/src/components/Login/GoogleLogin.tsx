@@ -6,6 +6,7 @@ import authService from "@/services/authService";
 import { useAppDispatch } from "@/store/hooks";
 import { loginSuccess } from "@/store/reducers/authSlice";
 import { setUser } from "@/store/reducers/userSlice";
+import gp_btn from "@/assets/images/gp-btn.svg";
 
 const GoogleLogin = () => {
   const dispatch = useAppDispatch();
@@ -32,7 +33,7 @@ const GoogleLogin = () => {
         width={129}
         height={37}
         effect="opacity"
-        src="/gp-btn.svg"
+        src={gp_btn}
         alt="Google"
       />
     </button>

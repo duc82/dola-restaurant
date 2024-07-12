@@ -12,8 +12,7 @@ import formatVnd from "../utils/formatVnd";
 import useQuantity from "../hooks/useQuantity";
 import { Helmet } from "react-helmet-async";
 import Tab from "../components/ProductDetail/Tab";
-import { useAppDispatch } from "@/store/hooks";
-import Prominent from "../components/Blog/Prominent";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { increaseQuantity } from "@/store/reducers/cartSlice";
 import ProductRelate from "@/components/ProductDetail/ProductRelate";
 import productService from "@/services/productService";
@@ -22,10 +21,17 @@ import { FullProduct } from "@/types/product";
 import Fancybox from "@/components/Fancybox";
 import Voucher from "@/components/Voucher";
 import { useModalCart } from "@/providers/CartProvider";
+import BlogRelate from "@/components/Blog/BlogRelate";
+import blogService from "@/services/blogService";
+import { getAllBlogs } from "@/store/reducers/blogSlice";
 
 const ProductDetail = () => {
   const dispatch = useAppDispatch();
   const [product, setProduct] = useState<FullProduct | null>(null);
+  const { blogs } = useAppSelector((state) => state.blog);
+  const [productSuggestions, setProductSuggestions] = useState<FullProduct[]>(
+    []
+  );
   const { updateAddedCart } = useModalCart();
 
   const { slug } = useParams();
@@ -40,7 +46,6 @@ const ProductDetail = () => {
   const [indexActiveImage, setIndexActiveImage] = useState(0);
   const swiperRef = useRef<SwiperType | null>(null);
 
-  // confuse
   const handleChangeActiveImage = (index: number) => {
     setIndexActiveImage(index);
     swiperRef.current?.slideTo(index);
@@ -75,6 +80,18 @@ const ProductDetail = () => {
         toast.error(handlingAxiosError(error).message);
       });
   }, [slug]);
+
+  useEffect(() => {
+    blogService
+      .getAll({ limit: 5 })
+      .then((data) => dispatch(getAllBlogs(data)));
+  }, [dispatch]);
+
+  useEffect(() => {
+    productService.getByParentCategory("banh-va-trang-mieng").then((data) => {
+      setProductSuggestions(data.products);
+    });
+  }, []);
 
   return (
     <>
@@ -237,7 +254,7 @@ const ProductDetail = () => {
           </div>
           <Tab product={product} />
           {/* Product relate */}
-          <ProductRelate parentCategorySlug={product?.category.parent?.slug} />
+          <ProductRelate categorySlug={product?.category.parent?.slug} />
           {/* Product viewed  */}
           {product && <ProductViewed product={product} />}
         </div>
@@ -249,39 +266,44 @@ const ProductDetail = () => {
                 Có thể bạn đang tìm
               </h1>
               <ul className="py-2.5 px-4 border border-yellow-primary rounded-b-lg">
-                <li className="flex lg:flex-col xl:flex-row lg:space-y-2.5 xl:space-y-0 items-center py-2.5 space-x-2.5 ">
-                  <Link to="/">
-                    <LazyLoadImage
-                      src="https://picsum.photos/1000?random=1"
-                      alt="Random"
-                      effect="opacity"
-                      wrapperClassName="!block"
-                      className="rounded-lg"
-                      width={100}
-                      height={100}
-                    />
-                  </Link>
-                  <div className="flex-1 lg:flex xl:block flex-col items-center">
-                    <Link
-                      to="/"
-                      className="text-base font-semibold line-clamp-1 mb-1.5 hover:text-yellow-primary"
-                    >
-                      Dương chi cam lộ
+                {productSuggestions.map((product) => (
+                  <li
+                    key={product._id}
+                    className="flex lg:flex-col xl:flex-row lg:space-y-2.5 xl:space-y-0 items-center py-2.5 space-x-2.5 "
+                  >
+                    <Link to={`/`}>
+                      <LazyLoadImage
+                        src={product.images[0].url}
+                        alt="Random"
+                        effect="opacity"
+                        wrapperClassName="!block"
+                        className="rounded-lg"
+                        width={100}
+                        height={100}
+                      />
                     </Link>
-                    <p className="text-red-600 text-base font-semibold">
-                      55.000d
-                    </p>
-                    <button
-                      type="button"
-                      className="py-1 px-4 mt-1 bg-yellow-primary shadow-card2 rounded-md"
-                    >
-                      Đặt món
-                    </button>
-                  </div>
-                </li>
+                    <div className="flex-1 lg:flex xl:block flex-col items-center">
+                      <Link
+                        to="/"
+                        className="text-base font-semibold line-clamp-1 mb-1.5 hover:text-yellow-primary"
+                      >
+                        {product.title}
+                      </Link>
+                      <p className="text-red-600 text-base font-semibold">
+                        {formatVnd(product.discountedPrice)}
+                      </p>
+                      <button
+                        type="button"
+                        className="py-1 px-4 mt-1 bg-yellow-primary shadow-card2 rounded-md"
+                      >
+                        Đặt món
+                      </button>
+                    </div>
+                  </li>
+                ))}
               </ul>
             </div>
-            <Prominent />
+            <BlogRelate blogs={blogs} />
           </div>
         </div>
       </Container>

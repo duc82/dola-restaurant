@@ -4,9 +4,14 @@ const ReviewService = require("../services/review.service");
 class ReviewController {
   constructor() {
     this.reviewService = new ReviewService();
+    this.getAll = asyncHandler(this.getAll.bind(this));
     this.create = asyncHandler(this.create.bind(this));
     this.update = asyncHandler(this.update.bind(this));
     this.getByProduct = asyncHandler(this.getByProduct.bind(this));
+  }
+
+  async getAll(req, res) {
+    res.json(await this.reviewService.getAll(req.query));
   }
 
   async create(req, res) {

@@ -75,8 +75,8 @@ const Category = () => {
 
             <SwiperSlide className="py-7 px-6 relative border border-white rounded-lg group">
               <Link
-                to={`/danh-muc-san-pham`}
-                title={"Các món khác"}
+                to="/danh-muc-san-pham/tat-ca-san-pham"
+                title="Các món khác"
                 className="text-center block"
               >
                 <div>

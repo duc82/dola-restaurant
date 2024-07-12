@@ -1,19 +1,12 @@
 import { FullType, Pagination } from ".";
 import { FullCategory } from "./category";
+import { FullReview } from "./review";
 
 interface Image {
   url: string;
 }
 
 interface FullImage extends FullType, Image {}
-
-interface Review {
-  rating: number;
-  comment: string;
-  user: string;
-}
-
-interface FullReview extends FullType, Review {}
 
 interface Product {
   title: string;
@@ -48,8 +41,6 @@ interface ProductsResponse extends Pagination {
 export type {
   Product,
   FullProduct,
-  Review,
-  FullReview,
   Image,
   FullImage,
   ProductResponse,

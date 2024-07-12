@@ -87,7 +87,30 @@ class OrderService {
   }
 
   async update(id, body) {
-    const order = await Order.findByIdAndUpdate(id, body, { new: true });
+    const order = await Order.findByIdAndUpdate(id, body, {
+      new: true,
+    }).populate([
+      "shippingAddress",
+      "vouchers",
+      {
+        path: "user",
+        select: "-password",
+      },
+      {
+        path: "products.product",
+        model: "Product",
+        populate: [
+          {
+            path: "images",
+            model: "Image",
+          },
+          {
+            path: "category",
+            model: "Category",
+          },
+        ],
+      },
+    ]);
 
     if (!order) {
       throw new CustomError({
@@ -99,6 +122,36 @@ class OrderService {
     return {
       message: "Đơn hàng đã được cập nhật thành công!",
       order,
+    };
+  }
+
+  async delete(id) {
+    const order = await Order.findByIdAndDelete(id);
+
+    if (!order) {
+      throw new CustomError({
+        message: "Không tìm thấy đơn hàng!",
+        status: 404,
+      });
+    }
+
+    return {
+      message: "Đơn hàng đã được xóa thành công!",
+    };
+  }
+
+  async deleteMany(ids) {
+    const orders = await Order.deleteMany({ _id: { $in: ids } });
+
+    if (!orders.deletedCount) {
+      throw new CustomError({
+        message: "Không tìm thấy đơn hàng!",
+        status: 404,
+      });
+    }
+
+    return {
+      message: "Đơn hàng đã được xóa thành công!",
     };
   }
 }

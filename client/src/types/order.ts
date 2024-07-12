@@ -16,7 +16,6 @@ interface Order {
   total: number;
   paidAt?: string | null;
   deliveredAt?: string | null;
-  cancelledAt?: string | null;
   note?: string | null;
 }
 
@@ -47,10 +46,16 @@ interface CreatePaymentUrlResponse {
   url: string;
 }
 
+interface VnpayReturnResponse {
+  code: string;
+  message: string;
+}
+
 export type {
   Order,
   FullOrder,
   OrderResponse,
   OrdersResponse,
   CreatePaymentUrlResponse,
+  VnpayReturnResponse,
 };

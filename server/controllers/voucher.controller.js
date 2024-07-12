@@ -9,6 +9,7 @@ class VoucherController {
     this.getByCode = asyncHandler(this.getByCode.bind(this));
     this.update = asyncHandler(this.update.bind(this));
     this.delete = asyncHandler(this.delete.bind(this));
+    this.deleteMany = asyncHandler(this.deleteMany.bind(this));
   }
 
   async create(req, res) {
@@ -31,6 +32,10 @@ class VoucherController {
 
   async delete(req, res) {
     res.json(await this.voucherService.delete(req.params.id));
+  }
+
+  async deleteMany(req, res) {
+    res.json(await this.voucherService.deleteMany(req.body.ids));
   }
 }
 

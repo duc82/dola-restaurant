@@ -110,7 +110,7 @@ const Category = () => {
   return (
     <div className="overflow-y-auto w-full">
       <Helmet>
-        <title>Danh mục sản phẩm</title>
+        <title>Quản lý sản phẩm</title>
       </Helmet>
 
       <div className="p-4 lg:px-6 lg:pt-6">
@@ -252,7 +252,12 @@ const Category = () => {
                 </p>
               </td>
 
-              <td>{formatDate(category.createdAt)}</td>
+              <td>
+                {formatDate(category.createdAt, {
+                  dateStyle: "short",
+                  timeStyle: "short",
+                })}
+              </td>
               <td className="whitespace-nowrap space-x-2.5">
                 <button
                   type="button"

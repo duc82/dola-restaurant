@@ -29,7 +29,7 @@ const voucherService = {
         : `?search=${queryOptions.search}`;
     }
 
-    return apiRequest<VoucherResponse | FullVoucher>("/vouchers" + query);
+    return apiRequest<VouchersResponse | FullVoucher>("/vouchers" + query);
   },
 
   getByCode: async (code: string, amount: number) => {
@@ -39,7 +39,7 @@ const voucherService = {
   },
 
   create: async (data: Voucher) => {
-    return apiRequest<VouchersResponse>("/vouchers/create", {
+    return apiRequest<VoucherResponse>("/vouchers/create", {
       accessToken: true,
       refreshToken: true,
       method: "POST",
@@ -48,7 +48,7 @@ const voucherService = {
   },
 
   update: async (id: string, data: Partial<Voucher>) => {
-    return apiRequest<VouchersResponse>(`/vouchers/update/${id}`, {
+    return apiRequest<VoucherResponse>(`/vouchers/update/${id}`, {
       accessToken: true,
       refreshToken: true,
       method: "PUT",
@@ -57,10 +57,19 @@ const voucherService = {
   },
 
   delete: async (id: string) => {
-    return apiRequest<VouchersResponse>(`/vouchers/delete/${id}`, {
+    return apiRequest<{ message: string }>(`/vouchers/delete/${id}`, {
       accessToken: true,
       refreshToken: true,
       method: "DELETE",
+    });
+  },
+
+  deleteMany: async (ids: string[]) => {
+    return apiRequest<{ message: string }>(`/vouchers/delete-many`, {
+      accessToken: true,
+      refreshToken: true,
+      method: "DELETE",
+      data: { ids },
     });
   },
 };

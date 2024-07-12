@@ -56,8 +56,33 @@ class VoucherService {
   }
 
   async delete(id) {
-    await Voucher.findByIdAndDelete(id);
+    const voucher = await Voucher.findByIdAndDelete(id);
+
+    if (!voucher) {
+      throw new CustomError({
+        message: "Không tìm thấy voucher",
+        status: 404,
+      });
+    }
+
     return { message: "Xóa voucher thành công" };
+  }
+
+  async deleteMany(ids) {
+    const vouchers = await Voucher.find({ _id: { $in: ids } });
+
+    if (!vouchers.length) {
+      throw new CustomError({
+        message: "Xóa người dùng thất bại!",
+        status: 400,
+      });
+    }
+
+    await Voucher.deleteMany({ _id: { $in: ids } });
+
+    return {
+      message: "Xóa voucher thành công",
+    };
   }
 }
 

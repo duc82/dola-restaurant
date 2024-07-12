@@ -5,6 +5,7 @@ import authService from "@/services/authService";
 import { useAppDispatch } from "@/store/hooks";
 import { loginSuccess } from "@/store/reducers/authSlice";
 import { setUser } from "@/store/reducers/userSlice";
+import fb_btn from "@/assets/images/fb-btn.svg";
 
 const FacebookLogin = () => {
   const dispatch = useAppDispatch();
@@ -30,7 +31,7 @@ const FacebookLogin = () => {
         width={129}
         height={37}
         effect="opacity"
-        src={"/fb-btn.svg"}
+        src={fb_btn}
         alt="Facebook"
       />
     </button>

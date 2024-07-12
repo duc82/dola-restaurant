@@ -3,9 +3,14 @@ import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { resetAuth } from "../../store/reducers/authSlice";
 import authService from "@/services/authService";
 
-const AccountDropdown = () => {
+interface AccountDropdownProps {
+  isAdminPage?: boolean;
+}
+
+const AccountDropdown = ({ isAdminPage = false }: AccountDropdownProps) => {
   const { accessToken } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
+  const { user } = useAppSelector((state) => state.user);
 
   const handleLogout = () => {
     authService.logout().then(() => {
@@ -41,6 +46,9 @@ const AccountDropdown = () => {
 
       {accessToken && (
         <>
+          {isAdminPage && (
+            <li className="mb-2.5 text-black">Xin chào, {user?.fullName} !</li>
+          )}
           <li className="mb-2.5">
             <Link
               to="/tai-khoan"
@@ -50,7 +58,7 @@ const AccountDropdown = () => {
               Tài khoản
             </Link>
           </li>
-          <li className="mb-2.5">
+          <li>
             <button
               onClick={handleLogout}
               title="Đăng xuất"
@@ -61,15 +69,17 @@ const AccountDropdown = () => {
           </li>
         </>
       )}
-      <li>
-        <Link
-          to="/mon-an-yeu-thich"
-          title="Món ăn yêu thích"
-          className="flex items-center justify-center bg-yellow-primary w-[236px] leading-[41px] rounded-md hover:bg-yellow-secondary"
-        >
-          Món ăn yêu thích
-        </Link>
-      </li>
+      {!isAdminPage && (
+        <li className="mt-2.5">
+          <Link
+            to="/mon-an-yeu-thich"
+            title="Món ăn yêu thích"
+            className="flex items-center justify-center bg-yellow-primary w-[236px] leading-[41px] rounded-md hover:bg-yellow-secondary"
+          >
+            Món ăn yêu thích
+          </Link>
+        </li>
+      )}
     </ul>
   );
 };

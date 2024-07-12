@@ -1,12 +1,17 @@
-import { FullType } from ".";
+import { FullType, Pagination } from ".";
+
+export enum VoucherType {
+  SHIPPING = "shipping",
+  DISCOUNT = "discount",
+}
 
 interface Voucher {
   code: string;
   discount: number;
   minAmount: number;
-  expiredAt: string;
+  expireAt: string;
   quantity: number;
-  type: "shipping" | "discount";
+  type: VoucherType;
 }
 
 interface FullVoucher extends FullType, Voucher {}
@@ -16,7 +21,7 @@ interface VoucherResponse {
   message: string;
 }
 
-interface VouchersResponse {
+interface VouchersResponse extends Pagination {
   vouchers: FullVoucher[];
   message: string;
 }

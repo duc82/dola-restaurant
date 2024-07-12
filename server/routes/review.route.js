@@ -1,16 +1,17 @@
 const { Router } = require("express");
 const reviewController = require("../controllers/review.controller");
-const authorizationMiddleware = require("../middlewares/authorization.middleware");
-const authenticationMiddleware = require("../middlewares/authentication.middleware");
+const authentication = require("../middlewares/authentication.middleware");
+const { Query } = require("../middlewares/validation.middleware");
+const ReviewDto = require("../dtos/review.dto");
+
+const reviewDto = new ReviewDto();
 
 const router = Router();
 
-router.post("/create", authorizationMiddleware, reviewController.create);
+router.get("/", Query(reviewDto.getAll), reviewController.getAll);
 
-router.get(
-  "/:productId",
-  authenticationMiddleware,
-  reviewController.getByProduct
-);
+router.post("/create", authentication, reviewController.create);
+
+router.get("/:productId", authentication, reviewController.getByProduct);
 
 module.exports = router;
