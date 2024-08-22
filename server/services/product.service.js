@@ -47,14 +47,40 @@ class ProductService {
   }
 
   async getAll(query) {
-    const { price, taste, size, sort, search, page, limit } = query;
+    const { price, taste, size, sort, search, page, limit, categorySlug } =
+      query;
 
     const skip = (page - 1) * limit;
 
     const filter = {};
 
-    if (taste || size || price || search) {
+    if (taste || size || price || search || categorySlug) {
       filter.$and = [];
+
+      if (categorySlug) {
+        const parentCategory = await Category.findOne({
+          slug: categorySlug,
+          parent: null,
+        }).populate("childrens");
+
+        if (parentCategory) {
+          const childCateIds = parentCategory.childrens.map((cate) => cate._id);
+
+          filter.$and.push({
+            category: {
+              $in: childCateIds,
+            },
+          });
+        } else {
+          const category = await Category.findOne({
+            slug: categorySlug,
+            parent: { $ne: null },
+          });
+          filter.$and.push({
+            category: category._id,
+          });
+        }
+      }
 
       if (search) {
         const regex = new RegExp(search, "i");

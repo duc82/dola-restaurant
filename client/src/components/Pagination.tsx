@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import cn from "../utils/cn";
 
 interface PaginationProps {
@@ -53,7 +53,7 @@ const Pagination = ({
       return [...leftRange, "DOTS", pageCount];
     }
 
-    if (isShowLeft && isShowRight) {
+    if ((isShowLeft && isShowRight) || (!isShowLeft && !isShowRight)) {
       const middleRange = createRange(leftSiblingIndex, rightSiblingIndex);
       return [1, "DOTS", ...middleRange, "DOTS", pageCount];
     }
@@ -63,10 +63,6 @@ const Pagination = ({
 
   const pageClasses =
     "cursor-pointer w-9 h-9 leading-9 rounded-lg text-white text-center border border-white flex items-center justify-center";
-
-  // if (currentPage === 0 || paginationRange.length < 2) {
-  //   return null;
-  // }
 
   const variants = {
     yellow: {
@@ -98,7 +94,15 @@ const Pagination = ({
       {paginationRange.map((page, i) => {
         if (page === "DOTS")
           return (
-            <li key={i} className={cn(pageClasses, "text-lg", pageClassName)}>
+            <li
+              key={i}
+              className={cn(
+                pageClasses,
+                "text-lg",
+                variants[variant].hover,
+                pageClassName
+              )}
+            >
               ...
             </li>
           );

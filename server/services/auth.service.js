@@ -8,6 +8,7 @@ const verifyGoogleToken = require("../utils/verifyGoogleToken.util");
 const crypto = require("crypto");
 const Token = require("../models/token.model");
 const mongoose = require("mongoose");
+const transporter = require("../configs/nodemailer.config");
 
 const sign = util.promisify(jwt.sign);
 const verify = util.promisify(jwt.verify);

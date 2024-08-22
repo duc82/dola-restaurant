@@ -1,13 +1,6 @@
-import { ArrowDown, ArrowUp } from "@/icons";
-import cn from "@/utils/cn";
-
 interface CartItemProps {
   title: string;
   total: number | string;
-  percentage: {
-    value: number;
-    increase: boolean;
-  };
   icon: JSX.Element;
 }
 
@@ -25,20 +18,6 @@ const CartItem = (props: CartItemProps) => {
             {props.title}
           </span>
         </div>
-
-        <span
-          className={cn(
-            "flex items-center gap-1 text-sm font-medium text-green-500",
-            !props.percentage.increase && "text-red-500"
-          )}
-        >
-          {props.percentage.value}%
-          {props.percentage.increase ? (
-            <ArrowUp className="w-4 h-4" />
-          ) : (
-            <ArrowDown className="w-4 h-4" />
-          )}
-        </span>
       </div>
     </div>
   );

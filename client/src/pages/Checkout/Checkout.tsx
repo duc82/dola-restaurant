@@ -35,6 +35,7 @@ const Checkout = () => {
     shipping: null,
     discount: null,
   });
+  const [voucherCode, setVoucherCode] = useState("");
   const [errorVoucher, setErrorVoucher] = useState<string>("");
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -108,6 +109,10 @@ const Checkout = () => {
     formik.handleChange(e);
   };
 
+  const handleChangeVoucherCode = (e: ChangeEvent<HTMLInputElement>) => {
+    setVoucherCode(e.target.value);
+  };
+
   const handleVoucher = async (code: string) => {
     setErrorVoucher("");
     setIsLoadingVoucher(true);
@@ -120,6 +125,7 @@ const Checkout = () => {
           return { ...prev, discount: voucher };
         }
       });
+      setVoucherCode("");
     } catch (error) {
       setErrorVoucher("Voucher không hợp lệ");
     }
@@ -162,6 +168,8 @@ const Checkout = () => {
         voucher={voucher}
         errorVoucher={errorVoucher}
         isLoadingVoucher={isLoadingVoucher}
+        voucherCode={voucherCode}
+        handleChangeVoucherCode={handleChangeVoucherCode}
       />
       <main className="lg:p-6 lg:w-2/3 px-4">
         <header className="hidden lg:block">

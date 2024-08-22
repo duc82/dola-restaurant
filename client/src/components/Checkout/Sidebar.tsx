@@ -16,6 +16,8 @@ const Sidebar = ({
   handleVoucher,
   errorVoucher,
   isLoadingVoucher,
+  voucherCode,
+  handleChangeVoucherCode,
 }: {
   voucher: VoucherDiscount;
   shippingFee: number;
@@ -23,10 +25,11 @@ const Sidebar = ({
   handleVoucher: (code: string) => void;
   isLoadingVoucher?: boolean;
   errorVoucher?: string;
+  voucherCode: string;
+  handleChangeVoucherCode: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }) => {
   const { subTotal, carts } = useAppSelector((state) => state.cart);
   const [isShowProducts, setIsShowProducts] = useState(false);
-  const [voucherCode, setVoucherCode] = useState("");
 
   const toggleShowProducts = () => {
     setIsShowProducts(!isShowProducts);
@@ -97,7 +100,8 @@ const Sidebar = ({
           <FloatingLabel
             type="text"
             id="voucherCode"
-            onChange={(e) => setVoucherCode(e.target.value)}
+            value={voucherCode}
+            onChange={handleChangeVoucherCode}
             error={errorVoucher}
             label="Nhập mã giảm giá"
             wrapperClassName="w-full"

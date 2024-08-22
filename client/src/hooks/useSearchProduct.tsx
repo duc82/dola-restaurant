@@ -30,8 +30,10 @@ const useSearchProduct = (options?: Options) => {
     }
   }, debounceDelay);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const getResults = useCallback((value: string) => debounceSearch(value), []);
+  const getResults = useCallback(
+    (value: string) => debounceSearch(value),
+    [debounceSearch]
+  );
 
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;

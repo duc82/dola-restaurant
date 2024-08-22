@@ -1,4 +1,4 @@
-import { Blog, BlogResponse, BlogsResponse } from "@/types/blog";
+import { BlogDTO, BlogResponse, BlogsResponse } from "@/types/blog";
 import apiRequest from "./api";
 import { QueryOptions } from "@/types";
 
@@ -29,16 +29,16 @@ const blogService = {
   getBySlug: (slug: string) => {
     return apiRequest<BlogResponse>(`/blogs/by-slug/${slug}`);
   },
-  create: (blog: Omit<Blog, "user">) => {
+  create: (blog: BlogDTO) => {
     return apiRequest<BlogResponse>("/blogs/create", {
       method: "POST",
       refreshToken: true,
       data: blog,
     });
   },
-  update: (id: string, blog: Omit<Blog, "user">) => {
+  update: (id: string, blog: BlogDTO) => {
     return apiRequest<BlogResponse>(`/blogs/update/${id}`, {
-      method: "PATCH",
+      method: "PUT",
       refreshToken: true,
       data: blog,
     });
@@ -46,6 +46,12 @@ const blogService = {
   delete: (id: string) => {
     return apiRequest<{ message: string }>(`/blogs/delete/${id}`, {
       method: "DELETE",
+    });
+  },
+  deleteMany: (ids: string[]) => {
+    return apiRequest<{ message: string }>(`/blogs/delete-many`, {
+      method: "DELETE",
+      data: { ids },
     });
   },
 };

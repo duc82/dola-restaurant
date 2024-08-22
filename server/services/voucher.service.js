@@ -19,7 +19,10 @@ class VoucherService {
     if (limit) {
       const skip = (page - 1) * limit;
 
-      const vouchers = await Voucher.find(filter).skip(skip).limit(limit);
+      const vouchers = await Voucher.find(filter)
+        .skip(skip)
+        .limit(limit)
+        .sort({ createdAt: "desc" });
 
       const total = await Voucher.countDocuments(filter);
 

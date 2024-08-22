@@ -14,6 +14,7 @@ import { Helmet } from "react-helmet-async";
 import SelectedFilter from "../components/ProductCategory/SelectedFilter";
 import cn from "../utils/cn";
 import ProductList from "@/components/Product/ProductList";
+import clsx from "clsx";
 
 // ???
 const queryArray = (searchParams: URLSearchParams, name: string): string[] => {
@@ -114,7 +115,7 @@ const Products = () => {
 
   const title = isCategoryAllProduct
     ? "Tất cả sản phẩm"
-    : products[0]?.category.name;
+    : products[0]?.category.name ?? products[0]?.category.parent?.name;
 
   return (
     <>
@@ -187,7 +188,7 @@ const Products = () => {
         <button
           type="button"
           id="openFilterMobile"
-          className={cn(
+          className={clsx(
             "fixed top-[35%] right-0 z-[999] cursor-pointer bg-center bg-[length:16px] bg-no-repeat text-white bg-yellow-primary rounded-l-lg w-11 h-10 shadow-card2 transition-[visibility,right] ease-ease duration-300 lg:hidden",
             isOpenFilterMobile ? "bg-filterClose right-64" : "right-0 bg-filter"
           )}

@@ -1,8 +1,8 @@
-import { BlogsResponse, FullBlog } from "@/types/blog";
+import { BlogsResponse, Blog } from "@/types/blog";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState = {
-  blogs: [] as FullBlog[],
+  blogs: [] as Blog[],
   limit: 0,
   total: 0,
   skip: 0,

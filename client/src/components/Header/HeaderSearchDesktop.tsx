@@ -1,19 +1,27 @@
 import { Search } from "../../icons";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import formatVnd from "../../utils/formatVnd";
 import useSearchProduct from "../../hooks/useSearchProduct";
+import { FormEvent } from "react";
 
 const HeaderSearchDesktop = () => {
   const { search, products, handleSearchChange, resetSearch } =
     useSearchProduct();
+
+  const navigate = useNavigate();
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    navigate(`/tim-kiem?query=${search}`);
+  };
 
   return (
     <div className="hidden lg:block absolute transition-[visibility,opacity,transform] duration-300 top-full right-0 bg-white w-[420px] z-[9999] rounded-md p-5 pt-2.5 invisible opacity-0 scale-90 group-hover:visible group-hover:opacity-100 group-hover:scale-100">
       <h1 className="uppercase text-gray-700 mb-4 text-base py-1.5 font-medium text-left border-b border-b-gray-200">
         Tìm kiếm món ăn của bạn
       </h1>
-      <form>
+      <form onSubmit={handleSubmit}>
         <div className="relative">
           <input
             type="text"
@@ -84,7 +92,7 @@ const HeaderSearchDesktop = () => {
               ))}
               <li className="text-center leading-5">
                 <Link
-                  to={`/tim-kiem?title=${search}`}
+                  to={`/tim-kiem?query=${search}`}
                   className="text-center text-gray-800 hover:text-yellow-primary"
                 >
                   Xem tất cả

@@ -1,17 +1,26 @@
 import { FullType, Pagination } from ".";
+import { FullProduct } from "./product";
+import { FullUser } from "./user";
 
 export interface Review {
   rating: number;
-  comment: string;
+  content: string;
   user: string;
-}
-
-export interface FullReview extends FullType, Review {}
-
-export interface ReviewsResponse extends Pagination {
-  reviews: Review[];
-}
-
-export interface ReviewRequest extends Review {
   product: string;
 }
+
+export interface FullReview extends FullType, Omit<Review, "user" | "product"> {
+  user: FullUser;
+  product: FullProduct;
+}
+
+export interface ReviewsResponse extends Pagination {
+  reviews: FullReview[];
+}
+
+export interface ReviewResponse {
+  review: FullReview;
+  message: string;
+}
+
+export interface ReviewRequest extends Omit<Review, "user"> {}

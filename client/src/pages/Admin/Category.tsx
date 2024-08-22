@@ -227,7 +227,7 @@ const Category = () => {
                 </div>
               </td>
               <td>{category.name}</td>
-              <td>{category.parent?.name || "Không có"}</td>
+              <td>{category.parent?.name || "Trống"}</td>
               <td>
                 {category.image ? (
                   <Fancybox>
@@ -243,12 +243,12 @@ const Category = () => {
                     </Link>
                   </Fancybox>
                 ) : (
-                  "Không có"
+                  "Trống"
                 )}
               </td>
               <td>
                 <p className="truncate w-56" title={category.description}>
-                  {category.description || "Không có"}
+                  {category.description || "Trống"}
                 </p>
               </td>
 

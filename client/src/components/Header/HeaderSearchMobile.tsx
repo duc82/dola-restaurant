@@ -1,13 +1,21 @@
 import { Search } from "@/icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import formatVnd from "@/utils/formatVnd";
 import useSearchProduct from "@/hooks/useSearchProduct";
 import cn from "@/utils/cn";
+import { FormEvent } from "react";
 
 const HeaderSearch = ({ active }: { active: boolean }) => {
   const { search, products, handleSearchChange, resetSearch } =
     useSearchProduct();
+
+  const navigate = useNavigate();
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    navigate(`/tim-kiem?query=${search}`);
+  };
 
   return (
     <div className="lg:hidden w-full">
@@ -17,7 +25,7 @@ const HeaderSearch = ({ active }: { active: boolean }) => {
           active && "max-h-16"
         )}
       >
-        <form className="p-2.5" action="/danh-muc-san-pham/tat-ca-san-pham">
+        <form className="p-2.5" onSubmit={handleSubmit}>
           <div className="relative">
             <input
               type="text"
@@ -88,7 +96,7 @@ const HeaderSearch = ({ active }: { active: boolean }) => {
                   ))}
                 </ul>
                 <Link
-                  to={`/tim-kiem?title=${search}`}
+                  to={`/tim-kiem?query=${search}`}
                   className="text-center block -mt-1 pb-1 hover:text-yellow-primary"
                 >
                   Xem tất cả

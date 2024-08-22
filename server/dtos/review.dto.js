@@ -6,6 +6,8 @@ class ReviewDto extends BaseDto {
     return Joi.object({
       page: this.page,
       limit: this.limitDefault,
+      search: this.search,
+      product: Joi.string().allow(""),
     });
   }
 }

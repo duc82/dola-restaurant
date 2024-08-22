@@ -1,10 +1,12 @@
 import {
   Dashboard,
   Menu,
-  Settings,
   ShoppingBag,
+  CartFill,
   Users,
   Voucher,
+  Notification,
+  News,
 } from "../icons";
 
 const admins = [
@@ -31,12 +33,22 @@ const admins = [
   {
     label: "Đơn hàng",
     link: "/admin/don-hang",
-    icon: ShoppingBag,
+    icon: CartFill,
   },
   {
     label: "Mã giảm giá",
     link: "/admin/ma-giam-gia",
     icon: Voucher,
+  },
+  {
+    label: "Tin tức",
+    link: "/admin/blog",
+    icon: News,
+  },
+  {
+    label: "Liên hệ",
+    link: "/admin/lien-he",
+    icon: Notification,
   },
 ];
 

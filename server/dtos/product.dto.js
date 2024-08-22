@@ -12,7 +12,7 @@ class ProductDto extends BaseDto {
     return Joi.object({
       limit: this.limitDefault,
       page: this.page,
-      serach: this.search,
+      search: this.search,
       price: this.price,
       tastte: this.taste,
       size: this.size,

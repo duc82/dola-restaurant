@@ -1,11 +1,11 @@
 [
   {
     "name": "VnPay",
-    "image": "/vnpay.webp",
+    "image": "src/assets/images/vnpay.webp",
     "default": true
   },
   {
     "name": "Thanh toán khi giao hàng (COD)",
-    "image": "/money_bill.svg"
+    "image": "src/assets/images/money_bill.svg"
   }
 ]

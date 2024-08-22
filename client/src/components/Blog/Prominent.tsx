@@ -1,8 +1,8 @@
-import { FullBlog } from "@/types/blog";
+import { Blog } from "@/types/blog";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Link } from "react-router-dom";
 
-const Prominent = ({ blogs }: { blogs: FullBlog[] }) => {
+const Prominent = ({ blogs }: { blogs: Blog[] }) => {
   return (
     <div className="pt-4">
       <h1 className="text-base text-white py-2.5 px-4 rounded-t-lg uppercase font-bold bg-yellow-primary">

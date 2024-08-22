@@ -44,16 +44,6 @@ const productSchema = new Schema(
       enum: ["nhỏ", "vừa", "lớn"],
     },
     description: String,
-    reviews: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Review",
-      },
-    ],
-    avgRating: {
-      type: Number,
-      default: 0,
-    },
   },
   {
     timestamps: true,

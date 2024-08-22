@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import formatDate from "@/utils/formatDate";
-import { FullBlog } from "@/types/blog";
 import clsx from "clsx";
+import { Blog } from "@/types/blog";
 
 interface BlogCardProps {
-  blog: FullBlog;
+  blog: Blog;
   reverse?: boolean;
 }
 
@@ -47,9 +47,10 @@ const BlogCard = ({ blog, reverse = false }: BlogCardProps) => {
         >
           {blog.title}
         </Link>
-        <p className="mb-4 text-base line-clamp-2 text-gray-300">
-          {blog.description}
-        </p>
+        <div
+          dangerouslySetInnerHTML={{ __html: blog.description }}
+          className="mb-4 text-base line-clamp-2 text-gray-300"
+        ></div>
         <div className="block w-full text-base leading-none text-yellow-primary relative py-5 border-t border-t-white">
           <Link
             to="/"

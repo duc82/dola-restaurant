@@ -21,7 +21,7 @@ class OrderService {
     const orders = await Order.find(filter)
       .skip(skip)
       .limit(limit)
-      .sort({ createdAt: -1 })
+      .sort({ createdAt: "desc" })
       .populate([
         "shippingAddress",
         "vouchers",

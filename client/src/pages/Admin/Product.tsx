@@ -27,7 +27,7 @@ import productService from "@/services/productService";
 
 const title = "Quản lý sản phẩm";
 
-const Product = () => {
+const ProductAdmin = () => {
   const {
     activeModal,
     closeModal,
@@ -53,6 +53,7 @@ const Product = () => {
       limit: currentLimit,
       page,
       search,
+      sort: "createdAt-desc",
     });
     return {
       data: data.products,
@@ -311,4 +312,4 @@ const Product = () => {
   );
 };
 
-export default Product;
+export default ProductAdmin;

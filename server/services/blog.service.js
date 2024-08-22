@@ -11,7 +11,10 @@ class BlogService {
     }
 
     const skip = (page - 1) * limit;
-    const blogs = await Blog.find(filter).skip(skip).limit(limit);
+    const blogs = await Blog.find(filter)
+      .skip(skip)
+      .limit(limit)
+      .sort({ createdAt: "desc" });
     const total = await Blog.countDocuments(filter);
     return {
       blogs,
@@ -69,7 +72,7 @@ class BlogService {
     return { message: "Xóa blog thành công" };
   }
 
-  async deletMany(ids) {
+  async deleteMany(ids) {
     const blogs = await Blog.find({ _id: { $in: ids } });
 
     if (!blogs.length) {
@@ -79,7 +82,7 @@ class BlogService {
       });
     }
 
-    await Blog.deletMany({
+    await Blog.deleteMany({
       _id: { $in: ids },
     });
 

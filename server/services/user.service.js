@@ -76,7 +76,8 @@ class UserService {
     const users = await User.find(filter)
       .skip(skip)
       .limit(limit)
-      .select("-password");
+      .select("-password")
+      .sort({ createdAt: "desc" });
 
     const total = await User.countDocuments(filter);
 

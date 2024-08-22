@@ -12,6 +12,7 @@ const orderService = {
   create(data: Order): Promise<OrderResponse> {
     return apiRequest<OrderResponse>("/orders/create", {
       method: "POST",
+      accessToken: true,
       refreshToken: true,
       data,
     });
@@ -46,6 +47,7 @@ const orderService = {
 
   getById(id: string): Promise<OrderResponse> {
     return apiRequest<OrderResponse>(`/orders/${id}`, {
+      accessToken: true,
       refreshToken: true,
     });
   },

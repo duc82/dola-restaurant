@@ -34,12 +34,12 @@ export default {
         ease: "ease",
       },
       backgroundImage: {
-        rating: "url('src/assets/images/danhgia.webp')",
-        select: "url('/ico-select_1.webp')",
-        select2: "url('/ico-select_2.png')",
-        filter: "url('/icon-filter-bg.webp')",
-        filterClose: "url('/icon-filter-close-bg.webp')",
-        booking: "url('/datban.webp')",
+        rating: "url('/src/assets/images/danhgia.webp')",
+        select: "url('/src/assets/images/ico-select_1.png')",
+        select2: "url('/src/assets/images/ico-select_2.png')",
+        filter: "url('/src/assets/images/icon-filter-bg.webp')",
+        filterClose: "url('/src/assets/images/icon-filter-close-bg.webp')",
+        booking: "url('/src/assets/images/datban.webp')",
       },
       animation: {
         "prod-x": "prod-x 2s linear infinite",

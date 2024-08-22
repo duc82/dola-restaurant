@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import cn from "@/utils/cn";
@@ -21,6 +21,10 @@ const MenuDropdown = ({ categories, active, onClose }: MenuDropdownProps) => {
   const activeHoverMenuClasses = active
     ? "translate-y-0 visible opacity-100"
     : "translate-y-5 invisible opacity-0";
+
+  useEffect(() => {
+    console.log(categories);
+  }, [categories]);
 
   return (
     <div
@@ -52,7 +56,7 @@ const MenuDropdown = ({ categories, active, onClose }: MenuDropdownProps) => {
                   {childrens.map((childCate) => (
                     <li key={childCate._id}>
                       <Link
-                        to={`/danh-muc-san-pham/${category.slug}`}
+                        to={`/danh-muc-san-pham/${childCate.slug}`}
                         onClick={onClose}
                         className="inline-block text-lg mb-1 hover:text-yellow-primary"
                       >

@@ -22,7 +22,6 @@ interface Product {
 
 interface FullProduct extends FullType, Omit<Product, "images" | "category"> {
   slug: string;
-  avgRating: number;
   discountedPrice: number;
   images: FullImage[];
   reviews: FullReview[];

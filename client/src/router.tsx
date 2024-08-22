@@ -33,6 +33,7 @@ import UserAdmin from "./pages/Admin/User";
 import Dashboard from "./pages/Admin/Dashboard";
 import ProductAdmin from "./pages/Admin/Product";
 import CategoryAdmin from "./pages/Admin/Category";
+import ContactAdmin from "./pages/Admin/Contact";
 import Cart from "./pages/Cart";
 import AccountInfo from "./pages/Account/AccountInfo";
 import ProductFavorite from "./pages/ProductFavorite";
@@ -40,6 +41,8 @@ import OrderAdmin from "./pages/Admin/Order";
 import VoucherAdmin from "./pages/Admin/Voucher";
 import Blog from "./pages/Blog";
 import BlogAdmin from "./pages/Admin/Blog";
+import MembershipPolicy from "./pages/MembershipPolicy";
+import Search from "./pages/Search";
 
 const router = createBrowserRouter([
   {
@@ -151,6 +154,10 @@ const router = createBrowserRouter([
         element: <PaymentInstruction />,
       },
       {
+        path: "chinh-sach-thanh-vien",
+        element: <MembershipPolicy />,
+      },
+      {
         path: "chinh-sach-thanh-toan",
         element: <PaymentPolicy />,
       },
@@ -161,6 +168,10 @@ const router = createBrowserRouter([
       {
         path: "qua-tang-tri-an",
         element: <GratitudeGifts />,
+      },
+      {
+        path: "tim-kiem",
+        element: <Search />,
       },
       {
         path: "*",
@@ -217,6 +228,10 @@ const router = createBrowserRouter([
       {
         path: "blog",
         element: <BlogAdmin />,
+      },
+      {
+        path: "lien-he",
+        element: <ContactAdmin />,
       },
     ],
   },

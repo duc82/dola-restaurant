@@ -6,7 +6,10 @@ class ContactService {
     const { page, limit } = query;
     const skip = (page - 1) * limit;
 
-    const contacts = await Contact.find().limit(limit).skip(skip);
+    const contacts = await Contact.find()
+      .limit(limit)
+      .skip(skip)
+      .sort({ createdAt: "desc" });
 
     return {
       contacts,
@@ -69,7 +72,7 @@ class ContactService {
     await Contact.deleteMany({ _id: { $in: ids } });
 
     return {
-      cotnacts,
+      contacts,
       message: "Xóa liên hệ thành công",
     };
   }

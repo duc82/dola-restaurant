@@ -116,10 +116,6 @@ router.put("/update/:id", authorization, categoryController.update);
 
 router.delete("/delete/:id", authorization, categoryController.delete);
 
-router.delete(
-  "/delete-many",
-  // authorization,
-  categoryController.deleteMany
-);
+router.delete("/delete-many", authorization, categoryController.deleteMany);
 
 module.exports = router;

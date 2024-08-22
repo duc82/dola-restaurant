@@ -33,43 +33,27 @@ const Dashboard = () => {
         <CartItem
           title="Doanh thu"
           icon={<Eyes />}
-          percentage={{
-            value: 10,
-            increase: true,
-          }}
           total={formatVnd(statistics?.totalProfit)}
         />
         <CartItem
           title="Tổng cộng đơn hàng"
           icon={<Cart />}
-          percentage={{
-            value: 20,
-            increase: true,
-          }}
           total={statistics?.totalOrder || 0}
         />
         <CartItem
           title="Tổng cộng sản phẩm"
           icon={<Bag />}
-          percentage={{
-            value: 30,
-            increase: true,
-          }}
           total={statistics?.totalProduct || 0}
         />
         <CartItem
           title="Tổng cộng người dùng"
           icon={<Users />}
-          percentage={{
-            value: 40,
-            increase: false,
-          }}
           total={statistics?.totalUser || 0}
         />
-        <Suspense fallback={<p>Loading...</p>}>
+        {/* <Suspense fallback={<p>Loading...</p>}>
           <ChartSales className="col-span-4" />
           <ChartProducts total={statistics?.totalProduct || 0} />
-        </Suspense>
+        </Suspense> */}
       </div>
     </main>
   );

@@ -23,7 +23,8 @@ class CategoryService {
         .skip(skip)
         .limit(limit)
         .populate("parent")
-        .select("-childrens");
+        .select("-childrens")
+        .sort({ createdAt: "desc" });
 
       const total = await Category.countDocuments(filter);
 

@@ -33,7 +33,7 @@ class BlogController {
   }
 
   async deleteMany(req, res) {
-    res.json(await this.blogService.deletMany(req.body.ids));
+    res.json(await this.blogService.deleteMany(req.body.ids));
   }
 }
 

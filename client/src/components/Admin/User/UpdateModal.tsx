@@ -1,21 +1,24 @@
 import Modal from "@/components/Modal/Modal";
-import { useAppDispatch } from "@/store/hooks";
 import { UpdateModalProps } from "@/types/admin";
 import { useFormik } from "formik";
 import Input from "../Input";
 import Select from "../Select";
 import handlingAxiosError from "@/utils/handlingAxiosError";
 import toast from "react-hot-toast";
-import { updateUser } from "@/store/reducers/userSlice";
 import { FullUser } from "@/types/user";
+import userService from "@/services/userService";
 
 interface UpdateModalUserProps extends UpdateModalProps {
   user: FullUser;
+  setUsers: React.Dispatch<React.SetStateAction<FullUser[]>>;
 }
 
-const UpdateModal = ({ show, onClose, user }: UpdateModalUserProps) => {
-  const dispatch = useAppDispatch();
-
+const UpdateModal = ({
+  show,
+  onClose,
+  user,
+  setUsers,
+}: UpdateModalUserProps) => {
   const formik = useFormik({
     initialValues: {
       fullName: user?.fullName || "",
@@ -32,9 +35,17 @@ const UpdateModal = ({ show, onClose, user }: UpdateModalUserProps) => {
       }
 
       try {
-        const { message } = await dispatch(
-          updateUser({ id: user._id, data: values })
-        ).unwrap();
+        const { message, user: data } = await userService.update(
+          user._id,
+          values
+        );
+        setUsers((prev) => {
+          const index = prev.findIndex((item) => item._id === data._id);
+          if (index !== -1) {
+            prev[index] = data;
+          }
+          return prev;
+        });
         onClose();
         resetForm();
         toast.success(message);

@@ -1,24 +1,25 @@
 import { FullType } from ".";
 
-interface Blog {
+interface BlogDTO {
   title: string;
   description: string;
   image: string;
+}
+
+interface Blog extends BlogDTO, FullType {
   slug: string;
 }
 
-interface FullBlog extends FullType, Omit<Blog, "user"> {}
-
 interface BlogResponse {
-  blog: FullBlog;
+  blog: Blog;
   message: string;
 }
 
 interface BlogsResponse {
-  blogs: FullBlog[];
+  blogs: Blog[];
   limit: number;
   total: number;
   skip: number;
 }
 
-export type { Blog, BlogsResponse, BlogResponse, FullBlog };
+export type { BlogDTO, BlogsResponse, BlogResponse, Blog };

@@ -4,25 +4,28 @@ import { Helmet } from "react-helmet-async";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import showrooms from "@/data/showrooms.json";
 import { useMemo, useState } from "react";
+import icon_hethong1 from "@/assets/images/icon_hethong1.webp";
+import icon_hethong2 from "@/assets/images/icon_hethong2.webp";
+import icon_hethong3 from "@/assets/images/icon_hethong3.webp";
 
 const infos = [
   {
     id: 1,
     title: "Hệ thống 8 cửa hàng",
     description: "Trên toàn quốc",
-    icon: "/icon_hethong1.webp",
+    icon: icon_hethong1,
   },
   {
     id: 2,
     title: "Hơn 100 nhân viên",
     description: "Để phục vụ quý khách",
-    icon: "/icon_hethong2.webp",
+    icon: icon_hethong2,
   },
   {
     id: 3,
     title: "Mở cửa 8-22h cả",
     description: "CN & Lễ tết",
-    icon: "/icon_hethong3.webp",
+    icon: icon_hethong3,
   },
 ];
 
@@ -73,11 +76,11 @@ const Showroom = () => {
       </Helmet>
       <section className="mb-[30px]">
         <Container>
-          <div className="flex items-center bg-emerald-secondary rounded-lg border border-white py-2.5 mb-7">
+          <div className="flex flex-col lg:flex-row lg:items-center space-y-2.5 lg:space-y-0 bg-emerald-secondary rounded-lg border border-white py-2.5 mb-7">
             {infos.map((info) => (
               <div
                 key={info.id}
-                className="flex items-center justify-center flex-1"
+                className="flex items-center flex-1 px-2.5 lg:p-0 lg:justify-center"
               >
                 <div className="rounded-full bg-yellow-primary w-16 h-16 flex items-center justify-center mr-2.5">
                   <LazyLoadImage
@@ -97,8 +100,8 @@ const Showroom = () => {
             ))}
           </div>
 
-          <div className="flex space-x-8">
-            <div className="flex-[30%] bg-emerald-secondary rounded-lg p-2.5">
+          <div className="flex flex-col lg:flex-row space-y-[30px] lg:space-y-0 lg:space-x-8">
+            <div className="lg:flex-[30%] bg-emerald-secondary rounded-lg p-2.5">
               <div className="flex space-x-2.5">
                 <select
                   className="w-full text-white appearance-none bg-yellow-primary text-sm font-medium h-9 rounded-lg border border-yellow-primary px-3 py-1 bg-select bg-auto mb-2.5"
@@ -130,10 +133,7 @@ const Showroom = () => {
                   ))}
                 </select>
               </div>
-              <ul
-                className="mt-4 overflow-y-auto scrollbar"
-                style={{ maxHeight: 400 }}
-              >
+              <ul className="mt-4 overflow-y-auto scrollbar max-h-[220px] lg:max-h-[400px]">
                 {newShowrooms.map((showroom, i) => (
                   <li
                     key={i}
@@ -156,10 +156,10 @@ const Showroom = () => {
                 ))}
               </ul>
             </div>
-            <div className="flex-[70%]">
+            <div className="lg:flex-[70%]">
               <iframe
                 src={iframeSrc}
-                className="w-full h-full rounded-lg"
+                className="h-[474px] w-full rounded-lg"
                 allowFullScreen
                 loading="lazy"
               ></iframe>

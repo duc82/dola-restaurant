@@ -3,14 +3,17 @@ import { useFormik } from "formik";
 import Input from "../Input";
 import { CreateModalProps } from "@/types/admin";
 import Select from "../Select";
-import { useAppDispatch } from "@/store/hooks";
 import toast from "react-hot-toast";
 import handlingAxiosError from "@/utils/handlingAxiosError";
 import { createUserSchema } from "@/schemas/userSchema";
-import { createUser } from "@/store/reducers/userSlice";
+import { FullUser } from "@/types/user";
+import userService from "@/services/userService";
 
-const CreateModal = ({ show, onClose }: CreateModalProps) => {
-  const dispatch = useAppDispatch();
+interface CreateUserModalProps extends CreateModalProps {
+  setUsers: React.Dispatch<React.SetStateAction<FullUser[]>>;
+}
+
+const CreateModal = ({ show, onClose, setUsers }: CreateUserModalProps) => {
   const formik = useFormik({
     initialValues: {
       fullName: "",
@@ -22,10 +25,11 @@ const CreateModal = ({ show, onClose }: CreateModalProps) => {
     validationSchema: createUserSchema,
     onSubmit: async (values, { resetForm }) => {
       try {
-        const { message } = await dispatch(createUser(values)).unwrap();
-        toast.success(message);
+        const { message, user } = await userService.create(values);
+        setUsers((prev) => [user, ...prev]);
         onClose();
         resetForm();
+        toast.success(message);
       } catch (error) {
         toast.error(handlingAxiosError(error).message);
       }

@@ -15,7 +15,6 @@ const BuyingGuide = () => {
         <Breadcrumb.Item href="/">Trang chủ</Breadcrumb.Item>
         <Breadcrumb.Item active>{title}</Breadcrumb.Item>
       </Breadcrumb>
-
       <Container>
         <h1 className="font-medium text-[40px] mb-2">{title}</h1>
         <p className="mb-4">

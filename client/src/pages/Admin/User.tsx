@@ -1,15 +1,9 @@
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { Dustbin, Edit, Plus2, Search } from "@/icons";
 import { Helmet } from "react-helmet-async";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { useSearchParams } from "react-router-dom";
 import Pagination from "@/components/Pagination";
 import useAdminModal from "@/hooks/useAdminModal";
-import {
-  deleteManyUser,
-  deleteUser,
-  getAllUser,
-} from "@/store/reducers/userSlice";
 import formatDate from "@/utils/formatDate";
 import CreateModal from "@/components/Admin/User/CreateModal";
 import toast from "react-hot-toast";
@@ -19,18 +13,12 @@ import cn from "@/utils/cn";
 import Limit from "@/components/Limit";
 import useLimit from "@/hooks/useLimit";
 import { FullUser } from "@/types/user";
+import userService from "@/services/userService";
+import useFetchPagination from "@/hooks/useFetchPagination";
 
 const title = "Quản lý người dùng";
 
 const User = () => {
-  const {
-    users,
-    total,
-    limit,
-    skip,
-    page: currentPage,
-  } = useAppSelector((state) => state.user);
-
   const {
     activeModal,
     openCreateModal,
@@ -44,8 +32,6 @@ const User = () => {
   const [urlSearchParams, setUrlSearchParams] = useSearchParams();
   const { currentLimit, handleChangeLimit } = useLimit();
   const [user, setUser] = useState<FullUser | null>(null);
-
-  const dispatch = useAppDispatch();
 
   const search = urlSearchParams.get("search") ?? "";
   const page = +(urlSearchParams.get("page") ?? "1");
@@ -61,8 +47,8 @@ const User = () => {
         "Bạn có chắc chắn muốn xóa người dùng này?"
       );
       if (!confirm) return;
-      const { message } = await dispatch(deleteUser(id)).unwrap();
-      closeModal();
+      const { message } = await userService.delete(id);
+      setUsers((prev) => prev.filter((user) => user._id !== id));
       toast.success(message);
     } catch (error) {
       toast.error(handlingAxiosError(error).message);
@@ -75,18 +61,38 @@ const User = () => {
         `Bạn có chắc chắn muốn xóa ${selectedRows.length} người dùng này?`
       );
       if (!confirm) return;
-      const { message } = await dispatch(deleteManyUser(selectedRows)).unwrap();
+      const { message } = await userService.deleteMany(selectedRows);
+      setUsers((prev) =>
+        prev.filter((user) => !selectedRows.includes(user._id))
+      );
       toast.success(message);
     } catch (error) {
       toast.error(handlingAxiosError(error).message);
     }
   };
 
-  useEffect(() => {
-    dispatch(getAllUser({ limit: currentLimit, page, search }));
-  }, [dispatch, page, search, currentLimit]);
+  const getUsers = useCallback(async () => {
+    const res = await userService.getAll({
+      limit: currentLimit,
+      page,
+      search,
+    });
 
-  const pageCount = Math.ceil(total / limit);
+    return {
+      data: res.users,
+      total: res.total,
+      skip: res.skip,
+    };
+  }, [currentLimit, page, search]);
+
+  const {
+    data: users,
+    skip,
+    total,
+    setData: setUsers,
+  } = useFetchPagination<FullUser[]>(getUsers, []);
+
+  const pageCount = Math.ceil(total / currentLimit);
 
   const hasSelected = selectedRows.size > 0;
 
@@ -246,7 +252,7 @@ const User = () => {
         </span>
         <Pagination
           pageCount={pageCount}
-          currentPage={currentPage}
+          currentPage={page}
           onPageChange={onPageChange}
           variant="blue"
         />
@@ -257,12 +263,17 @@ const User = () => {
         />
       </div>
 
-      <CreateModal onClose={closeModal} show={activeModal.create} />
+      <CreateModal
+        onClose={closeModal}
+        show={activeModal.create}
+        setUsers={setUsers}
+      />
       {user && (
         <UpdateModal
           onClose={closeModal}
           show={activeModal.update}
           user={user}
+          setUsers={setUsers}
         />
       )}
     </div>
