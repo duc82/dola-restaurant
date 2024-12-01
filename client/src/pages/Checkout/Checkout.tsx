@@ -6,7 +6,6 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import formatVnd from "@/utils/formatVnd";
 import { useFormik } from "formik";
 import { Link, useNavigate } from "react-router-dom";
-import paymentMethods from "@/data/paymentMethods.json";
 import Button from "@/components/Form/Button";
 import Sidebar from "@/components/Checkout/Sidebar";
 import { ChangeEvent, useEffect, useState } from "react";
@@ -17,6 +16,7 @@ import { resetCart } from "@/store/reducers/cartSlice";
 import formatAddress from "@/utils/formatAddress";
 import voucherService from "@/services/voucherService";
 import { FullVoucher } from "@/types/voucher";
+import moneyBill from "@/assets/images/money_bill.svg";
 
 const shippingFee = 40000;
 
@@ -59,8 +59,7 @@ const Checkout = () => {
         quantity: cart.quantity,
       })),
       note: "",
-      paymentMethod:
-        paymentMethods.find((method) => method.default)?.name || "",
+      paymentMethod: "Thanh toán khi giao hàng (COD)",
       vouchers: [] as string[],
     },
     enableReinitialize: true,
@@ -267,29 +266,31 @@ const Checkout = () => {
                 <CreditCart className="w-6 h-6 mr-2 -scale-x-100" />
                 Phương thức thanh toán
               </h2>
-              {paymentMethods.map((method) => (
-                <Radio
-                  key={method.name}
-                  id={method.name}
-                  name="paymentMethod"
-                  value={method.name}
-                  disabled={method.name === "VnPay"}
-                  checked={formik.values.paymentMethod === method.name}
-                  onChange={formik.handleChange}
-                  wrapperClassName="border border-[rgb(206,205,205)] rounded-md mb-3"
-                  label={
-                    <div className="flex items-center">
-                      <span className="flex-1">{method.name}</span>
-                      <img
-                        src={method.image}
-                        alt={method.name}
-                        className="ml-2"
-                        width={22}
-                      />
-                    </div>
-                  }
-                />
-              ))}
+
+              <Radio
+                id={"Thanh toán khi giao hàng (COD)"}
+                name="paymentMethod"
+                value={"Thanh toán khi giao hàng (COD)"}
+                checked={
+                  formik.values.paymentMethod ===
+                  "Thanh toán khi giao hàng (COD)"
+                }
+                onChange={formik.handleChange}
+                wrapperClassName="border border-[rgb(206,205,205)] rounded-md mb-3"
+                label={
+                  <div className="flex items-center">
+                    <span className="flex-1">
+                      {"Thanh toán khi giao hàng (COD)"}
+                    </span>
+                    <img
+                      src={moneyBill}
+                      alt={"Image"}
+                      className="ml-2"
+                      width={22}
+                    />
+                  </div>
+                }
+              />
             </div>
 
             <div className="py-4 lg:hidden">
