@@ -9,7 +9,6 @@ import { FullAddress } from "@/types/address";
 import addressService from "@/services/addressService";
 import formatAddress from "@/utils/formatAddress";
 import { useCallback } from "react";
-import paymentMethods from "@/data/paymentMethods.json";
 import toast from "react-hot-toast";
 import handlingAxiosError from "@/utils/handlingAxiosError";
 import orderService from "@/services/orderService";
@@ -122,14 +121,9 @@ export default function UpdateModal({
               value={formik.values.paymentMethod}
               onChange={formik.handleChange}
             >
-              {paymentMethods.map((paymentMethod) => (
-                <Select.Option
-                  key={paymentMethod.name}
-                  value={paymentMethod.name}
-                >
-                  {paymentMethod.name}
-                </Select.Option>
-              ))}
+              <Select.Option value={"Thanh toán khi giao hàng (COD)"}>
+                Thanh toán khi giao hàng (COD)
+              </Select.Option>
             </Select>
             <Select
               name="isPaid"
