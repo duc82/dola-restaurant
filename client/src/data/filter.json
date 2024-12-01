@@ -1,0 +1,57 @@
+{
+  "prices": [
+    {
+      "name": "Dưới 100.000đ",
+      "value": "{\"$lt\": 100000}"
+    },
+    {
+      "name": "Từ 100.000đ - 200.000đ",
+      "value": "{\"$gte\": 100000,\"$lte\": 200000}"
+    },
+    {
+      "name": "Từ 200.000đ - 500.000đ",
+      "value": "{\"$gte\": 200000,\"$lte\": 500000}"
+    },
+    {
+      "name": "Từ 500.000đ - 1 triệu",
+      "value": "{\"$gte\": 500000,\"$lte\": 1000000}"
+    },
+    {
+      "name": "Trên 1 triệu",
+      "value": "{\"$gt\": 1000000}"
+    }
+  ],
+  "taste": [
+    {
+      "name": "Mặn",
+      "value": "mặn"
+    },
+    {
+      "name": "Ngọt",
+      "value": "ngọt"
+    },
+    {
+      "name": "Chua",
+      "value": "chua"
+    },
+    {
+      "name": "Cay",
+      "value": "cay"
+    }
+  ],
+
+  "sizes": [
+    {
+      "name": "Lớn",
+      "value": "lớn"
+    },
+    {
+      "name": "Vừa",
+      "value": "vừa"
+    },
+    {
+      "name": "Nhỏ",
+      "value": "nhỏ"
+    }
+  ]
+}

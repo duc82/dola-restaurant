@@ -1,0 +1,216 @@
+[
+  {
+    "_id": "6628ed60f876a9cbfd847996",
+    "name": "Khai vị",
+    "image": "https://firebasestorage.googleapis.com/v0/b/dola-restaurant.appspot.com/o/categories%2Fkhaivi.webp?alt=media&token=f177fd98-111c-434a-969d-73e9c9fb87b2",
+    "description": "",
+    "createdAt": "2024-04-24T11:30:40.911Z",
+    "updatedAt": "2024-04-24T11:30:40.911Z",
+    "slug": "khai-vi"
+  },
+  {
+    "_id": "6628ee16f876a9cbfd847999",
+    "name": "Salad",
+    "image": "",
+    "description": "",
+    "parent": "6628ed60f876a9cbfd847996",
+    "createdAt": "2024-04-24T11:33:42.975Z",
+    "updatedAt": "2024-04-24T11:33:42.975Z",
+    "slug": "salad"
+  },
+  {
+    "_id": "6628eee0f876a9cbfd8479a7",
+    "name": "Gỏi",
+    "image": "",
+    "description": "",
+    "parent": "6628ed60f876a9cbfd847996",
+    "createdAt": "2024-04-24T11:37:04.749Z",
+    "updatedAt": "2024-04-24T11:37:04.749Z",
+    "slug": "goi"
+  },
+  {
+    "_id": "6628ef3df876a9cbfd8479ab",
+    "name": "Món chính",
+    "image": "https://firebasestorage.googleapis.com/v0/b/dola-restaurant.appspot.com/o/categories%2Fmonchinh.webp?alt=media&token=2db8d9db-a64d-4b8f-a1e0-b26caff7bc4d",
+    "description": "",
+    "createdAt": "2024-04-24T11:38:37.348Z",
+    "updatedAt": "2024-04-24T11:38:37.348Z",
+    "slug": "mon-chinh"
+  },
+  {
+    "_id": "6628f126f876a9cbfd8479e3",
+    "name": "Món bò",
+    "image": "https://firebasestorage.googleapis.com/v0/b/dola-restaurant.appspot.com/o/categories%2Fmonbo.webp?alt=media&token=98177614-cec2-4a20-8a92-d143ce0d786a",
+    "description": "Các món bò được chế biến tinh tế với hương vị đặc biệt nhất\t",
+    "parent": "6628ef3df876a9cbfd8479ab",
+    "createdAt": "2024-04-24T11:46:46.920Z",
+    "updatedAt": "2024-04-24T12:36:41.696Z",
+    "slug": "mon-bo"
+  },
+  {
+    "_id": "6628f137f876a9cbfd8479e7",
+    "name": "Món gà",
+    "image": "https://firebasestorage.googleapis.com/v0/b/dola-restaurant.appspot.com/o/categories%2Fmonga.webp?alt=media&token=2a7e361c-a70b-4f09-879d-97046583ea04",
+    "description": "Các món gà được chế biến tinh tế với hương vị đặc biệt nhất\t",
+    "parent": "6628ef3df876a9cbfd8479ab",
+    "createdAt": "2024-04-24T11:47:03.020Z",
+    "updatedAt": "2024-04-24T12:36:51.566Z",
+    "slug": "mon-ga"
+  },
+  {
+    "_id": "6628f140f876a9cbfd8479ea",
+    "name": "Món heo",
+    "image": "https://firebasestorage.googleapis.com/v0/b/dola-restaurant.appspot.com/o/categories%2Fmonheo.webp?alt=media&token=79011d33-4525-4ca3-b09e-3763c8a92fcf",
+    "description": "Các món heo được chế biến tinh tế với hương vị đặc biệt nhất\t",
+    "parent": "6628ef3df876a9cbfd8479ab",
+    "createdAt": "2024-04-24T11:47:12.083Z",
+    "updatedAt": "2024-04-24T12:36:57.707Z",
+    "slug": "mon-heo"
+  },
+  {
+    "_id": "6628f14bf876a9cbfd8479ed",
+    "name": "Món cá",
+    "image": "https://firebasestorage.googleapis.com/v0/b/dola-restaurant.appspot.com/o/categories%2Fmonca.webp?alt=media&token=cd43f35d-291a-4d66-9b12-3215463e55ec",
+    "description": "Các món cá được chế biến tinh tế với hương vị đặc biệt nhất\t",
+    "parent": "6628ef3df876a9cbfd8479ab",
+    "createdAt": "2024-04-24T11:47:23.092Z",
+    "updatedAt": "2024-04-24T12:37:03.116Z",
+    "slug": "mon-ca"
+  },
+  {
+    "_id": "6628f25cf876a9cbfd847a36",
+    "name": "Canh - Tiềm - Súp",
+    "image": "https://firebasestorage.googleapis.com/v0/b/dola-restaurant.appspot.com/o/categories%2Fcanh-tiem-sup.webp?alt=media&token=40281832-524a-44ae-a98d-5881e1961e00",
+    "description": "",
+    "createdAt": "2024-04-24T11:51:56.722Z",
+    "updatedAt": "2024-04-24T11:51:56.722Z",
+    "slug": "canh-tiem-sup"
+  },
+  {
+    "_id": "6628f265f876a9cbfd847a38",
+    "name": "Canh",
+    "image": "",
+    "description": "",
+    "parent": "6628f25cf876a9cbfd847a36",
+    "createdAt": "2024-04-24T11:52:05.968Z",
+    "updatedAt": "2024-04-24T11:52:05.968Z",
+    "slug": "canh"
+  },
+  {
+    "_id": "6628f26bf876a9cbfd847a3b",
+    "name": "Tiềm",
+    "image": "",
+    "description": "",
+    "parent": "6628f25cf876a9cbfd847a36",
+    "createdAt": "2024-04-24T11:52:11.463Z",
+    "updatedAt": "2024-04-24T11:52:11.463Z",
+    "slug": "tiem"
+  },
+  {
+    "_id": "6628f271f876a9cbfd847a3e",
+    "name": "Súp",
+    "image": "",
+    "description": "",
+    "parent": "6628f25cf876a9cbfd847a36",
+    "createdAt": "2024-04-24T11:52:17.272Z",
+    "updatedAt": "2024-04-24T11:52:17.272Z",
+    "slug": "sup"
+  },
+  {
+    "_id": "6628f29ff876a9cbfd847a51",
+    "name": "Cơm - Mì - Cháo",
+    "image": "https://firebasestorage.googleapis.com/v0/b/dola-restaurant.appspot.com/o/categories%2Fcom-mi-chao.webp?alt=media&token=26cfe834-7eef-4e5a-a185-50a717777692",
+    "description": "",
+    "createdAt": "2024-04-24T11:53:03.065Z",
+    "updatedAt": "2024-04-24T11:53:03.065Z",
+    "slug": "com-mi-chao"
+  },
+  {
+    "_id": "6628f2a5f876a9cbfd847a53",
+    "name": "Cơm",
+    "image": "",
+    "description": "",
+    "parent": "6628f29ff876a9cbfd847a51",
+    "createdAt": "2024-04-24T11:53:09.052Z",
+    "updatedAt": "2024-04-24T11:53:09.052Z",
+    "slug": "com"
+  },
+  {
+    "_id": "6628f2c4f876a9cbfd847a5f",
+    "name": "Mì",
+    "image": "",
+    "description": "",
+    "parent": "6628f29ff876a9cbfd847a51",
+    "createdAt": "2024-04-24T11:53:40.183Z",
+    "updatedAt": "2024-04-24T11:53:40.183Z",
+    "slug": "mi"
+  },
+  {
+    "_id": "6628f2ccf876a9cbfd847a62",
+    "name": "Cháo",
+    "image": "",
+    "description": "",
+    "parent": "6628f29ff876a9cbfd847a51",
+    "createdAt": "2024-04-24T11:53:48.132Z",
+    "updatedAt": "2024-04-24T11:53:48.132Z",
+    "slug": "chao"
+  },
+  {
+    "_id": "6628f5f41a5079b0d6d8f043",
+    "name": "Bánh và tráng miệng",
+    "image": "https://firebasestorage.googleapis.com/v0/b/dola-restaurant.appspot.com/o/categories%2Fbanh-trangmieng.webp?alt=media&token=1c60061e-1b1a-4eb3-9998-34961fdc9caa",
+    "description": "",
+    "createdAt": "2024-04-24T12:07:16.015Z",
+    "updatedAt": "2024-04-24T12:07:16.015Z",
+    "slug": "banh-va-trang-mieng"
+  },
+  {
+    "_id": "6628f5fc1a5079b0d6d8f045",
+    "name": "Bánh",
+    "image": "",
+    "description": "",
+    "parent": "6628f5f41a5079b0d6d8f043",
+    "createdAt": "2024-04-24T12:07:24.208Z",
+    "updatedAt": "2024-04-24T12:07:24.208Z",
+    "slug": "banh"
+  },
+  {
+    "_id": "6628f6041a5079b0d6d8f048",
+    "name": "Tráng miệng",
+    "image": "",
+    "description": "",
+    "parent": "6628f5f41a5079b0d6d8f043",
+    "createdAt": "2024-04-24T12:07:32.447Z",
+    "updatedAt": "2024-04-24T12:07:32.447Z",
+    "slug": "trang-mieng"
+  },
+  {
+    "_id": "6628f6141a5079b0d6d8f04b",
+    "name": "Đồ uống",
+    "image": "https://firebasestorage.googleapis.com/v0/b/dola-restaurant.appspot.com/o/categories%2Fdouong.webp?alt=media&token=fdfbe2f0-a6b5-461e-9119-c77922ba3eb4",
+    "description": "",
+    "createdAt": "2024-04-24T12:07:48.504Z",
+    "updatedAt": "2024-04-24T12:07:48.504Z",
+    "slug": "do-uong"
+  },
+  {
+    "_id": "6628f6211a5079b0d6d8f04d",
+    "name": "Cà phê",
+    "image": "",
+    "description": "",
+    "parent": "6628f6141a5079b0d6d8f04b",
+    "createdAt": "2024-04-24T12:08:01.600Z",
+    "updatedAt": "2024-04-24T12:08:01.600Z",
+    "slug": "ca-phe"
+  },
+  {
+    "_id": "6628f62d1a5079b0d6d8f050",
+    "name": "Trà sữa",
+    "image": "",
+    "description": "",
+    "parent": "6628f6141a5079b0d6d8f04b",
+    "createdAt": "2024-04-24T12:08:13.663Z",
+    "updatedAt": "2024-04-24T12:08:13.663Z",
+    "slug": "tra-sua"
+  }
+]

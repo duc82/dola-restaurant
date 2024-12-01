@@ -1,0 +1,30 @@
+[
+  {
+    "value": "",
+    "title": "Mặc định"
+  },
+  {
+    "value": "title-asc",
+    "title": "Tên A → Z"
+  },
+  {
+    "value": "title-desc",
+    "title": "Tên Z → A"
+  },
+  {
+    "value": "cost-asc",
+    "title": "Giá tăng dần"
+  },
+  {
+    "value": "cost-desc",
+    "title": "Giá giảm dần"
+  },
+  {
+    "value": "createdAt-desc",
+    "title": "Hàng mới nhất"
+  },
+  {
+    "value": "createdAt-asc",
+    "title": "Hàng cũ nhất"
+  }
+]

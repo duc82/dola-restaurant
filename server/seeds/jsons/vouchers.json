@@ -1,0 +1,26 @@
+[
+  {
+    "code": "FREESHIP",
+    "discount": 40000,
+    "expireAt": "2024-08-01",
+    "minAmount": 300000,
+    "quantity": 100,
+    "type": "shipping"
+  },
+  {
+    "code": "DOLA10",
+    "discount": 20000,
+    "expireAt": "2024-07-01",
+    "minAmount": 700000,
+    "quantity": 50,
+    "type": "discount"
+  },
+  {
+    "code": "DOLA50",
+    "discount": 50000,
+    "expireAt": "2024-06-28",
+    "minAmount": 1000000,
+    "quantity": 25,
+    "type": "discount"
+  }
+]

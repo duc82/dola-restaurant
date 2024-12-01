@@ -1,0 +1,82 @@
+[
+  {
+    "name": "Dola Restaurant Hà Nội",
+    "address": "266 Đội Cấn, Phường Liễu Giai, Quận Ba Đình, Hà Nội",
+    "district": "Quận Ba Đình",
+    "province": "Hà Nội",
+    "hotline": "0123456789",
+    "email": "example@gmail.com",
+    "main": true,
+    "iframeSrc": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d878.7244708224887!2d105.8163476275882!3d21.03651155742603!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab128d511a8d%3A0x3440d4c5d63f693!2zMjY2IFAuIMSQ4buZaSBD4bqlbiwgTGnhu4V1IEdpYWksIEJhIMSQw6xuaCwgSMOgIE7hu5lpLCBWaeG7h3QgTmFt!5e0!3m2!1svi!2s!4v1702362197158!5m2!1svi!2s"
+  },
+  {
+    "name": "Dola Hoàng Quốc Việt",
+    "address": "38 Hoàng Quốc Việt, Phường Nghĩa Tân, Quận Cầu Giấy, Hà Nội",
+    "district": "Quận Cầu Giấy",
+    "province": "Hà Nội",
+    "hotline": "0123456789",
+    "email": "example@gmail.com",
+    "main": false,
+    "iframeSrc": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3723.6658309336553!2d105.78902187616552!3d21.046052880607668!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab3048cf1bc9%3A0xf383d5c388f26254!2zMzggSG_DoG5nIFF14buRYyBWaeG7h3QsIE5naMSpYSBUw6JuLCBD4bqndSBHaeG6pXksIEjDoCBO4buZaSwgVmnhu4d0IE5hbQ!5e0!3m2!1svi!2sus!4v1717494154149!5m2!1svi!2sus"
+  },
+  {
+    "name": "Dola Hoàng Đạo Thúy",
+    "address": "150 Hoàng Đạo Thúy, Phường Trung Hòa, Quận Cầu Giấy, Hà Nội",
+    "district": "Quận Cầu Giấy",
+    "province": "Hà Nội",
+    "hotline": "0123456789",
+    "email": "example@gmail.com",
+    "main": false,
+    "iframeSrc": "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d7449.427178460144!2d105.806611!3d21.004115!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ac98969e83d7%3A0x4ec74448cccd83ec!2zMTUwIFAuIEhvw6BuZyDEkOG6oW8gVGjDunksIE5ow6JuIENow61uaCwgVGhhbmggWHXDom4sIEjDoCBO4buZaSwgVmnhu4d0IE5hbQ!5e0!3m2!1svi!2sus!4v1717494083565!5m2!1svi!2sus"
+  },
+  {
+    "name": "Dola Trần Phú",
+    "address": "95 Trần Phú, Phường Văn Quán, Quận Hà Đông, Hà Nội",
+    "district": "Quận Hà Đông",
+    "province": "Hà Nội",
+    "hotline": "0123456789",
+    "email": "example@gmail.com",
+    "main": false,
+    "iframeSrc": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3725.223851188735!2d105.78757288043306!3d20.98366213077312!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135accf4ca461f1%3A0xbf3d6106644c93b!2zOTUgVHLhuqduIFBow7osIFAuIFbEg24gUXXDoW4sIEjDoCDEkMO0bmcsIEjDoCBO4buZaSwgVmnhu4d0IE5hbQ!5e0!3m2!1svi!2s!4v1702361860088!5m2!1svi!2s"
+  },
+  {
+    "name": "Dola Restaurant Sài Gòn",
+    "address": "Tầng 3, 70 Lữ Gia, Phường 15, Quận 11, Thành phố Hồ Chí Minh",
+    "district": "Quận 11",
+    "province": "Hồ Chí Minh",
+    "hotline": "0123456789",
+    "email": "example@gmail.com",
+    "main": false,
+    "iframeSrc": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.5307872012236!2d106.65485467599802!3d10.770599089377779!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752ec1e37ff45d%3A0xcab439a08d20421a!2zMyDEkC4gTOG7ryBHaWEsIFBoxrDhu51uZyAxNSwgUXXhuq1uIDExLCBUaMOgbmggcGjhu5EgSOG7kyBDaMOtIE1pbmgsIFZp4buHdCBOYW0!5e0!3m2!1svi!2sus!4v1717493480335!5m2!1svi!2sus"
+  },
+  {
+    "name": "Dola Restaurant Đà Nẵng",
+    "address": "181 đường Huỳnh Tấn Phát, Phường Hoà Cường Nam, Quận Hải Châu, TP Đà Nẵng",
+    "district": "Quận Hải Châu",
+    "province": "Đà Nẵng",
+    "hotline": "0123456789",
+    "email": "example@gmail.com",
+    "main": false,
+    "iframeSrc": "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d7669.221422946617!2d108.214668!3d16.033768!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x314219ecd6d00127%3A0x5e1f8719efd14c01!2zMTgxIEh14buzbmggVOG6pW4gUGjDoXQsIEhvw6AgQ8aw4budbmcgTmFtLCBI4bqjaSBDaMOidSwgxJDDoCBO4bq1bmcsIFZp4buHdCBOYW0!5e0!3m2!1svi!2sus!4v1717493720008!5m2!1svi!2sus"
+  },
+  {
+    "name": "Dola Restaurant Bình Dương",
+    "address": "169 / 34 Nguyễn Hữu Cảnh, Phường Phú Thọ, TP.Thủ Dầu Một, Tỉnh Bình Dương",
+    "district": "TP.Thủ Dầu Một",
+    "province": "Bình Dương",
+    "hotline": "0123456789",
+    "email": "example@gmail.com",
+    "main": false,
+    "iframeSrc": "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d7833.872754362535!2d106.672803!3d10.968175!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3174d12ba8d5688b%3A0x5e0ca6fde29d3465!2zMTY5Lzc0LCAxNjkgTmd1eeG7hW4gSOG7r3UgQ-G6o25oLCBQaMO6IFRo4buNLCBUaOG7pyBE4bqndSBN4buZdCwgQsOsbmggRMawxqFuZywgVmnhu4d0IE5hbQ!5e0!3m2!1svi!2sus!4v1717493797608!5m2!1svi!2sus"
+  },
+  {
+    "name": "Dola Restaurant Cần Thơ",
+    "address": "81 đường Phan Huy Chú, KDC Thới Nhựt I, Phường An Khánh, Quận Ninh Kiều, Tp Cần Thơ",
+    "district": "Quận Ninh Kiều",
+    "province": "Cần Thơ",
+    "hotline": "0123456789",
+    "email": "example@gmail.com",
+    "main": false,
+    "iframeSrc": "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d7857.339108719556!2d105.754082!3d10.044103!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31a0886ded66f681%3A0x5424589b695fd18c!2zS2RjIFRo4bubaSBOaOG7sXQgMiwgQW4gS2jDoW5oLCBOaW5oIEtp4buBdSwgQ-G6p24gVGjGoSwgVmnhu4d0IE5hbQ!5e0!3m2!1svi!2sus!4v1717493885007!5m2!1svi!2sus"
+  }
+]
