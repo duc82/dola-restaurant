@@ -7,7 +7,9 @@ import productService from "@/services/productService";
 
 const ProductRelate = ({ categorySlug }: { categorySlug?: string }) => {
   const ref = useRef(null);
-  const isInView = useInView(ref, { triggerOnce: true });
+  const isInView = useInView(ref, {
+    triggerOnce: true,
+  });
   const [products, setProducts] = useState<FullProduct[]>([]);
 
   useEffect(() => {

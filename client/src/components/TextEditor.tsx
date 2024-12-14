@@ -1,4 +1,4 @@
-import ReactQuill, { ReactQuillProps } from "react-quill";
+import ReactQuill from "react-quill-new";
 
 const modules = {
   toolbar: [
@@ -25,7 +25,7 @@ const formats = [
   "indent",
 ];
 
-const TextEditor = (props: ReactQuillProps) => {
+const TextEditor = (props: ReactQuill.ReactQuillProps) => {
   return <ReactQuill modules={modules} formats={formats} {...props} />;
 };
 

@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { Dustbin, Edit, Plus2, Search } from "@/icons";
+import { Dustbin, Edit, Plus2, Search, Spinner } from "@/icons";
 import { Helmet } from "react-helmet-async";
 import { useSearchParams } from "react-router-dom";
 import Pagination from "@/components/Pagination";
@@ -90,11 +90,20 @@ const User = () => {
     skip,
     total,
     setData: setUsers,
+    isLoading,
   } = useFetchPagination<FullUser[]>(getUsers, []);
 
   const pageCount = Math.ceil(total / currentLimit);
 
   const hasSelected = selectedRows.size > 0;
+
+  if (isLoading) {
+    return (
+      <div className="w-full p-4 lg:px-6">
+        <Spinner className="w-10 h-10 animate-spin mx-auto" />
+      </div>
+    );
+  }
 
   return (
     <div className="overflow-y-auto w-full">

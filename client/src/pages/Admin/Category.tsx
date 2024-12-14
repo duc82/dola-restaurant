@@ -2,7 +2,7 @@ import CreateModal from "@/components/Admin/Category/CreateModal";
 import UpdateModal from "@/components/Admin/Category/UpdateModal";
 import Pagination from "@/components/Pagination";
 import useAdminModal from "@/hooks/useAdminModal";
-import { Dustbin, Edit, Plus2, Search } from "@/icons";
+import { Dustbin, Edit, Plus2, Search, Spinner } from "@/icons";
 import categoryService from "@/services/categoryService";
 import { useAppDispatch } from "@/store/hooks";
 import { deleteCategory } from "@/store/reducers/categorySlice";
@@ -101,11 +101,20 @@ const Category = () => {
     total,
     skip,
     setData: setCategories,
+    isLoading,
   } = useFetchPagination<FullCategory[]>(getCategories, []);
 
   const pageCount = Math.ceil(total / currentLimit);
 
   const hasSelected = selectedRows.size > 0;
+
+  if (isLoading) {
+    return (
+      <div className="w-full p-4 lg:px-6">
+        <Spinner className="w-10 h-10 animate-spin mx-auto" />
+      </div>
+    );
+  }
 
   return (
     <div className="overflow-y-auto w-full">

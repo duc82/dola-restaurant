@@ -12,7 +12,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "react-lazy-load-image-component/src/effects/opacity.css";
 import "react-lazy-load-image-component/src/effects/blur.css";
-import "react-quill/dist/quill.snow.css";
+import "react-quill-new/dist/quill.snow.css";
 import "react-loading-skeleton/dist/skeleton.css";
 import "@/assets/styles/index.css";
 import router from "./router";

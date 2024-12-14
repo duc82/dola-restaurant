@@ -4,7 +4,7 @@ import Pagination from "@/components/Pagination";
 import useAdminModal from "@/hooks/useAdminModal";
 import useFetchPagination from "@/hooks/useFetchPagination";
 import useLimit from "@/hooks/useLimit";
-import { Dustbin, Edit, Search } from "@/icons";
+import { Dustbin, Edit, Search, Spinner } from "@/icons";
 import contactService from "@/services/contactService";
 import { Contact } from "@/types/contact";
 import cn from "@/utils/cn";
@@ -91,11 +91,20 @@ export default function ContactAdmin() {
     total,
     skip,
     setData: setContacts,
+    isLoading,
   } = useFetchPagination<Contact[]>(getContacts, []);
 
   const pageCount = Math.ceil(total / currentLimit);
 
   const hasSelected = selectedRows.size > 0;
+
+  if (isLoading) {
+    return (
+      <div className="w-full p-4 lg:px-6">
+        <Spinner className="w-10 h-10 animate-spin mx-auto" />
+      </div>
+    );
+  }
 
   return (
     <div className="overflow-y-auto w-full">

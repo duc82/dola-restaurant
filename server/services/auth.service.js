@@ -8,7 +8,7 @@ const verifyGoogleToken = require("../utils/verifyGoogleToken.util");
 const crypto = require("crypto");
 const Token = require("../models/token.model");
 const mongoose = require("mongoose");
-const transporter = require("../configs/nodemailer.config");
+const createTransporter = require("../configs/nodemailer.config");
 
 const sign = util.promisify(jwt.sign);
 const verify = util.promisify(jwt.verify);
@@ -342,6 +342,7 @@ class AuthService {
     `,
     };
 
+    const transporter = await createTransporter();
     const info = await transporter.sendMail(mailOptions);
     return info;
   }
@@ -358,6 +359,8 @@ class AuthService {
       <a href='${this.origin}/doi-mat-khau/${to}/${token}'>Đặt lại mật khẩu</a>
       `,
     };
+
+    const transporter = await createTransporter();
     const info = await transporter.sendMail(mailOptions);
     return info;
   }

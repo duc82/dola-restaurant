@@ -64,7 +64,10 @@ const OtpInput = ({ onChange, length = 6, className }: OtpInputProps) => {
         <input
           type="text"
           key={i}
-          ref={(el) => (el ? (refs.current[i] = el) : undefined)}
+          ref={(el) => {
+            if (!el) return;
+            refs.current[i] = el;
+          }}
           value={otp}
           maxLength={1}
           onChange={(e) => handleChange(e, i)}

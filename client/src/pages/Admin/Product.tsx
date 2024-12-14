@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Dustbin, Edit, Plus2, Search } from "@/icons";
+import { Dustbin, Edit, Plus2, Search, Spinner } from "@/icons";
 import { useAppDispatch } from "@/store/hooks";
 import {
   deleteManyProduct,
@@ -67,6 +67,7 @@ const ProductAdmin = () => {
     total,
     skip,
     setData: setProducts,
+    isLoading,
   } = useFetchPagination<FullProduct[]>(getProducts, []);
 
   const onPageChange = (page: number) => {
@@ -102,6 +103,14 @@ const ProductAdmin = () => {
   const pageCount = Math.ceil(total / currentLimit);
 
   const hasSelected = selectedRows.size > 0;
+
+  if (isLoading) {
+    return (
+      <div className="w-full p-4 lg:px-6">
+        <Spinner className="w-10 h-10 animate-spin mx-auto" />
+      </div>
+    );
+  }
 
   return (
     <div className="overflow-y-auto w-full">

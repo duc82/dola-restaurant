@@ -1,7 +1,12 @@
+import { JSX } from "react";
+import CountUp from "react-countup";
+
 interface CartItemProps {
   title: string;
-  total: number | string;
+  total: number;
   icon: JSX.Element;
+  duration?: number;
+  suffix?: string;
 }
 
 const CartItem = (props: CartItemProps) => {
@@ -13,7 +18,14 @@ const CartItem = (props: CartItemProps) => {
 
       <div className="mt-4 flex items-end justify-between">
         <div>
-          <h4 className="text-2xl font-bold">{props.total}</h4>
+          <h4 className="text-2xl font-bold">
+            <CountUp
+              end={props.total}
+              suffix={props.suffix}
+              duration={props.duration}
+              separator="."
+            />
+          </h4>
           <span className="text-sm font-medium text-gray-400">
             {props.title}
           </span>

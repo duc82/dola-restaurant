@@ -1,7 +1,7 @@
 import cn from "@/utils/cn";
-import { ReactNode } from "react";
+import { PropsWithChildren } from "react";
 
-interface ChartWrapperProps {
+interface ChartWrapperProps extends PropsWithChildren {
   quantity: number | string;
   title: string;
   percent: {
@@ -10,7 +10,6 @@ interface ChartWrapperProps {
   };
   report: string;
   className?: string;
-  children?: ReactNode;
 }
 
 const ChartWrapper = ({

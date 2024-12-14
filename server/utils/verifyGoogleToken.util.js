@@ -1,10 +1,11 @@
-const { OAuth2Client } = require("google-auth-library");
+const { google } = require("googleapis");
+const OAuth2 = google.auth.OAuth2;
 require("dotenv").config();
 
 const clientIdGoogle = process.env.CLIENT_ID_GOOGLE;
 const clientSecretGoogle = process.env.CLIENT_SECRET_GOOGLE;
 
-const googleClient = new OAuth2Client(
+const googleClient = new OAuth2(
   clientIdGoogle,
   clientSecretGoogle,
   "postmessage"

@@ -4,7 +4,7 @@ interface Options extends IntersectionObserverInit {
   triggerOnce?: boolean;
 }
 
-const useInView = (ref: RefObject<Element>, options?: Options) => {
+const useInView = (ref: RefObject<Element | null>, options?: Options) => {
   const [isInView, setInView] = useState(false);
 
   useEffect(() => {

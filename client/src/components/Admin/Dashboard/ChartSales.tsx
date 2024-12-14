@@ -1,4 +1,3 @@
-import { useState } from "react";
 import ChartWrapper from "./ChartWrapper";
 import ApexCharts, { Props } from "react-apexcharts";
 import formatVnd from "@/utils/formatVnd";
@@ -32,7 +31,6 @@ function getChartOptions({
       dataLabels: {
         enabled: false,
       },
-
       tooltip: {
         theme: "dark",
         style: {
@@ -115,31 +113,29 @@ function getChartOptions({
 }
 
 const ChartSales = ({ className }: { className?: string }) => {
-  const [chartSales, setChartSales] = useState(
-    getChartOptions({
-      categories: [
-        "01 tháng 10",
-        "02 tháng 10",
-        "03 tháng 10",
-        "04 tháng 10",
-        "05 tháng 10",
-        "06 tháng 10",
-        "07 tháng 10",
-      ],
-      series: [
-        {
-          name: "Doanh thu",
-          data: [6356, 6218, 6156, 6526, 6356, 6256, 6056],
-          color: "#1A56DB",
-        },
-        {
-          name: "Doanh thu (kỳ trước)",
-          data: [6556, 6725, 6424, 6356, 6586, 6756, 6616],
-          color: "#FDBA8C",
-        },
-      ],
-    })
-  );
+  const chartSales = getChartOptions({
+    categories: [
+      "01 tháng 10",
+      "02 tháng 10",
+      "03 tháng 10",
+      "04 tháng 10",
+      "05 tháng 10",
+      "06 tháng 10",
+      "07 tháng 10",
+    ],
+    series: [
+      {
+        name: "Doanh thu",
+        data: [6356, 6218, 6156, 6526, 6356, 6256, 6056],
+        color: "#1A56DB",
+      },
+      {
+        name: "Doanh thu (kỳ trước)",
+        data: [6556, 6725, 6424, 6356, 6586, 6756, 6616],
+        color: "#FDBA8C",
+      },
+    ],
+  });
 
   return (
     <ChartWrapper

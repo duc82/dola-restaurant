@@ -4,7 +4,7 @@ import ApexCharts, { Props } from "react-apexcharts";
 function getChartOptions(seriesData: ApexAxisChartSeries[0]["data"]) {
   const chart: Props = {
     height: 300,
-    type: "bar",
+    type: "area",
     options: {
       colors: ["#1A56DB", "#FDBA8C"],
       chart: {
@@ -13,10 +13,11 @@ function getChartOptions(seriesData: ApexAxisChartSeries[0]["data"]) {
           show: false,
         },
       },
-      plotOptions: {
-        bar: {
-          columnWidth: "90%",
-          borderRadius: 3,
+      markers: {
+        strokeWidth: 2,
+        size: 0,
+        hover: {
+          size: 4,
         },
       },
       tooltip: {
@@ -35,9 +36,8 @@ function getChartOptions(seriesData: ApexAxisChartSeries[0]["data"]) {
         },
       },
       stroke: {
-        show: true,
+        curve: "smooth",
         width: 5,
-        colors: ["transparent"],
       },
       grid: {
         show: false,
@@ -59,12 +59,17 @@ function getChartOptions(seriesData: ApexAxisChartSeries[0]["data"]) {
         axisTicks: {
           show: false,
         },
+        tooltip: {
+          enabled: false,
+        },
       },
       yaxis: {
         show: false,
       },
       fill: {
-        opacity: 1,
+        gradient: {
+          gradientToColors: ["rgb(14,47,120)"],
+        },
       },
     },
     series: [
@@ -79,14 +84,14 @@ function getChartOptions(seriesData: ApexAxisChartSeries[0]["data"]) {
   return chart;
 }
 
-const ChartProducts = ({
-  className,
+export default function ChartUsers({
   total,
+  className,
 }: {
-  className?: string;
   total: number;
-}) => {
-  const chartProducts = getChartOptions([
+  className?: string;
+}) {
+  const chartUsers = getChartOptions([
     { x: "Ngày 1 Tháng 3", y: 170 },
     { x: "Ngày 2 Tháng 3", y: 180 },
     { x: "Ngày 3 Tháng 3", y: 164 },
@@ -99,19 +104,17 @@ const ChartProducts = ({
   return (
     <ChartWrapper
       quantity={total}
-      title="Số lượng sản phẩm"
-      percent={{ value: 14.6, isGrowing: true }}
-      report="sản phẩm"
+      title="Số lượng người dùng"
+      percent={{ value: 69, isGrowing: true }}
+      report="người dùng"
       className={className}
     >
       <ApexCharts
-        type={chartProducts.type}
-        options={chartProducts.options}
-        series={chartProducts.series}
-        height={chartProducts.height}
+        type={chartUsers.type}
+        options={chartUsers.options}
+        series={chartUsers.series}
+        height={chartUsers.height}
       />
     </ChartWrapper>
   );
-};
-
-export default ChartProducts;
+}

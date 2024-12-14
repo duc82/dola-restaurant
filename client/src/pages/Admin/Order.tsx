@@ -4,7 +4,7 @@ import Pagination from "@/components/Pagination";
 import useAdminModal from "@/hooks/useAdminModal";
 import useFetchPagination from "@/hooks/useFetchPagination";
 import useLimit from "@/hooks/useLimit";
-import { Dustbin, Edit, Search } from "@/icons";
+import { Dustbin, Edit, Search, Spinner } from "@/icons";
 import orderService from "@/services/orderService";
 import { FullOrder } from "@/types/order";
 import cn from "@/utils/cn";
@@ -92,10 +92,19 @@ export default function Order() {
     total,
     skip,
     setData: setOrders,
+    isLoading,
   } = useFetchPagination<FullOrder[]>(getOrders, []);
 
   const hasSelected = selectedRows.size > 0;
   const pageCount = Math.ceil(total / currentLimit);
+
+  if (isLoading) {
+    return (
+      <div className="w-full p-4 lg:px-6">
+        <Spinner className="w-10 h-10 animate-spin mx-auto" />
+      </div>
+    );
+  }
 
   return (
     <div className="overflow-y-auto w-full">

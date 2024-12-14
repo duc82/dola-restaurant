@@ -5,7 +5,7 @@ import Pagination from "@/components/Pagination";
 import useAdminModal from "@/hooks/useAdminModal";
 import useFetchPagination from "@/hooks/useFetchPagination";
 import useLimit from "@/hooks/useLimit";
-import { Dustbin, Edit, Plus2, Search } from "@/icons";
+import { Dustbin, Edit, Plus2, Search, Spinner } from "@/icons";
 import voucherService from "@/services/voucherService";
 import { FullVoucher, VouchersResponse } from "@/types/voucher";
 import cn from "@/utils/cn";
@@ -97,10 +97,19 @@ export default function Voucher() {
     total,
     skip,
     setData: setVouchers,
+    isLoading,
   } = useFetchPagination<FullVoucher[]>(getVouchers, []);
 
   const hasSelected = selectedRows.size > 0;
   const pageCount = Math.ceil(total / currentLimit);
+
+  if (isLoading) {
+    return (
+      <div className="w-full p-4 lg:px-6">
+        <Spinner className="w-10 h-10 animate-spin mx-auto" />
+      </div>
+    );
+  }
 
   return (
     <div className="overflow-y-auto w-full">
