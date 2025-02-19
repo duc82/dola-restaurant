@@ -17,6 +17,9 @@ import formatAddress from "@/utils/formatAddress";
 import voucherService from "@/services/voucherService";
 import { FullVoucher } from "@/types/voucher";
 import moneyBill from "@/assets/images/money_bill.svg";
+import vnpay from "@/assets/images/vnpay.webp";
+import payment_3 from "@/assets/images/payment_3.webp";
+import { PaymentElement } from "@stripe/react-stripe-js";
 
 const shippingFee = 40000;
 
@@ -268,9 +271,9 @@ const Checkout = () => {
               </h2>
 
               <Radio
-                id={"Thanh toán khi giao hàng (COD)"}
+                id="Thanh toán khi giao hàng (COD)"
                 name="paymentMethod"
-                value={"Thanh toán khi giao hàng (COD)"}
+                value="Thanh toán khi giao hàng (COD)"
                 checked={
                   formik.values.paymentMethod ===
                   "Thanh toán khi giao hàng (COD)"
@@ -280,11 +283,53 @@ const Checkout = () => {
                 label={
                   <div className="flex items-center">
                     <span className="flex-1">
-                      {"Thanh toán khi giao hàng (COD)"}
+                      Thanh toán khi giao hàng (COD)
                     </span>
                     <img
                       src={moneyBill}
+                      alt="Image"
+                      className="ml-2"
+                      width={22}
+                    />
+                  </div>
+                }
+              />
+
+              <Radio
+                id="VnPay"
+                name="paymentMethod"
+                value="VnPay"
+                checked={formik.values.paymentMethod === "VnPay"}
+                onChange={formik.handleChange}
+                wrapperClassName="border border-[rgb(206,205,205)] rounded-md mb-3"
+                label={
+                  <div className="flex items-center">
+                    <span className="flex-1">VnPay</span>
+                    <img
+                      src={vnpay}
                       alt={"Image"}
+                      className="ml-2"
+                      width={22}
+                    />
+                  </div>
+                }
+              />
+
+              <Radio
+                id="Thẻ tin dụng/Thẻ ghi nợ"
+                name="paymentMethod"
+                value="Thẻ tin dụng/Thẻ ghi nợ"
+                checked={
+                  formik.values.paymentMethod === "Thẻ tin dụng/Thẻ ghi nợ"
+                }
+                onChange={formik.handleChange}
+                wrapperClassName="border border-[rgb(206,205,205)] rounded-md"
+                label={
+                  <div className="flex items-center">
+                    <span className="flex-1">Thẻ tin dụng/Thẻ ghi nợ</span>
+                    <img
+                      src={payment_3}
+                      alt="Image"
                       className="ml-2"
                       width={22}
                     />

@@ -1,8 +1,83 @@
-@import "table.css";
+@import "tailwindcss";
+@plugin "@tailwindcss/forms";
+@import "./table.css";
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@theme {
+  --font-dancing_script: "Dancing Script", cursive;
+
+  --color-emerald-primary: rgb(20 59 54);
+  --color-emerald-secondary: rgb(14 40 37);
+  --color-emerald-blur: rgba(20, 59, 54, 0.63);
+  --color-yellow-primary: rgb(214 156 82);
+  --color-yellow-secondary: rgb(177 118 42);
+  --color-black-primary: rgb(7 21 19);
+  --color-warning: rgb(133 100 4);
+
+  --background-image-rating: url("/src/assets/images/danhgia.webp");
+  --background-image-select: url("/src/assets/images/ico-select_1.png");
+  --background-image-select2: url("/src/assets/images/ico-select_2.png");
+  --background-image-filter: url("/src/assets/images/icon-filter-bg.webp");
+  --background-image-filterClose: url("/src/assets/images/icon-filter-close-bg.webp");
+  --background-image-booking: url("/src/assets/images/datban.webp");
+
+  --shadow-card: 4px 4px rgb(172 172 172);
+  --shadow-card2: 0 3px rgb(163 123 68);
+  --shadow-dropdown: 0px 6px 12px 0px rgba(0, 0, 0, 0.18);
+  --shadow-dropdown2: 0px 1px 2px 2px rgba(0, 0, 0, 0.04);
+
+  --breakpoint-sm: 576px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 992px;
+  --breakpoint-xl: 1200px;
+  --breakpoint-2xl: 1366px;
+  --breakpoint-3xl: 1440px;
+
+  --ease-ease: ease;
+
+  --animate-prod-x: prod-x 2s linear infinite;
+  --animate-prod-y: prod-y 2s linear infinite;
+  --animate-pulseSmall: pulseSmall 1.25s linear infinite;
+  --animate-progressBarFill: progressBarFill 2s linear infinite;
+
+  @keyframes prod-x {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  @keyframes prod-y {
+    0% {
+      transform: translateY(-100%);
+    }
+    100% {
+      transform: translateY(100%);
+    }
+  }
+
+  @keyframes pulseSmall {
+    0% {
+      box-shadow: 0 0 0 0 rgba(214, 156, 82, 0.7);
+    }
+    70% {
+      box-shadow: 0 0 0 10px rgba(214, 156, 82, 0.7);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(214, 156, 82, 0.7);
+    }
+  }
+
+  @keyframes progressBarFill {
+    0% {
+      background-position: 0 0;
+    }
+    100% {
+      background-position: 40px 0;
+    }
+  }
+}
 
 @layer base {
   @font-face {
@@ -25,6 +100,10 @@
   input[type="number"] {
     -moz-appearance: textfield;
     appearance: textfield;
+  }
+
+  button {
+    cursor: pointer;
   }
 
   html {
@@ -54,15 +133,15 @@
 }
 
 .swiper-pagination {
-  @apply mt-5 relative bottom-0 !important;
+  @apply mt-5 relative bottom-0;
 }
 
 .swiper-pagination-bullet {
-  @apply h-4 w-4 border-yellow-primary border bg-inherit rounded-sm opacity-100 transition-all duration-500 hover:bg-yellow-primary !important;
+  @apply h-4 w-4 border-yellow-primary border bg-inherit rounded-sm opacity-100 transition-all duration-500 hover:bg-yellow-primary;
 }
 
 .swiper-pagination-bullet.swiper-pagination-bullet-active {
-  @apply bg-yellow-primary !important;
+  @apply bg-yellow-primary;
 }
 
 .bg-linear-transparent {
@@ -129,5 +208,5 @@
 }
 
 .ql-editor h3 {
-  @apply text-3xl font-medium !important;
+  @apply text-3xl font-medium;
 }

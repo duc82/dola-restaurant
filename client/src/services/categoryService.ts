@@ -43,8 +43,7 @@ const categoryService = {
   create: (data: CategoryDto) => {
     return apiRequest<CategoryResponse>("/categories/create", {
       method: "POST",
-      accessToken: true,
-      refreshToken: true,
+      token: true,
       data,
     });
   },
@@ -52,8 +51,7 @@ const categoryService = {
   update: (id: string, data: CategoryDto) => {
     return apiRequest<CategoryResponse>(`/categories/update/${id}`, {
       method: "PUT",
-      accessToken: true,
-      refreshToken: true,
+      token: true,
       data,
     });
   },
@@ -61,16 +59,14 @@ const categoryService = {
   delete: (id: string) => {
     return apiRequest<{ message: string }>(`/categories/delete/${id}`, {
       method: "DELETE",
-      accessToken: true,
-      refreshToken: true,
+      token: true,
     });
   },
 
   deleteMany: (ids: string[]) => {
     return apiRequest<{ message: string }>("/categories/delete-many", {
       method: "DELETE",
-      accessToken: true,
-      refreshToken: true,
+      token: true,
       data: { ids },
     });
   },

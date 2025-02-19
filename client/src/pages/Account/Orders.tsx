@@ -10,9 +10,10 @@ import { Link } from "react-router-dom";
 const Orders = () => {
   const dispatch = useAppDispatch();
   const { orders } = useAppSelector((state) => state.order);
+  const { user } = useAppSelector((state) => state.user);
 
   useEffect(() => {
-    orderService.getAll().then((data) => {
+    orderService.getAll({ userId: user?._id }).then((data) => {
       dispatch(getAllOrders({ orders: data.orders }));
     });
   }, [dispatch]);

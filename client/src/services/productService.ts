@@ -98,8 +98,7 @@ const productService = {
   create: (data: Product) => {
     return apiRequest<ProductResponse>("/products/create", {
       method: "POST",
-      accessToken: true,
-      refreshToken: true,
+      token: true,
       data,
     });
   },
@@ -107,8 +106,7 @@ const productService = {
   update: (id: string, data: Partial<Product>) => {
     return apiRequest<ProductResponse>(`/products/update/${id}`, {
       method: "PUT",
-      accessToken: true,
-      refreshToken: true,
+      token: true,
       data,
     });
   },
@@ -116,16 +114,14 @@ const productService = {
   delete: (id: string) => {
     return apiRequest<{ message: string }>(`/products/delete/${id}`, {
       method: "DELETE",
-      accessToken: true,
-      refreshToken: true,
+      token: true,
     });
   },
 
   deleteMany: (selectedRows: string[]) => {
     return apiRequest<{ message: string }>("/products/delete-many", {
       method: "DELETE",
-      accessToken: true,
-      refreshToken: true,
+      token: true,
       data: { selectedRows },
     });
   },

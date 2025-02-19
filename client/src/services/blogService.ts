@@ -32,25 +32,27 @@ const blogService = {
   create: (blog: BlogDTO) => {
     return apiRequest<BlogResponse>("/blogs/create", {
       method: "POST",
-      refreshToken: true,
+      token: true,
       data: blog,
     });
   },
   update: (id: string, blog: BlogDTO) => {
     return apiRequest<BlogResponse>(`/blogs/update/${id}`, {
       method: "PUT",
-      refreshToken: true,
+      token: true,
       data: blog,
     });
   },
   delete: (id: string) => {
     return apiRequest<{ message: string }>(`/blogs/delete/${id}`, {
       method: "DELETE",
+      token: true,
     });
   },
   deleteMany: (ids: string[]) => {
     return apiRequest<{ message: string }>(`/blogs/delete-many`, {
       method: "DELETE",
+      token: true,
       data: { ids },
     });
   },

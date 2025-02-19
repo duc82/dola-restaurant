@@ -20,13 +20,21 @@ class AuthController {
   async loginGoogle(req, res) {
     res
       .status(200)
-      .json(await this.authService.loginGoogle(req.body.code, res));
+      .json(
+        await this.authService.loginGoogle(req.body.code, req.useragent, res)
+      );
   }
 
   async loginFacebook(req, res) {
     res
       .status(200)
-      .json(await this.authService.loginFacebook(req.body.accessToken, res));
+      .json(
+        await this.authService.loginFacebook(
+          req.body.accessToken,
+          req.userAgent,
+          res
+        )
+      );
   }
 
   async signUp(req, res) {

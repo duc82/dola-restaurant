@@ -40,8 +40,7 @@ const voucherService = {
 
   create: async (data: Voucher) => {
     return apiRequest<VoucherResponse>("/vouchers/create", {
-      accessToken: true,
-      refreshToken: true,
+      token: true,
       method: "POST",
       data,
     });
@@ -49,8 +48,7 @@ const voucherService = {
 
   update: async (id: string, data: Partial<Voucher>) => {
     return apiRequest<VoucherResponse>(`/vouchers/update/${id}`, {
-      accessToken: true,
-      refreshToken: true,
+      token: true,
       method: "PUT",
       data,
     });
@@ -58,16 +56,14 @@ const voucherService = {
 
   delete: async (id: string) => {
     return apiRequest<{ message: string }>(`/vouchers/delete/${id}`, {
-      accessToken: true,
-      refreshToken: true,
+      token: true,
       method: "DELETE",
     });
   },
 
   deleteMany: async (ids: string[]) => {
     return apiRequest<{ message: string }>(`/vouchers/delete-many`, {
-      accessToken: true,
-      refreshToken: true,
+      token: true,
       method: "DELETE",
       data: { ids },
     });

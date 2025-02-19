@@ -55,7 +55,6 @@ const authService = {
       "/auth/refreshToken",
       {
         method: "POST",
-        refreshToken: true,
         data: { refreshToken: true },
       }
     );
@@ -64,7 +63,6 @@ const authService = {
   logout: () => {
     return apiRequest<{ message: string }>("/auth/logout", {
       method: "POST",
-      refreshToken: true,
       data: { logout: true },
     });
   },

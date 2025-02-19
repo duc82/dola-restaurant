@@ -12,16 +12,17 @@ class OrderService {
   }
 
   async getAll(query) {
-    const { limit, page, search } = query;
+    const { limit, page, search, userId } = query;
 
-    const filter = {};
+    console.log(userId);
 
     const skip = (page - 1) * limit;
 
+    const filter = {
+      user: userId,
+    };
+
     const orders = await Order.find(filter)
-      .skip(skip)
-      .limit(limit)
-      .sort({ createdAt: "desc" })
       .populate([
         "shippingAddress",
         "vouchers",
@@ -43,7 +44,10 @@ class OrderService {
             },
           ],
         },
-      ]);
+      ])
+      .skip(skip)
+      .limit(limit)
+      .sort({ createdAt: "desc" });
 
     const total = await Order.countDocuments(filter);
 

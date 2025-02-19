@@ -20,7 +20,7 @@ const FacebookLogin = () => {
       const data = await authService.loginFacebook(authResponse.accessToken);
       dispatch(loginSuccess(data.accessToken));
       dispatch(setUser(data.user));
-    } catch (error) {
+    } catch (_error) {
       toast.error("Đăng nhập thất bại");
     }
   };

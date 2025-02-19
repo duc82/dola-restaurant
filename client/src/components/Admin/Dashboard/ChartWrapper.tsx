@@ -16,7 +16,6 @@ const ChartWrapper = ({
   quantity,
   title,
   percent,
-  report,
   className,
   children,
 }: ChartWrapperProps) => {

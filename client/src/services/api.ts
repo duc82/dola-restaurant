@@ -22,12 +22,11 @@ const api = axios.create({
 export default async function apiRequest<T>(
   endpoint: string,
   config?: AxiosRequestConfig & {
-    refreshToken?: boolean;
-    accessToken?: boolean;
+    token?: boolean;
   }
 ): Promise<T> {
-  // Auto refresh token when token expired
-  if (config?.refreshToken) {
+  if (config?.token) {
+    // Auto refresh token when token expired
     api.interceptors.response.use(
       (res) => res,
       async (error: AxiosError) => {
@@ -46,10 +45,6 @@ export default async function apiRequest<T>(
       }
     );
 
-    config.withCredentials = true;
-  }
-
-  if (config?.accessToken) {
     api.interceptors.request.use((config) => {
       const accessToken = store.getState().auth.accessToken;
       if (accessToken) {
@@ -61,6 +56,7 @@ export default async function apiRequest<T>(
 
   const res = await api<T>({
     url: endpoint,
+    withCredentials: true,
     ...config,
   });
 

@@ -49,9 +49,8 @@ class AuthService {
     return payload;
   }
 
-  async loginGoogle(code, res) {
+  async loginGoogle(code, userAgent, res) {
     const payload = await verifyGoogleToken(code);
-    const userAgent = req.useragent;
 
     const device = userAgent.isMobile
       ? "Mobile"
@@ -96,9 +95,8 @@ class AuthService {
     return { message: "Đăng nhập thành công", user, accessToken };
   }
 
-  async loginFacebook(accessToken, res) {
+  async loginFacebook(accessToken, userAgent, res) {
     const payload = await this.verifyFacebookToken(accessToken);
-    const userAgent = req.useragent;
 
     const device = userAgent.isMobile
       ? "Mobile"

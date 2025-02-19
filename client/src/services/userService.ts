@@ -3,7 +3,7 @@ import {
   User,
   UserResponse,
   UserUpdateCurrentDTO,
-  UsersResponse
+  UsersResponse,
 } from "@/types/user";
 import apiRequest from "./api";
 import { QueryOptions } from "@/types";
@@ -35,62 +35,56 @@ const userService = {
 
   getCurrent: () => {
     return apiRequest<FullUser>("/users/current", {
-      accessToken: true,
-      refreshToken: true
+      token: true,
     });
   },
 
   create: (user: User) => {
     return apiRequest<UserResponse>("/users/create", {
       method: "POST",
-      accessToken: true,
-      refreshToken: true,
-      data: user
+      token: true,
+      data: user,
     });
   },
 
   updateCurrent: (data: UserUpdateCurrentDTO) => {
     return apiRequest<UserResponse>("/users/update/current", {
       method: "PUT",
-      accessToken: true,
-      refreshToken: true,
-      data
+      token: true,
+      data,
     });
   },
 
   update: (id: string, data: Partial<User>) => {
     return apiRequest<UserResponse>(`/users/update/${id}`, {
       method: "PUT",
-      refreshToken: true,
-      data
+      token: true,
+      data,
     });
   },
 
   changePassword: (data: { oldPassword: string; newPassword: string }) => {
     return apiRequest<UserResponse>("/users/changePassword", {
       method: "POST",
-      accessToken: true,
-      refreshToken: true,
-      data
+      token: true,
+      data,
     });
   },
 
   delete: (id: string) => {
     return apiRequest<{ message: string }>(`/users/delete/${id}`, {
       method: "DELETE",
-      accessToken: true,
-      refreshToken: true
+      token: true,
     });
   },
 
   deleteMany: (ids: string[]) => {
     return apiRequest<{ message: string }>("/users/delete-many", {
       method: "DELETE",
-      accessToken: true,
-      refreshToken: true,
-      data: { ids }
+      token: true,
+      data: { ids },
     });
-  }
+  },
 };
 
 export default userService;

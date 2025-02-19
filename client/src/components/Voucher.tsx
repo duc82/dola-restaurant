@@ -5,6 +5,7 @@ import cn from "../utils/cn";
 import formatVnd from "@/utils/formatVnd";
 import { MouseEvent } from "react";
 import toast from "react-hot-toast";
+import voucher from "@/assets/images/voucher.webp";
 
 interface VoucherProps {
   className?: string;
@@ -51,7 +52,7 @@ const Voucher = ({ className }: VoucherProps) => {
     >
       <div className="flex items-center space-x-2.5 text-yellow-primary font-semibold text-lg rounded-[20px] bg-emerald-primary border-2 border-yellow-primary py-1 px-4 absolute -top-5">
         <LazyLoadImage
-          src={"/voucher.webp"}
+          src={voucher}
           alt="Voucher"
           effect="opacity"
           width={30}

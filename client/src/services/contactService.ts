@@ -21,8 +21,7 @@ const contactService = {
     }
 
     return apiRequest<ContactsResponse>(`/contacts${query}`, {
-      accessToken: true,
-      refreshToken: true,
+      token: true,
     });
   },
 
@@ -37,16 +36,14 @@ const contactService = {
     return apiRequest<ContactResponse>(`/contacts/update/${id}`, {
       data: contact,
       method: "PUT",
-      accessToken: true,
-      refreshToken: true,
+      token: true,
     });
   },
 
   delete: async (id: string) => {
     return apiRequest<ContactResponse>(`/contacts/delete/${id}`, {
       method: "DELETE",
-      accessToken: true,
-      refreshToken: true,
+      token: true,
     });
   },
 
@@ -54,8 +51,7 @@ const contactService = {
     return apiRequest<ContactResponse>(`/contacts/delete-many`, {
       data: { ids },
       method: "DELETE",
-      accessToken: true,
-      refreshToken: true,
+      token: true,
     });
   },
 };

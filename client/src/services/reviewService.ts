@@ -35,8 +35,7 @@ const reviewService = {
     }
 
     return apiRequest<ReviewsResponse>(`/reviews${query}`, {
-      accessToken: true,
-      refreshToken: true,
+      token: true,
     });
   },
 
@@ -44,8 +43,7 @@ const reviewService = {
     return apiRequest<ReviewResponse>("/reviews/create", {
       method: "POST",
       data,
-      accessToken: true,
-      refreshToken: true,
+      token: true,
     });
   },
 };
