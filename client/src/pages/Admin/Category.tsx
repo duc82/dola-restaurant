@@ -9,7 +9,7 @@ import { deleteCategory } from "@/store/reducers/categorySlice";
 import formatDate from "@/utils/formatDate";
 import handlingAxiosError from "@/utils/handlingAxiosError";
 import { useCallback, useState } from "react";
-import { Helmet } from "@dr.pogodin/react-helmet";
+import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { useSearchParams } from "react-router-dom";

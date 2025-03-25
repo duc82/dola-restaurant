@@ -2,7 +2,7 @@ import Breadcrumb from "@/components/Breadcrumb";
 import Container from "@/components/Container";
 import ProductList from "@/components/Product/ProductList";
 import { FullProduct } from "@/types/product";
-import { Helmet } from "@dr.pogodin/react-helmet";
+import { Helmet } from "react-helmet-async";
 import { useLoaderData, useNavigation } from "react-router-dom";
 
 const title = "Tìm kiếm";

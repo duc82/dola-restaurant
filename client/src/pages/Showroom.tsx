@@ -1,6 +1,6 @@
 import Breadcrumb from "@/components/Breadcrumb/index";
 import Container from "@/components/Container";
-import { Helmet } from "@dr.pogodin/react-helmet";
+import { Helmet } from "react-helmet-async";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import showrooms from "@/data/showrooms.json";
 import { useMemo, useState } from "react";

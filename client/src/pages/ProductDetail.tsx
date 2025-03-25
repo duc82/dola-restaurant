@@ -8,7 +8,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import formatVnd from "../utils/formatVnd";
 import useQuantity from "../hooks/useQuantity";
-import { Helmet } from "@dr.pogodin/react-helmet";
+import { Helmet } from "react-helmet-async";
 import Tab from "../components/ProductDetail/Tab";
 import { useAppDispatch } from "@/store/hooks";
 import { increaseQuantity } from "@/store/reducers/cartSlice";

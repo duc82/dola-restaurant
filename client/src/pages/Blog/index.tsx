@@ -3,7 +3,7 @@ import Breadcrumb from "@/components/Breadcrumb";
 import Category from "@/components/ProductCategory/Category";
 import Container from "@/components/Container";
 import BlogCard from "@/components/Blog/BlogCard";
-import { Helmet } from "@dr.pogodin/react-helmet";
+import { Helmet } from "react-helmet-async";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import blogService from "@/services/blogService";
 import { getAllBlogs } from "@/store/reducers/blogSlice";

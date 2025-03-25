@@ -8,7 +8,7 @@ import formatAddress from "@/utils/formatAddress";
 import formatDate from "@/utils/formatDate";
 import formatVnd from "@/utils/formatVnd";
 import { useEffect } from "react";
-import { Helmet } from "@dr.pogodin/react-helmet";
+import { Helmet } from "react-helmet-async";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";

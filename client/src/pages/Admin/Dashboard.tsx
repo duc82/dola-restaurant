@@ -3,7 +3,7 @@ import { Bag, Cart, Eyes, Spinner, Users } from "@/icons";
 import statisticService from "@/services/statisticService";
 import { Statistic } from "@/types/statistic";
 import { lazy, useEffect, useState } from "react";
-import { Helmet } from "@dr.pogodin/react-helmet";
+import { Helmet } from "react-helmet-async";
 
 const ChartProducts = lazy(
   () => import("@/components/Admin/Dashboard/ChartProducts")

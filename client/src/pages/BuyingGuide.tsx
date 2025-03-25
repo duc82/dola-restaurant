@@ -1,4 +1,4 @@
-import { Helmet } from "@dr.pogodin/react-helmet";
+import { Helmet } from "react-helmet-async";
 import Container from "../components/Container";
 import Breadcrumb from "@/components/Breadcrumb";
 

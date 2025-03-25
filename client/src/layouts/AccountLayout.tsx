@@ -2,7 +2,7 @@ import Container from "../components/Container";
 import AccountPage from "../components/Account/AccountPage";
 import { Outlet, useLocation } from "react-router-dom";
 import Breadcrumb from "../components/Breadcrumb/index";
-import { Helmet } from "@dr.pogodin/react-helmet";
+import { Helmet } from "react-helmet-async";
 import { useEffect } from "react";
 import addressService from "@/services/addressService";
 import { useAppDispatch } from "@/store/hooks";

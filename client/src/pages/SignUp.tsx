@@ -7,7 +7,7 @@ import FacebookLogin from "../components/Login/FacebookLogin";
 import GoogleLogin from "../components/Login/GoogleLogin";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import toast from "react-hot-toast";
-import { Helmet } from "@dr.pogodin/react-helmet";
+import { Helmet } from "react-helmet-async";
 import { authStart, authSuccess } from "@/store/reducers/authSlice";
 import handlingAxiosError from "../utils/handlingAxiosError";
 import authService from "@/services/authService";

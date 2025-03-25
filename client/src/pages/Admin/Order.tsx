@@ -13,7 +13,7 @@ import formatDate from "@/utils/formatDate";
 import formatVnd from "@/utils/formatVnd";
 import handlingAxiosError from "@/utils/handlingAxiosError";
 import { useCallback, useState } from "react";
-import { Helmet } from "@dr.pogodin/react-helmet";
+import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
 import { useSearchParams } from "react-router-dom";
 

@@ -1,5 +1,5 @@
 import Breadcrumb from "@/components/Breadcrumb";
-import { Helmet } from "@dr.pogodin/react-helmet";
+import { Helmet } from "react-helmet-async";
 
 const title = "Chi tiết bài viết";
 

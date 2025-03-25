@@ -1,6 +1,6 @@
 import Breadcrumb from "@/components/Breadcrumb";
 import Container from "@/components/Container";
-import { Helmet } from "@dr.pogodin/react-helmet";
+import { Helmet } from "react-helmet-async";
 
 const GratitudeGifts = () => {
   const title = "Quà tặng tri ân";

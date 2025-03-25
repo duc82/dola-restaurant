@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Helmet } from "@dr.pogodin/react-helmet";
+import { Helmet } from "react-helmet-async";
 import Breadcrumb from "../components/Breadcrumb";
 import Container from "../components/Container";
 import InputGroup from "../components/Form/InputGroup";

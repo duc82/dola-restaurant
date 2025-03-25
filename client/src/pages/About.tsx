@@ -1,7 +1,7 @@
 import Container from "../components/Container";
 import Breadcrumb from "../components/Breadcrumb/index";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { Helmet } from "@dr.pogodin/react-helmet";
+import { Helmet } from "react-helmet-async";
 import about_image from "@/assets/images/about_image.webp";
 
 const title = "Giới thiệu";

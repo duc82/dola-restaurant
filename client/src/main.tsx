@@ -4,7 +4,7 @@ import { RouterProvider } from "react-router-dom";
 import { Provider } from "react-redux";
 import { persistor, store } from "./store";
 import { Toaster } from "react-hot-toast";
-import { HelmetProvider } from "@dr.pogodin/react-helmet";
+import { HelmetProvider } from "react-helmet-async";
 import { CartProvider } from "./providers/CartProvider";
 import { PersistGate } from "redux-persist/integration/react";
 import ProductQuickviewProvider from "./providers/ProductQuickviewProvider";

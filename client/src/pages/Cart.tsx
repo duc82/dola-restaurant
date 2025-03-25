@@ -9,7 +9,7 @@ import useWindowResize from "../hooks/useWindowResize";
 import { Cart2 } from "../icons";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { removeCart } from "@/store/reducers/cartSlice";
-import { Helmet } from "@dr.pogodin/react-helmet";
+import { Helmet } from "react-helmet-async";
 import Breadcrumb from "@/components/Breadcrumb";
 
 const title = "Giỏ hàng";

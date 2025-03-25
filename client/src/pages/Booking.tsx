@@ -2,7 +2,7 @@ import Breadcrumb from "../components/Breadcrumb";
 import Container from "../components/Container";
 import Title from "../components/Home/Title";
 import InputGroup from "../components/Form/InputGroup";
-import { Helmet } from "@dr.pogodin/react-helmet";
+import { Helmet } from "react-helmet-async";
 
 const title = "Đặt bàn";
 

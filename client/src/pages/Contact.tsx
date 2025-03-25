@@ -2,7 +2,7 @@ import Breadcrumb from "../components/Breadcrumb/index";
 import Container from "../components/Container";
 import ContactAddress from "../components/Contact/ContactAddress";
 import ContactForm from "../components/Contact/ContactForm";
-import { Helmet } from "@dr.pogodin/react-helmet";
+import { Helmet } from "react-helmet-async";
 import showrooms from "@/data/showrooms.json";
 
 const title = "Liên hệ";

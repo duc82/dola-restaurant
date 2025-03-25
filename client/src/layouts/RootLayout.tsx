@@ -3,7 +3,7 @@ import Header from "../components/Header/Header";
 import Footer from "../components/Footer";
 import { createPortal } from "react-dom";
 import ModalCart from "../components/Cart/ModalCart";
-import { Helmet } from "@dr.pogodin/react-helmet";
+import { Helmet } from "react-helmet-async";
 import ProductQuickview from "@/components/Product/ProductQuickview";
 import ScrollTop from "@/components/ScrollTop";
 

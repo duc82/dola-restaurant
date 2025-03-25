@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 import { Dustbin, Edit, Plus2, Search, Spinner } from "@/icons";
-import { Helmet } from "@dr.pogodin/react-helmet";
+import { Helmet } from "react-helmet-async";
 import { useSearchParams } from "react-router-dom";
 import Pagination from "@/components/Pagination";
 import useAdminModal from "@/hooks/useAdminModal";

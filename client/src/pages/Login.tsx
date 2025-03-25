@@ -6,7 +6,7 @@ import FacebookLogin from "../components/Login/FacebookLogin";
 import GoogleLogin from "../components/Login/GoogleLogin";
 import InputGroup from "../components/Form/InputGroup";
 import toast from "react-hot-toast";
-import { Helmet } from "@dr.pogodin/react-helmet";
+import { Helmet } from "react-helmet-async";
 import {
   authStart,
   authSuccess,

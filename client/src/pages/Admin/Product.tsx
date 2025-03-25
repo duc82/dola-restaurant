@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { Helmet } from "@dr.pogodin/react-helmet";
+import { Helmet } from "react-helmet-async";
 import { Dustbin, Edit, Plus2, Search, Spinner } from "@/icons";
 import { useAppDispatch } from "@/store/hooks";
 import {

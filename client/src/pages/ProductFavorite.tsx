@@ -6,7 +6,7 @@ import { useAppSelector } from "@/store/hooks";
 import cn from "@/utils/cn";
 import clsx from "clsx";
 import { useRef, useState } from "react";
-import { Helmet } from "@dr.pogodin/react-helmet";
+import { Helmet } from "react-helmet-async";
 
 const title = "Món ăn yêu thích";
 

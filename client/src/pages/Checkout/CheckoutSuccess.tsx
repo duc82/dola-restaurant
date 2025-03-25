@@ -6,7 +6,7 @@ import cn from "@/utils/cn";
 import formatAddress from "@/utils/formatAddress";
 import formatVnd from "@/utils/formatVnd";
 import { useEffect, useState } from "react";
-import { Helmet } from "@dr.pogodin/react-helmet";
+import { Helmet } from "react-helmet-async";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Link, useNavigate, useParams } from "react-router-dom";
 

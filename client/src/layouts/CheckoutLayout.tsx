@@ -3,7 +3,7 @@ import { getCurrentAddresses } from "@/store/reducers/addressSlice";
 import { getCurrentUser } from "@/store/reducers/userSlice";
 import cn from "@/utils/cn";
 import { useEffect } from "react";
-import { Helmet } from "@dr.pogodin/react-helmet";
+import { Helmet } from "react-helmet-async";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 

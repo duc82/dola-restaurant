@@ -8,7 +8,7 @@ import { useParams, useSearchParams } from "react-router-dom";
 import Overlay from "../components/Overlay";
 import filter from "../data/filter.json";
 import Category from "../components/ProductCategory/Category";
-import { Helmet } from "@dr.pogodin/react-helmet";
+import { Helmet } from "react-helmet-async";
 import SelectedFilter from "../components/ProductCategory/SelectedFilter";
 import cn from "../utils/cn";
 import ProductList from "@/components/Product/ProductList";
