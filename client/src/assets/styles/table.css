@@ -1,0 +1,52 @@
+table#cart {
+  @apply border-collapse w-full border border-gray-300;
+}
+
+#cart thead {
+  @apply border-b border-b-gray-300;
+}
+
+#cart th {
+  @apply py-2;
+}
+
+#cart td {
+  @apply py-2.5;
+}
+
+#cart th:first-child {
+  @apply text-left pl-2.5;
+}
+
+#cart th:last-child {
+  @apply pr-2.5;
+}
+
+#cart td:first-child {
+  @apply pl-2.5;
+}
+
+#cart td:last-child {
+  @apply pr-2.5;
+}
+
+#cart td:not(:first-child) {
+  @apply text-center;
+}
+
+.table-admin {
+  @apply w-full text-left divide-y divide-gray-600;
+}
+
+.table-admin tbody {
+  @apply divide-y divide-gray-600;
+}
+
+.table-admin thead {
+  @apply bg-emerald-secondary;
+}
+
+.table-admin th,
+.table-admin td {
+  @apply p-4 first:lg:pl-6 last:lg:pr-6;
+}

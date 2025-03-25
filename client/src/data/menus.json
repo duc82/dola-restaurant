@@ -1,0 +1,28 @@
+[
+  {
+    "id": 1,
+    "name": "Trang chủ",
+    "url": "/"
+  },
+  {
+    "id": 2,
+    "name": "Giới thiệu",
+    "url": "/gioi-thieu"
+  },
+  {
+    "id": 3,
+    "name": "Menu",
+    "url": "/danh-muc-san-pham/tat-ca-san-pham",
+    "hasChild": true
+  },
+  {
+    "id": 4,
+    "name": "Tin tức",
+    "url": "/tin-tuc"
+  },
+  {
+    "id": 5,
+    "name": "Liên hệ",
+    "url": "/lien-he"
+  }
+]
