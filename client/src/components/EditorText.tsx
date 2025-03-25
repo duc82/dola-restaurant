@@ -1,5 +1,5 @@
+import ReactQuill from "react-quill-new";
 import cn from "@/utils/cn";
-import ReactQuill from "react-quill";
 
 interface EditorTextProps {
   value?: string;
