@@ -17,7 +17,7 @@ import formatAddress from "@/utils/formatAddress";
 import voucherService from "@/services/voucherService";
 import { FullVoucher } from "@/types/voucher";
 import moneyBill from "@/assets/images/money_bill.svg";
-import vnpay from "@/assets/images/vnpay.webp";
+// import vnpay from "@/assets/images/vnpay.webp";
 
 const shippingFee = 40000;
 
@@ -289,7 +289,7 @@ const Checkout = () => {
                 }
               />
 
-              <Radio
+              {/* <Radio
                 id="VnPay"
                 name="paymentMethod"
                 value="VnPay"
@@ -307,7 +307,7 @@ const Checkout = () => {
                     />
                   </div>
                 }
-              />
+              /> */}
             </div>
 
             <div className="py-4 lg:hidden">

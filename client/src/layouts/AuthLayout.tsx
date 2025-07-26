@@ -1,13 +1,13 @@
 import { useAppSelector } from "@/store/hooks";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { FacebookProvider } from "react-facebook";
-import { Outlet, Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 
 const AuthLayout = () => {
-  const { accessToken } = useAppSelector((state) => state.auth);
+  const { user } = useAppSelector((state) => state.user);
 
-  if (accessToken) {
-    return <Navigate to="/tai-khoan" />;
+  if (user) {
+    return <Navigate to="/" replace />;
   }
 
   return (

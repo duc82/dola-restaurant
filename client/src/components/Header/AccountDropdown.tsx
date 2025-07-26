@@ -2,14 +2,16 @@ import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { resetAuth } from "../../store/reducers/authSlice";
 import authService from "@/services/authService";
+import { useEffect } from "react";
+import { getCurrentUser } from "@/store/reducers/userSlice";
 
 interface AccountDropdownProps {
   isAdminPage?: boolean;
 }
 
 const AccountDropdown = ({ isAdminPage = false }: AccountDropdownProps) => {
-  const { accessToken } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
+  const { accessToken } = useAppSelector((state) => state.auth);
   const { user } = useAppSelector((state) => state.user);
 
   const handleLogout = () => {
@@ -19,9 +21,14 @@ const AccountDropdown = ({ isAdminPage = false }: AccountDropdownProps) => {
     });
   };
 
+  useEffect(() => {
+    if (!accessToken) return;
+    dispatch(getCurrentUser());
+  }, [dispatch, accessToken]);
+
   return (
     <ul className="transition-[visibility,opacity,transform] bg-white duration-300 rounded-lg p-2.5 absolute top-full right-0 min-w-[196px] z-10 opacity-0 invisible scale-95 group-hover:opacity-100 group-hover:visible group-hover:scale-100 text-white will-change-transform shadow-dropdown">
-      {!accessToken && (
+      {!user && (
         <>
           <li className="mb-2.5">
             <Link
@@ -44,7 +51,7 @@ const AccountDropdown = ({ isAdminPage = false }: AccountDropdownProps) => {
         </>
       )}
 
-      {accessToken && (
+      {user && (
         <>
           {isAdminPage && (
             <li className="mb-2.5 text-black">Xin chào, {user?.fullName} !</li>

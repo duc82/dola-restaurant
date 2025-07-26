@@ -147,7 +147,6 @@ const Footer = () => {
           <span className="block sm:inline-block">
             Bản quyền thuộc về <b>Dola Restaurant</b>.
           </span>{" "}
-          <span>Cung cấp bởi Sopa</span>
         </Container>
       </section>
     </footer>

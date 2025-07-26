@@ -4,8 +4,6 @@ import type { RejectValue } from "@/types";
 import { FullUser } from "@/types/user";
 import userService from "@/services/userService";
 import limits from "@/data/limits.json";
-import { store } from "..";
-import { resetAuth } from "./authSlice";
 
 export const getCurrentUser = createAsyncThunk<FullUser, void, RejectValue>(
   "user/getCurrentUser",
@@ -40,9 +38,6 @@ const userSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(getCurrentUser.fulfilled, (state, { payload }) => {
       state.user = payload;
-    });
-    builder.addCase(getCurrentUser.rejected, () => {
-      store.dispatch(resetAuth());
     });
   },
 });

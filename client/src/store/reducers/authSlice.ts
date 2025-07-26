@@ -1,4 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { getCurrentUser } from "./userSlice";
 
 export interface AuthState {
   isLoading: boolean;
@@ -24,6 +25,12 @@ const authSlice = createSlice({
       state.accessToken = payload;
     },
     resetAuth: () => initialState,
+  },
+  extraReducers(builder) {
+    builder.addCase(getCurrentUser.rejected, (state) => {
+      state.accessToken = initialState.accessToken;
+      state.isLoading = initialState.isLoading;
+    });
   },
 });
 
